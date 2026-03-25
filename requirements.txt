@@ -1,0 +1,6 @@
+pymc>=5.0.0
+arviz
+langgraph
+pandas
+yfinance
+statsbombpy
