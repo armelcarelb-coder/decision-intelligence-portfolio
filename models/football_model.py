@@ -43,7 +43,7 @@ class FootballAnalystProbabilistic:
         return az.summary(self.trace)
 
     def plot_trace(self, filename="trace.png"):
-        az.plot_trace(self.trace)
+        az.plot_posterior(analyst.trace) 
         import matplotlib.pyplot as plt
         plt.savefig(filename)
 
@@ -61,4 +61,4 @@ if __name__ == "__main__":
     
     analyst.plot_trace("models/resultat.png")
 
-    
+  
