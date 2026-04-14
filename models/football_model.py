@@ -41,15 +41,19 @@ class FootballAnalystProbabilistic:
             raise ValueError("Model not trained yet.")
         
         return az.summary(self.trace)
-
-    def plot_trace(self, filename="trace.png"):
-        az.plot_posterior(analyst.trace)
-        import matplotlib.pyplot as plt
-        plt.savefig(filename)
-
-if __name__ == "__main__":
+        if self.trace is None : 
+            print("Erreur: Le modèle doit etre entrainé avant de générer un resumé")
+            return None
+        # az.summary calcule la moyenne, l'ecart-type et les intervalles de confiance
+        stats = az.summary(self.trace, round_to = 2)
+        return stats
     
-    xg = np.array([0.8, 1.2, 0.5, 1.5])
+if __name__ == "__main__" :
+    import arviz as az
+    import matplotlib.pyplot as plt
+
+    # Données de test
+    xg = np.array([0.8 , 1.2 , 0.5, 1.5])
     goals = np.array([1, 2, 0, 1])
 
     analyst = FootballAnalystProbabilistic("Gavi")
@@ -58,4 +62,46 @@ if __name__ == "__main__":
     analyst.train()
     
     print(analyst.summary())
+
+    # 3. Sauvegarde du graphique
+    az.plot_trace(analyst.trace)
+    import matplotlib.pyplot as plt
+    plt.savefig("models/resultat_performance.png")
+
+
+
+    # initialisation et execution
+    model= Footballanalystprobabilistic("Gavi")
+    analyst.build_model(xg, goals)
+    resultats = analyst.train()
+    # On recupère la trace ici
+    
+    # Affichage du resumé statistique 
+    if resultats is not None : 
+        print("\n Mise à jour du graphique...")
+        az.plot_trace(resultats)
+        plt.savefig("models/resultats_performance.png")
+        print("Terminé! vérifié le fichier 'resultats_performance.png' et ton terminal. ")
+    else:
+        print("L'entrainement a échoué, verifie tes fonctions build_model et train. ")
+    # 1. Visualisation 
+    print("Génération du graphique...")
+    az.plot_trace(model.trace)
+    plt.savefig("models/resultats_performance.png")
+
+    # 2. Statistiques chiffrées
+    print("\n RESUME STATISTIQUE / ")
+    print(model.summary())
+
+
+# 1. On recupère les resultats (la trace)
+trace = model.train()
+
+# 2. On crée le graphique (Trace Plot)
+az.plot_trace(trace)
+
+# 3. CRUCIAL : On enregistre au lieu d'afficher
+plt.savefig("models/resultat_performance.png")
+print("Graphique enregistré dans models/resultat_performance.png")
+
     
