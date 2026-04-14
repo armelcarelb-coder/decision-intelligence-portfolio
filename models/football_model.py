@@ -64,24 +64,26 @@ class FootballAnalystProbabilistic:
         plt.savefig(filename)
         print(f"Graphique sauvegardé sous : {filename}")
 
-    def decision_recruitment(self):
+    def decision_recruitment_advanced(self):
         samples = self.trace.posterior["talent"].values
+
+        # Simulation business réaliste
+        transfer_cost = 10
+        salary_cost = 5
     
-        prob_good = (samples > 1).mean()
-    
-        # Hypothèses métier
-        gain_good = 10
-        loss_bad = -5
-    
-        expected_value = prob_good * gain_good + (1 - prob_good) * loss_bad
-    
-        print(f"Probabilité joueur performant : {prob_good:.2%}")
-        print(f"Valeur attendue du recrutement : {expected_value:.2f}")
-    
-        if expected_value > 0:
-          print("Décision : RECRUTER")
+        # Exemple : talent influence revenu
+        simulated_revenue = samples * 15
+
+        profit = simulated_revenue - (transfer_cost + salary_cost)
+
+        expected_profit = profit.mean()
+
+        print(f"Profit moyen estimé : {expected_profit:.2f}")
+
+        if expected_profit > 0:
+            print("Décision : RECRUTER")
         else:
-          print("Décision : NE PAS RECRUTER")
+            print("Décision : NE PAS RECRUTER")
 
 if __name__ == "__main__":
     
@@ -94,7 +96,7 @@ if __name__ == "__main__":
     analyst.train()
     analyst.evaluate_player()
     analyst.plot_result()
-    analyst.decision_recruitment()
+    analyst.decision_recruitment_advanced()
     
     print(analyst.summary())
 
