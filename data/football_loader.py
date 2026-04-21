@@ -21,6 +21,22 @@ class FootballDataLoader :
         player_data = events[events['player'] == player_name]
         return player_data
     
+    def get_player_xg_goals(self, match_id, player_name):
+        events = sb.events(match_id=match_id)
+
+        player_events = events[events['player'] == player_name]
+
+        shots = player_events[player_events['type'] == 'Shot']
+
+        xg = shots['shot_statsbomb_xg'].fillna(0).values
+        goals = shots['shot_outcome'].apply(lambda x: 1 if x == 'Goal' else 0).values
+
+        return xg, goals
+    
+    def get_players_in_match(self, match_id):
+       events = sb.events(match_id=match_id)
+       return events['player'].dropna().unique()
+    
 # --- TEST RAPIDE ---
 
 if __name__ == "__main__":
@@ -32,3 +48,6 @@ if __name__ == "__main__":
     matches = loader.get_matches(11,42)
     print(f"Trouvé{len(matches)} matchs.")
     print(matches[['match_id', 'home_team', 'away_team']].head())
+
+    loader.get_players_in_match()
+    print("players")
