@@ -70,7 +70,7 @@ if __name__ == "__main__":
     xg = np.array([0.8, 1.2, 0.5, 1.5])
     goals = np.array([1, 2, 0, 1])
 
-    analyst = FootballAnalystProbabilistic("Gavi")
+    analyst = FootballAnalystProbabilistic("Ivan Rakitić")
     
     analyst.build_model(xg, goals)
     analyst.train()

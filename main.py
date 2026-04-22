@@ -13,7 +13,7 @@ players = loader.get_players_in_match(matches.iloc[0]['match_id'])
 print("Joueurs disponibles :", players)
 
 # Choix manuel (après inspection)
-player_name = "Lionel Messi"  # à ajuster
+player_name = "Ivan Rakitić"  # à ajuster
 
 xg_all = []
 goals_all = []
