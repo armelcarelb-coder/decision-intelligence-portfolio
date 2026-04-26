@@ -1,52 +1,44 @@
-import numpy as np
-from models.football_model import FootballAnalystProbabilistic
-from engine.decision_engine import PlayerDecisionEngine
 from data.football_loader import FootballDataLoader
+from engine.multi_player_engine import MultiPlayerEngine
 
-# 1.Données
 loader = FootballDataLoader()
 
 matches = loader.get_matches(11, 42)
+match_ids = matches.head(5)['match_id']
 
-# DEBUG joueurs
-players = loader.get_players_in_match(matches.iloc[0]['match_id'])
-print("Joueurs disponibles :", players)
+# joueurs à analyser (extraits du match)
+players = loader.get_players_in_match(match_ids.iloc[0])
 
-# Choix manuel (après inspection)
-player_name = "Ivan Rakitić"  # à ajuster
+# ⚠️ on limite pour éviter explosion calcul
+players = players[:5]
 
-xg_all = []
-goals_all = []
+engine = MultiPlayerEngine(loader)
 
-for match_id in matches.head(5)['match_id']:
-    xg, goals = loader.get_player_xg_goals(match_id, player_name)
+results = engine.analyze_players(players, match_ids)
 
-    xg_all.extend(xg)
-    goals_all.extend(goals)
+ranked = engine.rank_players(results)
 
-xg = np.array(xg_all)
-goals = np.array(goals_all)
-
-# sécurité
-if len(xg) == 0:
-    print("Pas de données pour ce joueur.")
-    exit()
-
-# 2. modèle
-model = FootballAnalystProbabilistic(player_name)
-model.build_model(xg, goals)
-model.train()
-
-# 3. engine
-engine = PlayerDecisionEngine(model)
-
-result = engine.make_decision(
-    transfer_cost=10,
-    salary_cost=5,
-    xg_total=xg.sum()
+print("\n=== RANKING JOUEURS ===")
+for r in ranked:
+    print(
+    f"{r['player']} | Profit: {r['profit']:.2f} | Prob: {r['probability']:.2%} | "
+    f"Style: {r['style']} | Efficiency: {r['efficiency']} | "
+    f"xG: {r['xg_total']:.2f} | Goals: {r['goals'] if 'goals' in r else 'N/A'} | Shots: {r['shots']}"
 )
 
-print("\n=== DECISION REPORT ===")
-print(f"Probabilité performance : {result['probability_performance']:.2%}")
-print(f"Profit attendu : {result['expected_profit']:.2f}")
-print(f"Décision : {result['decision']}")
+print("\n=== PLAYER PROFILES ===")
+for r in ranked:
+    profile = {
+        "name": r["player"],
+        "style": r["style"],
+        "efficiency": r["efficiency"],
+        "xg_total": round(r["xg_total"], 2),
+        "goals_total": r["goals_total"],
+        "shots": r["shots"],
+        "conversion_rate": round(r["conversion_rate"], 2),
+        "avg_xg_per_shot": round(r["avg_xg_per_shot"], 2)
+    }
+    print(profile)
+
+print("\n=== RECOMMANDATION ===")
+print(engine.recommend(ranked))
