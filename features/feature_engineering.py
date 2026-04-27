@@ -21,7 +21,7 @@ class FeatureEngineer:
         shots = len(xg)
 
         # éviter division par zéro
-        conversion_rate = goals_total / (xg_total + 1e-6)
+        conversion_rate = goals_total / shots if shots > 0 else 0
 
         avg_xg_per_shot = xg.mean()
 

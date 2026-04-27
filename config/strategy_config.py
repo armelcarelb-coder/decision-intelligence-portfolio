@@ -1,10 +1,6 @@
-class StrategyConfig:
-
-    def __init__(self):
-        self.transfer_cost = 10
-        self.salary_cost = 5
-        self.market_value_factor = 15
-
-        # seuil décision
-        self.min_profit = 0
-        self.min_probability = 0.6
+STRATEGIES = {
+    "rentable": lambda p: p["profit"] > 0,
+    "offensif": lambda p: p["style"] == "high_volume_player",
+    "efficace": lambda p: p["efficiency"] == "clinical_finisher",
+    "low_risk": lambda p: p["probability"] > 0.6
+}
