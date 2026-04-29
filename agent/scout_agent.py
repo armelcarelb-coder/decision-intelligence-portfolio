@@ -30,62 +30,88 @@ class ScoutAgent:
 
         return filtered
 
-    # 🧠 3. RUN AGENT
+    
+    def build_reasoning(self, best_player, strategies):
+        reasons = []
+
+        if "rentable" in strategies:
+           reasons.append("profit attendu élevé")
+
+        if "low_risk" in strategies:
+            reasons.append("probabilité de performance élevée")
+
+        if "offensif" in strategies:
+            reasons.append("profil offensif (volume de jeu élevé)")
+
+        if "efficace" in strategies:
+            reasons.append("excellente efficacité devant le but")
+
+    # fallback si rien détecté
+        if not reasons:
+            reasons.append("meilleur compromis global")
+
+        return reasons
+
+        # 🧠 3. RUN AGENT
     def run(self, request, players, match_ids):
 
         print("\n🤖 AGENT SCOUT ACTIVÉ")
         print(f"🎯 Mission: {request}")
 
-        # 1. Analyse brute
         results = self.engine.analyze_players(players[:5], match_ids)
+        total_players = len(results)
 
         if len(results) == 0:
-            return "❌ Aucun joueur analysable."
+           return "❌ Aucun joueur analysable."
 
-        # 2. Compréhension
         strategies = self.interpret_request(request)
         print(f"🧠 Stratégies détectées: {strategies}")
 
-        # 3. Filtrage
         filtered = self.apply_strategies(results, strategies)
+        filtered_count = len(filtered)
 
-        if len(filtered) == 0:
-            print("⚠️ Aucun joueur ne correspond aux critères.")
-            print("🔄 Relaxation des contraintes...")
-
-            filtered = results  # fallback
-
-            fallback_mode = True
+        if filtered_count == 0:
+           fallback_mode = True
+           filtered = results
         else:
-            fallback_mode = False
+           fallback_mode = False
 
-        # 4. Ranking
         ranked = self.engine.rank_players(filtered)
-
         best = ranked[0]
 
-        # 5. Recommandation
         decision = self.engine.recommend(ranked)
 
-        # 6. Réponse intelligente
+        reasons = self.build_reasoning(best, strategies)
+
+        note = ""
+        if fallback_mode:
+           note = "⚠️ Aucun joueur ne correspond strictement aux critères → meilleure alternative proposée\n"
+
         response = f"""
-📊 SCOUT REPORT
+    🤖 AGENT SCOUT — ANALYSE INTELLIGENTE
 
-🎯 Critères: {', '.join(strategies) if strategies else 'Aucun filtre'}
+    📊 Analyse globale:
+      - Joueurs analysés: {total_players}
+      - Joueurs après filtrage: {filtered_count}
 
-🏆 Meilleur joueur: {best['player']}
+    🎯 Critères: {', '.join(strategies) if strategies else 'Aucun filtre'}
 
-💰 Profit attendu: {best['profit']:.2f}
-📈 Probabilité: {best['probability']:.2%}
+    {note}
 
-🎯 Profil:
-- Style: {best['style']}
-- Efficiency: {best['efficiency']}
+    🏆 Meilleur joueur: {best['player']}
 
-📢 Décision:
-{decision}
+    💰 Profit attendu: {best['profit']:.2f}
+    📈 Probabilité: {best['probability']:.2%}
 
-note = "⚠️ Critères non satisfaits, meilleure alternative proposée\n" if fallback_mode else ""
-"""
+    🎯 Profil:
+      - Style: {best['style']}
+      - Efficiency: {best['efficiency']}
 
-        return response
+    🧠 Raisonnement:
+      - {chr(10).join(reasons)}
+
+    📢 Décision:
+     {decision}
+    """
+
+        return response   # ✅ FIX CRITIQUE
