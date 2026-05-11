@@ -1,10 +1,15 @@
 from config.strategy_config import STRATEGIES
+from agent.memory import AgentMemory
 
 class ScoutAgent:
 
     def __init__(self, loader):
         from engine.multi_player_engine import MultiPlayerEngine
+
         self.engine = MultiPlayerEngine(loader)
+
+        # ✅ mémoire agent
+        self.memory = AgentMemory()
 
     # 🧠 1. Compréhension simple (rule-based NLP)
     def interpret_request(self, request):
@@ -78,6 +83,9 @@ class ScoutAgent:
 
         ranked = self.engine.rank_players(filtered)
         best = ranked[0]
+        self.memory.save_results(ranked)
+        self.memory.save_recommendation(ranked[0])
+        self.memory.save_strategies(strategies)
 
         decision = self.engine.recommend(ranked)
 
@@ -113,5 +121,7 @@ class ScoutAgent:
     📢 Décision:
      {decision}
     """
+        self.memory.save_interaction(request, response)
 
         return response   # ✅ FIX CRITIQUE
+        

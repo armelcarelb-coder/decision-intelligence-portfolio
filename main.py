@@ -19,3 +19,5 @@ while True:
 
     response = agent.run(request, players, match_ids)
     print(response)
+    
+print(agent.memory.get_history())
