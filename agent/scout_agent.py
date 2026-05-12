@@ -1,4 +1,5 @@
 from config.strategy_config import STRATEGIES
+from strategy.strategy_manager import StrategyManager
 from agent.memory import AgentMemory
 
 class ScoutAgent:
@@ -11,29 +12,9 @@ class ScoutAgent:
         # ✅ mémoire agent
         self.memory = AgentMemory()
 
+        self.strategy_manager = StrategyManager()
+
     # 🧠 1. Compréhension simple (rule-based NLP)
-    def interpret_request(self, request):
-        request = request.lower()
-
-        active_strategies = []
-
-        for key in STRATEGIES.keys():
-            if key in request:
-                active_strategies.append(key)
-
-        return active_strategies
-
-    # 🎯 2. Application des filtres
-    def apply_strategies(self, players, strategies):
-        if not strategies:
-            return players
-
-        filtered = players
-
-        for strat in strategies:
-            filtered = list(filter(STRATEGIES[strat], filtered))
-
-        return filtered
 
     
     def build_reasoning(self, best_player, strategies):
@@ -69,10 +50,13 @@ class ScoutAgent:
         if len(results) == 0:
            return "❌ Aucun joueur analysable."
 
-        strategies = self.interpret_request(request)
+        strategies = self.strategy_manager.detect_strategies(request)
         print(f"🧠 Stratégies détectées: {strategies}")
 
-        filtered = self.apply_strategies(results, strategies)
+        filtered = self.strategy_manager.apply_strategies(
+            results,
+            strategies
+        )
         filtered_count = len(filtered)
 
         if filtered_count == 0:
