@@ -1,6 +1,8 @@
 from config.strategy_config import STRATEGIES
 from strategy.strategy_manager import StrategyManager
 from agent.memory import AgentMemory
+from agent.comparator import PlayerComparator
+from llm.llm_reasoner import LLMReasoner
 
 class ScoutAgent:
 
@@ -13,6 +15,10 @@ class ScoutAgent:
         self.memory = AgentMemory()
 
         self.strategy_manager = StrategyManager()
+
+        self.comparator = PlayerComparator()
+
+        self.reasoner = LLMReasoner()
 
     # 🧠 1. Compréhension simple (rule-based NLP)
 
@@ -49,6 +55,24 @@ class ScoutAgent:
 
         if len(results) == 0:
            return "❌ Aucun joueur analysable."
+        
+        if "compare" in request.lower():
+
+            last_player = self.memory.get_last_recommendation()
+
+            if last_player is None:
+                 return "❌ Aucun joueur précédent à comparer."
+
+            ranked = self.memory.last_results
+
+            current_best = ranked[0]
+
+            comparison = self.comparator.compare_players(
+                last_player,
+                current_best
+            )
+
+            return "\n".join(comparison)
 
         strategies = self.strategy_manager.detect_strategies(request)
         print(f"🧠 Stratégies détectées: {strategies}")
@@ -67,6 +91,9 @@ class ScoutAgent:
 
         ranked = self.engine.rank_players(filtered)
         best = ranked[0]
+        
+        llm_explanation = self.reasoner.explain_recommendation(best)
+
         self.memory.save_results(ranked)
         self.memory.save_recommendation(ranked[0])
         self.memory.save_strategies(strategies)
@@ -104,6 +131,8 @@ class ScoutAgent:
 
     📢 Décision:
      {decision}
+
+    {llm_explanation}
     """
         self.memory.save_interaction(request, response)
 
