@@ -17,6 +17,39 @@ class FootballDataLoader :
     
     def get_events(self, match_id):
         return sb.events(match_id=match_id)
+    
+    def get_barca_matches(self, matches):
+
+        barca_matches = matches[
+           (matches["home_team"] == "Barcelona") |
+           (matches["away_team"] == "Barcelona")
+        ]
+
+        return barca_matches
+    
+    def get_barca_players(self, match_ids):
+
+        barca_players = set()
+
+        for match_id in match_ids:
+
+            events = sb.events(match_id=match_id)
+
+        # uniquement Barça
+            barca_events = events[
+                events["team"] == "Barcelona"
+            ]
+
+            players = (
+                barca_events["player"]
+                .dropna()
+                .unique()
+            )
+
+            for p in players:
+                barca_players.add(p)
+
+        return list(barca_players)
 
     def get_players_in_match(self, match_id):
         events = self.get_events(match_id)
@@ -62,6 +95,22 @@ class FootballDataLoader :
           "shots": shots_count
         }
     
+    def get_all_players(self, match_ids):
+
+        all_players = set()
+
+        for match_id in match_ids:
+
+            try:
+                 players = self.get_players_in_match(match_id)
+
+                 for p in players:
+                     all_players.add(p)
+
+            except:
+                continue
+
+        return list(all_players)
     
 # --- TEST RAPIDE ---
 

@@ -50,7 +50,7 @@ class ScoutAgent:
         print("\n🤖 AGENT SCOUT ACTIVÉ")
         print(f"🎯 Mission: {request}")
 
-        results = self.engine.analyze_players(players[:5], match_ids)
+        results = self.engine.analyze_players(players[:25], match_ids)
         total_players = len(results)
 
         if len(results) == 0:
