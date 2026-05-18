@@ -38,17 +38,17 @@ class SquadAnalyzer:
 
         weaknesses = []
 
-        if report["conversion_rate"] < 0.15:
+        if report["conversion_rate"] <= 0.18:
             weaknesses.append(
                 "Faible efficacité offensive"
             )
 
-        if report["offensive_players"] < 2:
+        if report["offensive_players"] <= 3:
             weaknesses.append(
                 "Manque de profils offensifs"
             )
 
-        if report["team_xg"] < 5:
+        if report["team_xg"] <= 8:
             weaknesses.append(
                 "Création offensive insuffisante"
             )
