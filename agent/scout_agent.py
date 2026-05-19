@@ -3,6 +3,7 @@ from strategy.strategy_manager import StrategyManager
 from agent.memory import AgentMemory
 from agent.comparator import PlayerComparator
 from llm.llm_reasoner import LLMReasoner
+from tactical.tactical_fit_engine import TacticalFitEngine
 
 class ScoutAgent:
 
@@ -19,6 +20,8 @@ class ScoutAgent:
         self.comparator = PlayerComparator()
 
         self.reasoner = LLMReasoner()
+
+        self.tactical_engine = TacticalFitEngine()
 
     # 🧠 1. Compréhension simple (rule-based NLP)
 
@@ -50,7 +53,7 @@ class ScoutAgent:
         print("\n🤖 AGENT SCOUT ACTIVÉ")
         print(f"🎯 Mission: {request}")
 
-        results = self.engine.analyze_players(players, match_ids)
+        results = self.engine.analyze_players(players[:50], match_ids)
         total_players = len(results)
 
         if len(results) == 0:
@@ -91,6 +94,7 @@ class ScoutAgent:
 
         ranked = self.engine.rank_players(filtered)
         best = ranked[0]
+        tactical_fit = self.tactical_engine.evaluate_player(best)
         
         llm_explanation = self.reasoner.explain_recommendation(best)
 
@@ -133,6 +137,13 @@ class ScoutAgent:
      {decision}
 
     {llm_explanation}
+
+    📊 Tactical Fit:
+    - Fit score : {tactical_fit['fit_score']}/15
+    - Fit level : {tactical_fit['fit_level']}
+
+    🧠 Compatibilité tactique:
+    - {chr(10).join(tactical_fit['fit_reasons'])}
     """
         self.memory.save_interaction(request, response)
 

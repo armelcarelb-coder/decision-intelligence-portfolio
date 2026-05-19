@@ -4,6 +4,8 @@ from agent.scout_agent import ScoutAgent
 from analysis.squad_analyser import SquadAnalyzer
 from statsbombpy import sb
 from recruitment.needs_engine import RecruitmentNeedsEngine
+from tactical.tactical_fit_engine import TacticalFitEngine
+
 
 competitions = sb.competitions()
 
@@ -57,6 +59,48 @@ weaknesses = analyzer.detect_weaknesses(team_report)
 # 5. Générer besoins recrutement
 needs = needs_engine.generate_needs(weaknesses)
 
+fit_engine = TacticalFitEngine()
+
+recruitment_targets = [
+    {
+        "player": "Rafael Leao",
+        "position": "LW",
+        "style": "offensive_player",
+        "efficiency": "elite_finisher",
+        "probability": 0.81,
+        "shots": 82,
+        "xg_total": 14.3
+    },
+    {
+        "player": "Joshua Kimmich",
+        "position": "CM",
+        "style": "balanced_player",
+        "efficiency": "elite_controller",
+        "probability": 0.88,
+        "shots": 34,
+        "xg_total": 4.1
+    },
+    {
+        "player": "Alexander Isak",
+        "position": "ST",
+        "style": "offensive_player",
+        "efficiency": "clinical_finisher",
+        "probability": 0.79,
+        "shots": 96,
+        "xg_total": 18.7
+    }
+]
+
+fit_results = []
+
+for target in recruitment_targets:
+
+    fit = fit_engine.evaluate_player(target)
+    fit_results.append({
+        **target,
+        **fit
+    })
+
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 print("📊 ANALYSE EFFECTIF BARÇA")
 print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
@@ -81,6 +125,24 @@ for n in needs:
 🎯 Poste : {n['position']}
 👤 Profil recherché : {n['profile']}
 🧠 Raison : {n['reason']}
+""")
+    
+print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("🧠 TACTICAL FIT ENGINE")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+for player in fit_results:
+
+    print(f"""
+👤 {player['player']}
+⚽ Position : {player['position']}
+
+📊 Fit Score : {player['fit_score']}
+🔥 Fit Level : {player['fit_level']}
+
+🧠 Tactical Traits:
+- Style : {player['style']}
+- Efficiency : {player['efficiency']}
 """)
     
 while True:
