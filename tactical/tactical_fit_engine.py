@@ -80,7 +80,8 @@ class TacticalFitEngine:
         # -----------------------------
         # VOLUME OFFENSIF
         # -----------------------------
-        if player["shots"] >= 20:
+        shots = player.get("shots", 0)
+        if shots >= 20:
             score += 3
             reasons.append(
                 "fort volume offensif"
@@ -101,6 +102,7 @@ class TacticalFitEngine:
         # -----------------------------
         # xG TOTAL
         # -----------------------------
+        xg_total = player.get("xg_total", 0)
         if player["xg_total"] >= 5:
             score += 3
             reasons.append(

@@ -50,6 +50,34 @@ class FootballDataLoader :
                 barca_players.add(p)
 
         return list(barca_players)
+    
+    def get_barca_players_only(self, match_ids):
+
+        all_players = []
+
+        for match_id in match_ids:
+
+            try:
+                events = sb.events(match_id=match_id)
+
+                # uniquement joueurs Barça
+                barca_events = events[
+                    events["team"] == "Barcelona"
+                ]
+
+                players = (
+                    barca_events["player"]
+                    .dropna()
+                    .unique()
+                    .tolist()
+                )
+
+                all_players.extend(players)
+
+            except Exception as e:
+                print(f"Erreur match {match_id}: {e}")
+
+        return list(set(all_players))
 
     def get_players_in_match(self, match_id):
         events = self.get_events(match_id)

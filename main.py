@@ -5,6 +5,7 @@ from analysis.squad_analyser import SquadAnalyzer
 from statsbombpy import sb
 from recruitment.needs_engine import RecruitmentNeedsEngine
 from tactical.tactical_fit_engine import TacticalFitEngine
+from market.market_intelligence import MarketIntelligence
 
 
 competitions = sb.competitions()
@@ -35,7 +36,7 @@ players = loader.get_barca_players(match_ids)
 
 match_ids = matches['match_id']
 
-players = loader.get_all_players(match_ids)
+players = loader.get_barca_players_only(match_ids)
 
 agent = ScoutAgent(loader)
 analyzer = SquadAnalyzer()
@@ -61,33 +62,59 @@ needs = needs_engine.generate_needs(weaknesses)
 
 fit_engine = TacticalFitEngine()
 
+market_engine = MarketIntelligence()
+
 recruitment_targets = [
+
     {
         "player": "Rafael Leao",
         "position": "LW",
         "style": "offensive_player",
         "efficiency": "elite_finisher",
         "probability": 0.81,
-        "shots": 82,
-        "xg_total": 14.3
+
+        "shots": 42,
+        "xg_total": 8.4,
+
+        "age": 25,
+        "market_value": 90,
+        "contract_years_left": 3,
+        "salary": 14,
+        "injury_risk": "medium"
     },
+
     {
         "player": "Joshua Kimmich",
         "position": "CM",
         "style": "balanced_player",
         "efficiency": "elite_controller",
         "probability": 0.88,
-        "shots": 34,
-        "xg_total": 4.1
+
+        "shots": 12,
+        "xg_total": 2.1,
+
+        "age": 29,
+        "market_value": 50,
+        "contract_years_left": 1,
+        "salary": 16,
+        "injury_risk": "low"
     },
+
     {
         "player": "Alexander Isak",
         "position": "ST",
         "style": "offensive_player",
         "efficiency": "clinical_finisher",
         "probability": 0.79,
-        "shots": 96,
-        "xg_total": 18.7
+
+        "shots": 51,
+        "xg_total": 10.7,
+
+        "age": 24,
+        "market_value": 75,
+        "contract_years_left": 4,
+        "salary": 12,
+        "injury_risk": "medium"
     }
 ]
 
@@ -96,9 +123,11 @@ fit_results = []
 for target in recruitment_targets:
 
     fit = fit_engine.evaluate_player(target)
+    market = market_engine.evaluate_market(target)
     fit_results.append({
         **target,
-        **fit
+        **fit,
+        **market
     })
 
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
@@ -143,6 +172,13 @@ for player in fit_results:
 🧠 Tactical Traits:
 - Style : {player['style']}
 - Efficiency : {player['efficiency']}
+
+print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("💰 MARKET INTELLIGENCE")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+📈 Market Score : {player['market_score']}
+🏷️ Market Level : {player['market_level']}
 """)
     
 while True:
