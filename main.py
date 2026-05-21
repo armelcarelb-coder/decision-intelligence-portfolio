@@ -7,7 +7,7 @@ from recruitment.needs_engine import RecruitmentNeedsEngine
 from tactical.tactical_fit_engine import TacticalFitEngine
 from market.market_intelligence import MarketIntelligence
 from simulation.bayesian_transfer_simulator import BayesianTransferSimulator
-
+from scenario.multi_scenario_engine import MultiScenarioEngine
 
 competitions = sb.competitions()
 
@@ -45,6 +45,8 @@ analyzer = SquadAnalyzer()
 needs_engine = RecruitmentNeedsEngine()
 
 simulator = BayesianTransferSimulator()
+
+scenario_engine = MultiScenarioEngine()
 
 # 1. Lancer agent UNE FOIS pour générer les données
 agent.run("analyse initiale", players, match_ids)
@@ -142,7 +144,52 @@ for target in recruitment_targets:
         **complete_player,
         **simulation
     })
+    
+    # =========================
+    # PLAYER COMPLET FINAL
+    # =========================
+    full_player = {
+        **complete_player,
+        **simulation
+    }
 
+    # =========================
+    # SCENARIOS
+    # =========================
+    economic = scenario_engine.evaluate(
+        full_player,
+        "economic"
+    )
+
+    win_now = scenario_engine.evaluate(
+        full_player,
+        "win_now"
+    )
+
+    young = scenario_engine.evaluate(
+        full_player,
+        "young_talent"
+    )
+
+    injury = scenario_engine.evaluate(
+        full_player,
+        "injury_crisis"
+    )
+
+    departure = scenario_engine.evaluate(
+        full_player,
+        "star_departure"
+    )
+
+fit_results.append({
+    **full_player,
+
+    "economic": economic,
+    "win_now": win_now,
+    "young_talent": young,
+    "injury_crisis": injury,
+    "star_departure": departure
+})
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 print("📊 ANALYSE EFFECTIF BARÇA")
 print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
@@ -208,6 +255,33 @@ for player in fit_results:
 - Success Probability : {player['success_probability']}
 - Risk Level : {player['risk_level']}
 - Decision : {player['transfer_decision']}
+ """)
+    
+print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print ("🎭 MULTI-SCENARIO ANALYSIS")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+for player in fit_results:
+   print(f"""
+    💸 Economic Scenario
+    - Score : {player['economic']['scenario_score']}
+    - Level : {player['economic']['scenario_level']}
+
+    🏆 Win Now Scenario
+    - Score : {player['win_now']['scenario_score']}
+    - Level : {player['win_now']['scenario_level']}
+
+    🌱 Young Talent Scenario
+    - Score : {player['young_talent']['scenario_score']}
+    - Level : {player['young_talent']['scenario_level']}
+
+    🚑 Injury Crisis Scenario
+    - Score : {player['injury_crisis']['scenario_score']}
+    - Level : {player['injury_crisis']['scenario_level']}
+
+    ⭐ Star Departure Scenario
+    - Score : {player['star_departure']['scenario_score']}
+    - Level : {player['star_departure']['scenario_level']}
 """)
     
 while True:
