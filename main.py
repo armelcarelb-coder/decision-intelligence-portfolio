@@ -6,6 +6,7 @@ from statsbombpy import sb
 from recruitment.needs_engine import RecruitmentNeedsEngine
 from tactical.tactical_fit_engine import TacticalFitEngine
 from market.market_intelligence import MarketIntelligence
+from simulation.bayesian_transfer_simulator import BayesianTransferSimulator
 
 
 competitions = sb.competitions()
@@ -43,7 +44,7 @@ analyzer = SquadAnalyzer()
 
 needs_engine = RecruitmentNeedsEngine()
 
-
+simulator = BayesianTransferSimulator()
 
 # 1. Lancer agent UNE FOIS pour générer les données
 agent.run("analyse initiale", players, match_ids)
@@ -123,11 +124,23 @@ fit_results = []
 for target in recruitment_targets:
 
     fit = fit_engine.evaluate_player(target)
+
     market = market_engine.evaluate_market(target)
-    fit_results.append({
+
+    # ✅ fusion des données AVANT simulation
+    complete_player = {
         **target,
         **fit,
         **market
+    }
+
+    simulation = simulator.simulate_transfer(
+        complete_player
+    )
+
+    fit_results.append({
+        **complete_player,
+        **simulation
     })
 
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
@@ -172,13 +185,29 @@ for player in fit_results:
 🧠 Tactical Traits:
 - Style : {player['style']}
 - Efficiency : {player['efficiency']}
-
+""")
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-print("💰 MARKET INTELLIGENCE")
+print("🧠 RECRUITMENT TARGETS")
 print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-📈 Market Score : {player['market_score']}
-🏷️ Market Level : {player['market_level']}
+for player in fit_results:
+
+    print(f"""
+👤 {player['player']}
+⚽ Position : {player['position']}
+
+📊 Tactical Fit
+- Score : {player['fit_score']}
+- Level : {player['fit_level']}
+
+💰 Market Intelligence
+- Market Score : {player['market_score']}
+- Market Level : {player['market_level']}
+
+🧠 Bayesian Transfer Simulation
+- Success Probability : {player['success_probability']}
+- Risk Level : {player['risk_level']}
+- Decision : {player['transfer_decision']}
 """)
     
 while True:
