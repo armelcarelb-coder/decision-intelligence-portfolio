@@ -4,6 +4,8 @@ from agent.memory import AgentMemory
 from agent.comparator import PlayerComparator
 from llm.llm_reasoner import LLMReasoner
 from tactical.tactical_fit_engine import TacticalFitEngine
+from normalization.normalization import Normalizer
+from profiling.player_profiler import PlayerProfiler
 
 class ScoutAgent:
 
@@ -22,6 +24,8 @@ class ScoutAgent:
         self.reasoner = LLMReasoner()
 
         self.tactical_engine = TacticalFitEngine()
+
+        self.profiler = PlayerProfiler()
 
     # 🧠 1. Compréhension simple (rule-based NLP)
 
@@ -94,6 +98,14 @@ class ScoutAgent:
 
         ranked = self.engine.rank_players(filtered)
         best = ranked[0]
+        normalizer = Normalizer()
+        player = normalizer.normalize_player(best)
+        profile = self.profiler.classify_player(best)
+
+        best = {
+            **best,
+            **profile
+        }
         tactical_fit = self.tactical_engine.evaluate_player(best)
         
         llm_explanation = self.reasoner.explain_recommendation(best)
@@ -141,6 +153,10 @@ class ScoutAgent:
     📊 Tactical Fit:
     - Fit score : {tactical_fit['fit_score']}/15
     - Fit level : {tactical_fit['fit_level']}
+    
+    🧠 Archetype Analysis:
+    - Primary : {best['primary_archetype']}
+    - Secondary : {best['secondary_archetypes']}
 
     🧠 Compatibilité tactique:
     - {chr(10).join(tactical_fit['fit_reasons'])}

@@ -8,6 +8,8 @@ from tactical.tactical_fit_engine import TacticalFitEngine
 from market.market_intelligence import MarketIntelligence
 from simulation.bayesian_transfer_simulator import BayesianTransferSimulator
 from scenario.multi_scenario_engine import MultiScenarioEngine
+from profiling.player_profiler import PlayerProfiler
+from normalization.normalization import Normalizer
 
 competitions = sb.competitions()
 
@@ -47,6 +49,9 @@ needs_engine = RecruitmentNeedsEngine()
 simulator = BayesianTransferSimulator()
 
 scenario_engine = MultiScenarioEngine()
+
+normalizer = Normalizer()
+profiler = PlayerProfiler()
 
 # 1. Lancer agent UNE FOIS pour générer les données
 agent.run("analyse initiale", players, match_ids)
@@ -126,6 +131,17 @@ fit_results = []
 fit_results = []
 
 for target in recruitment_targets:
+
+    normalized = normalizer.normalize_player(target)
+
+    profile = profiler.classify_player(
+        normalized
+    )
+
+    complete_player = {
+        **normalized,
+        **profile
+    }
 
     # =========================
     # TACTICAL FIT
@@ -298,6 +314,11 @@ for player in fit_results:
     ⭐ Star Departure Scenario
     - Score : {player['star_departure']['scenario_score']}
     - Level : {player['star_departure']['scenario_level']}
+
+    🧠 Archetype Analysis
+
+    - Primary : {player['primary_archetype']}
+    - Secondary : {player['secondary_archetypes']}
 """)
     
 while True:
