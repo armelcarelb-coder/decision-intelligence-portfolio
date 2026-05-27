@@ -123,30 +123,38 @@ recruitment_targets = [
 
 fit_results = []
 
+fit_results = []
+
 for target in recruitment_targets:
 
+    # =========================
+    # TACTICAL FIT
+    # =========================
     fit = fit_engine.evaluate_player(target)
 
+    # =========================
+    # MARKET
+    # =========================
     market = market_engine.evaluate_market(target)
 
-    # ✅ fusion des données AVANT simulation
+    # =========================
+    # PLAYER COMPLET
+    # =========================
     complete_player = {
         **target,
         **fit,
         **market
     }
 
+    # =========================
+    # BAYESIAN SIMULATION
+    # =========================
     simulation = simulator.simulate_transfer(
         complete_player
     )
 
-    fit_results.append({
-        **complete_player,
-        **simulation
-    })
-    
     # =========================
-    # PLAYER COMPLET FINAL
+    # PLAYER FINAL
     # =========================
     full_player = {
         **complete_player,
@@ -181,15 +189,23 @@ for target in recruitment_targets:
         "star_departure"
     )
 
-fit_results.append({
-    **full_player,
+    # =========================
+    # FINAL STORAGE
+    # =========================
+    fit_results.append({
 
-    "economic": economic,
-    "win_now": win_now,
-    "young_talent": young,
-    "injury_crisis": injury,
-    "star_departure": departure
-})
+        **full_player,
+
+        "economic": economic,
+
+        "win_now": win_now,
+
+        "young_talent": young,
+
+        "injury_crisis": injury,
+
+        "star_departure": departure
+    })
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 print("📊 ANALYSE EFFECTIF BARÇA")
 print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
