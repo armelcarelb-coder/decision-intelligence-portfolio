@@ -10,16 +10,19 @@ class PlayerProfiler:
 
         secondary = []
 
-        # =====================================
-        # VARIABLES
-        # =====================================
+        # =========================
+        # PER90 METRICS
+        # =========================
         shots = player.get("shots_per90", 0)
 
         xg = player.get("xg_per90", 0)
 
         assists = player.get("assists_per90", 0)
 
-        key_passes = player.get("key_passes_per90", 0)
+        key_passes = player.get(
+            "key_passes_per90",
+            0
+        )
 
         progressive_passes = player.get(
             "progressive_passes_per90",
@@ -46,125 +49,119 @@ class PlayerProfiler:
             0
         )
 
-        # =====================================
+        # =========================
         # PRESSING FORWARD
-        # =====================================
-        if shots >= 2.5 and pressures >= 15:
+        # =========================
+        if shots >= 2 and pressures >= 6:
 
             archetypes.append(
                 "pressing_forward"
             )
 
-        # =====================================
+        # =========================
         # BOX POACHER
-        # =====================================
-        if xg >= 0.45 and shots >= 3:
+        # =========================
+        if xg >= 0.45 and shots >= 2.5:
 
             archetypes.append(
                 "box_poacher"
             )
 
-        # =====================================
+        # =========================
         # VERTICAL CREATOR
-        # =====================================
-        if progressive_passes >= 6 and key_passes >= 2:
+        # =========================
+        if progressive_passes >= 4 and key_passes >= 1.5:
 
             archetypes.append(
                 "vertical_creator"
             )
 
-        # =====================================
+        # =========================
         # POSSESSION CONTROLLER
-        # =====================================
-        if progressive_passes >= 8 and pressures >= 10:
+        # =========================
+        if progressive_passes >= 6:
 
             archetypes.append(
                 "possession_controller"
             )
 
-        # =====================================
+        # =========================
         # BALL WINNING 6
-        # =====================================
-        if tackles >= 3 and interceptions >= 2:
+        # =========================
+        if tackles >= 2 and interceptions >= 1:
 
             archetypes.append(
                 "ball_winning_6"
             )
 
-        # =====================================
+        # =========================
         # TRANSITION MONSTER
-        # =====================================
-        if dribbles >= 4 and shots >= 2:
+        # =========================
+        if dribbles >= 3 and shots >= 1.5:
 
             archetypes.append(
                 "transition_monster"
             )
 
-        # =====================================
+        # =========================
         # TOUCHLINE WINGER
-        # =====================================
-        if dribbles >= 5 and assists >= 0.25:
+        # =========================
+        if dribbles >= 4 and assists >= 0.2:
 
             archetypes.append(
                 "touchline_winger"
             )
 
-        # =====================================
+        # =========================
         # DEEP PLAYMAKER
-        # =====================================
-        if progressive_passes >= 9 and key_passes >= 1:
+        # =========================
+        if progressive_passes >= 7 and key_passes >= 1:
 
             archetypes.append(
                 "deep_playmaker"
             )
 
-        # =====================================
+        # =========================
         # INVERTED CREATOR
-        # =====================================
-        if shots >= 2 and key_passes >= 2:
+        # =========================
+        if shots >= 1.8 and key_passes >= 1.5:
 
             archetypes.append(
                 "inverted_creator"
             )
 
-        # =====================================
+        # =========================
         # ELITE PROGRESSOR
-        # =====================================
-        if progressive_passes >= 10:
+        # =========================
+        if progressive_passes >= 8:
 
             archetypes.append(
                 "elite_progressor"
             )
 
-        # =====================================
+        # =========================
         # FALLBACK
-        # =====================================
+        # =========================
         if len(archetypes) == 0:
 
             archetypes.append(
                 "balanced_player"
             )
 
-        # =====================================
-        # ARCHETYPE PRINCIPAL
-        # =====================================
         primary = archetypes[0]
 
-        # =====================================
-        # ARCHETYPE SECONDAIRE
-        # =====================================
         if len(archetypes) > 1:
 
             secondary = archetypes[1:]
 
-        # =====================================
-        # RETOUR
-        # =====================================
         return {
 
-            "primary_archetype": primary,
+            "primary_archetype":
+                primary,
 
-            "secondary_archetypes": secondary,
+            "secondary_archetypes":
+                secondary,
 
-            "all_archetypes": archetypes
+            "all_archetypes":
+                archetypes
         }

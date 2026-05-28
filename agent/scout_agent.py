@@ -58,8 +58,13 @@ class ScoutAgent:
         print(f"🎯 Mission: {request}")
 
         results = self.engine.analyze_players(players[:50], match_ids)
-        total_players = len(results)
+        if results is None:
+            results = []
 
+        if len(results) == 0:
+            return "❌ Aucun joueur analysable."
+        
+        total_players = len(results)
         if len(results) == 0:
            return "❌ Aucun joueur analysable."
         

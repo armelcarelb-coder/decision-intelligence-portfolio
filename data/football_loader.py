@@ -1,167 +1,135 @@
 from statsbombpy import sb
 import pandas as pd
 
-class FootballDataLoader :
-    def __init__(self):
-        """Initialise la connexion aux données ouvertes de StatsBomb."""
-        self.free_competitions = None
 
-    def get_competitions(self):
-        """Affiche les competitions disponibles gratuitement."""
-        self.free_competitions = sb.competitions()
-        return self.free_competitions
-    
-    def get_matches(self,competition_id , season_id):
-        """Récupère la liste des matchs pour une saison donnée."""
-        return sb.matches(competition_id=competition_id, season_id=season_id)
-    
-    def get_events(self, match_id):
-        return sb.events(match_id=match_id)
-    
+class FootballDataLoader:
+
+    def __init__(self):
+
+        pass
+
+    # =========================================
+    # MATCHES
+    # =========================================
+    def get_matches(self, competition_id, season_id):
+
+        return sb.matches(
+            competition_id=competition_id,
+            season_id=season_id
+        )
+
+    # =========================================
+    # BARÇA MATCHES
+    # =========================================
     def get_barca_matches(self, matches):
 
-        barca_matches = matches[
-           (matches["home_team"] == "Barcelona") |
-           (matches["away_team"] == "Barcelona")
+        return matches[
+            (matches["home_team"] == "Barcelona")
+            |
+            (matches["away_team"] == "Barcelona")
         ]
 
-        return barca_matches
-    
-    def get_barca_players(self, match_ids):
-
-        barca_players = set()
-
-        for match_id in match_ids:
-
-            events = sb.events(match_id=match_id)
-
-        # uniquement Barça
-            barca_events = events[
-                events["team"] == "Barcelona"
-            ]
-
-            players = (
-                barca_events["player"]
-                .dropna()
-                .unique()
-            )
-
-            for p in players:
-                barca_players.add(p)
-
-        return list(barca_players)
-    
+    # =========================================
+    # BARÇA PLAYERS ONLY
+    # =========================================
     def get_barca_players_only(self, match_ids):
 
-        all_players = []
+        players = set()
 
         for match_id in match_ids:
 
             try:
+
                 events = sb.events(match_id=match_id)
 
-                # uniquement joueurs Barça
+                # équipe Barça seulement
                 barca_events = events[
                     events["team"] == "Barcelona"
                 ]
 
-                players = (
-                    barca_events["player"]
-                    .dropna()
-                    .unique()
-                    .tolist()
-                )
+                if "player" in barca_events.columns:
 
-                all_players.extend(players)
+                    unique_players = (
+                        barca_events["player"]
+                        .dropna()
+                        .unique()
+                    )
+
+                    players.update(unique_players)
 
             except Exception as e:
-                print(f"Erreur match {match_id}: {e}")
 
-        return list(set(all_players))
+                print(
+                    f"Erreur match {match_id}: {e}"
+                )
 
-    def get_players_in_match(self, match_id):
-        events = self.get_events(match_id)
-        return events['player'].dropna().unique()
-    
-    def get_player_xg_goals(self, match_id, player_name):
-        events = sb.events(match_id=match_id)
+        return list(players)
 
-        player_events = events[events['player'] == player_name]
+    # =========================================
+    # PLAYER EVENTS
+    # =========================================
+    def get_player_events(self, player_name, match_ids):
 
-        shots = player_events[player_events['type'] == 'Shot']
-
-        xg = shots['shot_statsbomb_xg'].fillna(0).values
-        goals = shots['shot_outcome'].apply(lambda x: 1 if x == 'Goal' else 0).values
-
-        return xg, goals
-    
-    def get_players_in_match(self, match_id):
-       events = sb.events(match_id=match_id)
-       return events['player'].dropna().unique()
-    
-    def get_player_stats(self, match_id, player_name):
-       events = sb.events(match_id=match_id)
-
-       player_events = events[events['player'] == player_name]
-
-       shots = player_events[player_events['type'] == 'Shot']
-
-       if len(shots) == 0:
-           return {
-              "xg_total": 0,
-              "goals": 0,
-              "shots": 0
-            }
-
-       xg_total = shots['shot_statsbomb_xg'].fillna(0).sum()
-       goals = (shots['shot_outcome'] == 'Goal').sum()
-       shots_count = len(shots)
-
-       return {
-          "xg_total": xg_total,
-          "goals": goals,
-          "shots": shots_count
-        }
-    
-    def get_all_players(self, match_ids):
-
-        all_players = set()
+        all_events = []
 
         for match_id in match_ids:
 
             try:
-                 players = self.get_players_in_match(match_id)
 
-                 for p in players:
-                     all_players.add(p)
+                events = sb.events(match_id=match_id)
 
-            except:
-                continue
+                player_events = events[
+                    events["player"] == player_name
+                ]
 
-        return list(all_players)
-    
-# --- TEST RAPIDE ---
+                if len(player_events) > 0:
 
-if __name__ == "__main__":
-    loader = FootballDataLoader()
+                    all_events.append(player_events)
 
-    print("Récupération des matchs de La Liga...")
+            except Exception as e:
 
-    matches = loader.get_matches(11, 42)
-    print(f"Trouvé {len(matches)} matchs.")
-    print(matches[['match_id', 'home_team', 'away_team']].head())
+                print(
+                    f"Erreur récupération events {player_name}: {e}"
+                )
 
-    # 👉 on prend un match exemple
-    match_id = matches.iloc[0]['match_id']
+        if len(all_events) == 0:
 
-    players = loader.get_players_in_match(match_id)
+            return pd.DataFrame()
 
-    print(f"\nNombre de joueurs trouvés : {len(players)}")
-    print(players[:10])  # preview
+        return pd.concat(all_events)
 
-    player_name = players[9]  # test rapide
+    # =========================================
+    # LEGACY xG/goals METHOD
+    # =========================================
+    def get_player_xg_goals(self, match_id, player_name):
 
-    stats = loader.get_player_stats(match_id, player_name)
+        try:
 
-    print(f"\nStats pour {player_name} :")
-    print(stats)
+            events = sb.events(match_id=match_id)
+
+            player_shots = events[
+                (events["player"] == player_name)
+                &
+                (events["type"] == "Shot")
+            ]
+
+            xg = (
+                player_shots["shot_statsbomb_xg"]
+                .fillna(0)
+                .tolist()
+            )
+
+            goals = []
+
+            for _, shot in player_shots.iterrows():
+
+                if shot.get("shot_outcome") == "Goal":
+                    goals.append(1)
+                else:
+                    goals.append(0)
+
+            return xg, goals
+
+        except Exception:
+
+            return [], []

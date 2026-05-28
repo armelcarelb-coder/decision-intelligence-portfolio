@@ -35,9 +35,9 @@ matches = loader.get_barca_matches(matches)
 
 match_ids = matches["match_id"]
 
-players = loader.get_barca_players(match_ids)
+#players = loader.get_barca_players(match_ids)
 
-match_ids = matches['match_id']
+#match_ids = matches['match_id']
 
 players = loader.get_barca_players_only(match_ids)
 
@@ -58,6 +58,27 @@ agent.run("analyse initiale", players, match_ids)
 
 # 2. Récupérer les résultats du scouting
 results = agent.memory.last_results
+
+if results is None:
+    results = []
+
+normalized_results = []
+
+for player in results:
+
+    normalized = normalizer.normalize_player(player)
+
+    profile = profiler.classify_player(
+        normalized
+    )
+
+    complete = {
+        **normalized,
+        **profile
+    }
+
+    normalized_results.append(complete)
+results = normalized_results
 
 # 3. Analyse l'effectif
 team_report = analyzer.analyze_team(results)
@@ -157,7 +178,8 @@ for target in recruitment_targets:
     # PLAYER COMPLET
     # =========================
     complete_player = {
-        **target,
+        **normalized,
+        **profile,
         **fit,
         **market
     }

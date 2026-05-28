@@ -12,11 +12,11 @@ class SquadAnalyzer:
 
         for p in players_data:
 
-            total_xg += p["xg_total"]
-            total_goals += p["goals_total"]
-            total_shots += p["shots"]
+            total_xg += p.get("xg_total", 0)
+            total_goals += p.get("goals", 0)
+            total_shots += p.get("shots", 0)
 
-            if p["shots"] >= 10:
+            if p.get("shots", 0) >= 10:
                 offensive_players += 1
 
         conversion_rate = (
@@ -33,7 +33,7 @@ class SquadAnalyzer:
         }
 
         return report
-    
+
     def detect_weaknesses(self, report):
 
         weaknesses = []
