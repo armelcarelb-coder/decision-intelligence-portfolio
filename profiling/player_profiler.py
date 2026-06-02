@@ -10,6 +10,9 @@ class PlayerProfiler:
 
         secondary = []
 
+        style = "balanced_player"
+
+        efficiency = "average_finisher"
         # =========================
         # PER90 METRICS
         # =========================
@@ -154,6 +157,45 @@ class PlayerProfiler:
 
             secondary = archetypes[1:]
 
+        if "box_poacher" in archetypes:
+            style = "offensive_player"
+
+        elif "transition_monster" in archetypes:
+            style = "offensive_player"
+
+        elif "deep_playmaker" in archetypes:
+            style = "playmaker"
+
+        elif "ball_winning_6" in archetypes:
+            style = "defensive_player"
+
+        else:
+            style = "balanced_player"
+
+        goals_per90 = player.get(
+            "goals_per90",
+            0
+        )
+
+        xg_per90 = player.get(
+            "xg_per90",
+            0
+        )
+
+        delta = goals_per90 - xg_per90
+
+        if delta >= 0.15:
+
+            efficiency = "elite_finisher"
+
+        elif delta >= -0.05:
+
+            efficiency = "average_finisher"
+
+        else:
+
+            efficiency = "underperforming"
+
         return {
 
             "primary_archetype":
@@ -163,5 +205,9 @@ class PlayerProfiler:
                 secondary,
 
             "all_archetypes":
-                archetypes
+                archetypes,
+            
+            "style": style,
+            
+            "efficiency": efficiency
         }

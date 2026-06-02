@@ -98,12 +98,21 @@ recruitment_targets = [
     {
         "player": "Rafael Leao",
         "position": "LW",
-        "style": "offensive_player",
-        "efficiency": "elite_finisher",
-        "probability": 0.81,
 
-        "shots": 42,
-        "xg_total": 8.4,
+        "minutes": 2900,
+
+        "shots": 110,
+        "xg_total": 13.5,
+        "goals": 15,
+
+        "assists": 11,
+        "key_passes": 62,
+        "progressive_passes": 145,
+
+        "pressures": 520,
+        "tackles": 32,
+        "interceptions": 18,
+        "dribbles": 170,
 
         "age": 25,
         "market_value": 90,
@@ -115,12 +124,21 @@ recruitment_targets = [
     {
         "player": "Joshua Kimmich",
         "position": "CM",
-        "style": "balanced_player",
-        "efficiency": "elite_controller",
-        "probability": 0.88,
 
-        "shots": 12,
-        "xg_total": 2.1,
+        "minutes": 3200,
+
+        "shots": 35,
+        "xg_total": 4.0,
+        "goals": 4,
+
+        "assists": 10,
+        "key_passes": 95,
+        "progressive_passes": 280,
+
+        "pressures": 780,
+        "tackles": 88,
+        "interceptions": 56,
+        "dribbles": 40,
 
         "age": 29,
         "market_value": 50,
@@ -132,12 +150,21 @@ recruitment_targets = [
     {
         "player": "Alexander Isak",
         "position": "ST",
-        "style": "offensive_player",
-        "efficiency": "clinical_finisher",
-        "probability": 0.79,
 
-        "shots": 51,
-        "xg_total": 10.7,
+        "minutes": 2700,
+
+        "shots": 125,
+        "xg_total": 21.5,
+        "goals": 23,
+
+        "assists": 5,
+        "key_passes": 42,
+        "progressive_passes": 55,
+
+        "pressures": 470,
+        "tackles": 18,
+        "interceptions": 8,
+        "dribbles": 105,
 
         "age": 24,
         "market_value": 75,
@@ -149,101 +176,110 @@ recruitment_targets = [
 
 fit_results = []
 
-fit_results = []
-
 for target in recruitment_targets:
 
-    normalized = normalizer.normalize_player(target)
+    # =========================
+    # NORMALIZATION
+    # =========================
+    normalized = normalizer.normalize_player(
+        target
+    )
 
+    # =========================
+    # PLAYER PROFILING
+    # =========================
     profile = profiler.classify_player(
         normalized
     )
 
-    complete_player = {
-        **normalized,
-        **profile
-    }
-
     # =========================
     # TACTICAL FIT
     # =========================
-    fit = fit_engine.evaluate_player(target)
+
+    fit = fit_engine.evaluate_player(
+        profiled_player
+    )
+
+    fitted_player = {
+        **profiled_player,
+        **fit
+    }
 
     # =========================
     # MARKET
     # =========================
-    market = market_engine.evaluate_market(target)
 
-    # =========================
-    # PLAYER COMPLET
-    # =========================
-    complete_player = {
-        **normalized,
-        **profile,
-        **fit,
+    market = market_engine.evaluate_market(
+        fitted_player
+    )
+
+    market_player = {
+        **fitted_player,
         **market
     }
 
     # =========================
     # BAYESIAN SIMULATION
     # =========================
+
     simulation = simulator.simulate_transfer(
-        complete_player
+        market_player
     )
 
+    simulated_player = {
+        **market_player,
+        **simulation
+    }
     # =========================
     # PLAYER FINAL
     # =========================
-    full_player = {
-        **complete_player,
-        **simulation
+    fitted_player = {
+        **simulated_player,
+        **fit
     }
 
     # =========================
     # SCENARIOS
     # =========================
     economic = scenario_engine.evaluate(
-        full_player,
-        "economic"
+    simulated_player,
+    "economic"
     )
 
     win_now = scenario_engine.evaluate(
-        full_player,
+        simulated_player,
         "win_now"
     )
 
     young = scenario_engine.evaluate(
-        full_player,
+        simulated_player,
         "young_talent"
     )
 
     injury = scenario_engine.evaluate(
-        full_player,
+        simulated_player,
         "injury_crisis"
     )
 
     departure = scenario_engine.evaluate(
-        full_player,
+        simulated_player,
         "star_departure"
     )
 
     # =========================
-    # FINAL STORAGE
+    # STORAGE
     # =========================
     fit_results.append({
 
-        **full_player,
+    **simulated_player,
 
-        "economic": economic,
-
-        "win_now": win_now,
-
-        "young_talent": young,
-
-        "injury_crisis": injury,
-
-        "star_departure": departure
+    "economic": economic,
+    "win_now": win_now,
+    "young_talent": young,
+    "injury_crisis": injury,
+    "star_departure": departure
     })
+
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 print("📊 ANALYSE EFFECTIF BARÇA")
 print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
