@@ -186,16 +186,20 @@ for target in recruitment_targets:
     )
 
     # =========================
-    # PLAYER PROFILING
+    # PROFILING
     # =========================
     profile = profiler.classify_player(
         normalized
     )
 
+    profiled_player = {
+        **normalized,
+        **profile
+    }
+
     # =========================
     # TACTICAL FIT
     # =========================
-
     fit = fit_engine.evaluate_player(
         profiled_player
     )
@@ -208,7 +212,6 @@ for target in recruitment_targets:
     # =========================
     # MARKET
     # =========================
-
     market = market_engine.evaluate_market(
         fitted_player
     )
@@ -219,9 +222,8 @@ for target in recruitment_targets:
     }
 
     # =========================
-    # BAYESIAN SIMULATION
+    # SIMULATION
     # =========================
-
     simulation = simulator.simulate_transfer(
         market_player
     )
@@ -230,20 +232,13 @@ for target in recruitment_targets:
         **market_player,
         **simulation
     }
-    # =========================
-    # PLAYER FINAL
-    # =========================
-    fitted_player = {
-        **simulated_player,
-        **fit
-    }
 
     # =========================
     # SCENARIOS
     # =========================
     economic = scenario_engine.evaluate(
-    simulated_player,
-    "economic"
+        simulated_player,
+        "economic"
     )
 
     win_now = scenario_engine.evaluate(
@@ -266,18 +261,15 @@ for target in recruitment_targets:
         "star_departure"
     )
 
-    # =========================
-    # STORAGE
-    # =========================
     fit_results.append({
 
-    **simulated_player,
+        **simulated_player,
 
-    "economic": economic,
-    "win_now": win_now,
-    "young_talent": young,
-    "injury_crisis": injury,
-    "star_departure": departure
+        "economic": economic,
+        "win_now": win_now,
+        "young_talent": young,
+        "injury_crisis": injury,
+        "star_departure": departure
     })
 
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")

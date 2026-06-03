@@ -1,213 +1,176 @@
 class PlayerProfiler:
 
     def __init__(self):
-
         pass
 
     def classify_player(self, player):
 
         archetypes = []
-
         secondary = []
 
-        style = "balanced_player"
-
-        efficiency = "average_finisher"
         # =========================
         # PER90 METRICS
         # =========================
-        shots = player.get("shots_per90", 0)
 
+        shots = player.get("shots_per90", 0)
         xg = player.get("xg_per90", 0)
+        goals = player.get("goals_per90", 0)
 
         assists = player.get("assists_per90", 0)
 
         key_passes = player.get(
-            "key_passes_per90",
-            0
+            "key_passes_per90", 0
         )
 
         progressive_passes = player.get(
-            "progressive_passes_per90",
-            0
+            "progressive_passes_per90", 0
         )
 
         pressures = player.get(
-            "pressures_per90",
-            0
+            "pressures_per90", 0
         )
 
         tackles = player.get(
-            "tackles_per90",
-            0
+            "tackles_per90", 0
         )
 
         interceptions = player.get(
-            "interceptions_per90",
-            0
+            "interceptions_per90", 0
         )
 
         dribbles = player.get(
-            "dribbles_per90",
-            0
+            "dribbles_per90", 0
         )
 
         # =========================
-        # PRESSING FORWARD
+        # ARCHETYPES
         # =========================
+
         if shots >= 2 and pressures >= 6:
+            archetypes.append("pressing_forward")
 
-            archetypes.append(
-                "pressing_forward"
-            )
-
-        # =========================
-        # BOX POACHER
-        # =========================
         if xg >= 0.45 and shots >= 2.5:
+            archetypes.append("box_poacher")
 
-            archetypes.append(
-                "box_poacher"
-            )
-
-        # =========================
-        # VERTICAL CREATOR
-        # =========================
         if progressive_passes >= 4 and key_passes >= 1.5:
+            archetypes.append("vertical_creator")
 
-            archetypes.append(
-                "vertical_creator"
-            )
-
-        # =========================
-        # POSSESSION CONTROLLER
-        # =========================
         if progressive_passes >= 6:
+            archetypes.append("possession_controller")
 
-            archetypes.append(
-                "possession_controller"
-            )
-
-        # =========================
-        # BALL WINNING 6
-        # =========================
         if tackles >= 2 and interceptions >= 1:
+            archetypes.append("ball_winning_6")
 
-            archetypes.append(
-                "ball_winning_6"
-            )
-
-        # =========================
-        # TRANSITION MONSTER
-        # =========================
         if dribbles >= 3 and shots >= 1.5:
+            archetypes.append("transition_monster")
 
-            archetypes.append(
-                "transition_monster"
-            )
-
-        # =========================
-        # TOUCHLINE WINGER
-        # =========================
         if dribbles >= 4 and assists >= 0.2:
+            archetypes.append("touchline_winger")
 
-            archetypes.append(
-                "touchline_winger"
-            )
-
-        # =========================
-        # DEEP PLAYMAKER
-        # =========================
         if progressive_passes >= 7 and key_passes >= 1:
+            archetypes.append("deep_playmaker")
 
-            archetypes.append(
-                "deep_playmaker"
-            )
-
-        # =========================
-        # INVERTED CREATOR
-        # =========================
         if shots >= 1.8 and key_passes >= 1.5:
+            archetypes.append("inverted_creator")
 
-            archetypes.append(
-                "inverted_creator"
-            )
-
-        # =========================
-        # ELITE PROGRESSOR
-        # =========================
         if progressive_passes >= 8:
-
-            archetypes.append(
-                "elite_progressor"
-            )
+            archetypes.append("elite_progressor")
 
         # =========================
         # FALLBACK
         # =========================
-        if len(archetypes) == 0:
 
-            archetypes.append(
-                "balanced_player"
-            )
+        if not archetypes:
+            archetypes.append("balanced_player")
 
         primary = archetypes[0]
 
         if len(archetypes) > 1:
-
             secondary = archetypes[1:]
 
-        if "box_poacher" in archetypes:
+        # =========================
+        # STYLE SCORING
+        # =========================
+
+        attacking_score = 0
+        creative_score = 0
+        defensive_score = 0
+
+        attacking_score += shots
+        attacking_score += dribbles * 0.5
+        attacking_score += xg * 4
+
+        creative_score += key_passes * 2
+        creative_score += progressive_passes * 0.5
+        creative_score += assists * 3
+
+        defensive_score += tackles * 2
+        defensive_score += interceptions * 2
+        defensive_score += pressures * 0.25
+
+        # =========================
+        # STYLE GLOBAL
+        # =========================
+
+        max_score = max(
+            attacking_score,
+            creative_score,
+            defensive_score
+        )
+
+        if max_score == attacking_score:
             style = "offensive_player"
 
-        elif "transition_monster" in archetypes:
-            style = "offensive_player"
-
-        elif "deep_playmaker" in archetypes:
+        elif max_score == creative_score:
             style = "playmaker"
 
-        elif "ball_winning_6" in archetypes:
+        elif max_score == defensive_score:
             style = "defensive_player"
 
         else:
             style = "balanced_player"
 
-        goals_per90 = player.get(
-            "goals_per90",
-            0
-        )
+        # =========================
+        # FINISHING EFFICIENCY
+        # =========================
 
-        xg_per90 = player.get(
-            "xg_per90",
-            0
-        )
+        delta = goals - xg
 
-        delta = goals_per90 - xg_per90
+        if delta >= 0.25:
+            efficiency = "clinical_finisher"
 
-        if delta >= 0.15:
-
+        elif delta >= 0.10:
             efficiency = "elite_finisher"
 
         elif delta >= -0.05:
-
             efficiency = "average_finisher"
 
         else:
-
             efficiency = "underperforming"
+
+        # =========================
+        # RETURN
+        # =========================
 
         return {
 
-            "primary_archetype":
-                primary,
+            "primary_archetype": primary,
 
-            "secondary_archetypes":
-                secondary,
+            "secondary_archetypes": secondary,
 
-            "all_archetypes":
-                archetypes,
-            
+            "all_archetypes": archetypes,
+
             "style": style,
-            
-            "efficiency": efficiency
+
+            "efficiency": efficiency,
+
+            # Jour 7
+            "attacking_score":
+                round(attacking_score, 2),
+
+            "creative_score":
+                round(creative_score, 2),
+
+            "defensive_score":
+                round(defensive_score, 2)
         }
