@@ -261,7 +261,7 @@ for target in recruitment_targets:
         "star_departure"
     )
 
-    fit_results.append({
+    final_player = {
 
         **simulated_player,
 
@@ -270,7 +270,9 @@ for target in recruitment_targets:
         "young_talent": young,
         "injury_crisis": injury,
         "star_departure": departure
-    })
+    }
+
+    fit_results.append(final_player)
 
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 print("📊 ANALYSE EFFECTIF BARÇA")
