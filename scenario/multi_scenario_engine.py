@@ -5,40 +5,81 @@ class MultiScenarioEngine:
         self.scenarios = [
 
             "economic",
-
             "win_now",
-
             "young_talent",
-
             "injury_crisis",
-
             "star_departure"
         ]
 
     def evaluate(self, player, scenario):
 
         score = 0
-
         reasons = []
+
+        # =====================================
+        # SAFE VARIABLES
+        # =====================================
+
+        age = player.get("age", 0)
+
+        salary = player.get(
+            "salary",
+            999
+        )
+
+        contract_years_left = player.get(
+            "contract_years_left",
+            99
+        )
+
+        fit_level = player.get(
+            "fit_level",
+            "LOW"
+        )
+
+        success_probability = player.get(
+            "success_probability",
+            0
+        )
+
+        market_value = player.get(
+            "market_value",
+            999
+        )
+
+        injury_risk = player.get(
+            "injury_risk",
+            "medium"
+        )
+
+        style = player.get(
+            "style",
+            "balanced_player"
+        )
+
+        xg_total = player.get(
+            "xg_total",
+            0
+        )
 
         # =====================================
         # ECONOMIC MODE
         # =====================================
         if scenario == "economic":
 
-            if player["age"] <= 24:
+            if age <= 24:
                 score += 3
                 reasons.append(
                     "fort potentiel de revente"
                 )
 
-            if player["salary"] <= 10:
+            if salary <= 10:
                 score += 3
                 reasons.append(
                     "salaire faible"
                 )
 
-            if player["contract_years_left"] <= 2:
+            if contract_years_left <= 2:
                 score += 2
                 reasons.append(
                     "transfert potentiellement abordable"
@@ -49,22 +90,40 @@ class MultiScenarioEngine:
         # =====================================
         elif scenario == "win_now":
 
-            if player["fit_level"] == "ELITE":
+            if fit_level == "ELITE":
                 score += 4
                 reasons.append(
                     "impact tactique immédiat"
                 )
 
-            if player["success_probability"] >= 0.80:
+            elif fit_level == "HIGH":
+                score += 2
+                reasons.append(
+                    "bonne compatibilité tactique"
+                )
+
+            if success_probability >= 0.80:
                 score += 4
                 reasons.append(
                     "très forte probabilité de réussite"
                 )
 
-            if 26 <= player["age"] <= 30:
+            elif success_probability >= 0.65:
+                score += 2
+                reasons.append(
+                    "bonne probabilité de réussite"
+                )
+
+            if 26 <= age <= 30:
                 score += 2
                 reasons.append(
                     "joueur dans son prime"
+                )
+
+            elif 23 <= age <= 25:
+                score += 1
+                reasons.append(
+                    "âge proche du prime"
                 )
 
         # =====================================
@@ -72,19 +131,19 @@ class MultiScenarioEngine:
         # =====================================
         elif scenario == "young_talent":
 
-            if player["age"] <= 22:
+            if age <= 22:
                 score += 5
                 reasons.append(
                     "très jeune talent"
                 )
 
-            elif player["age"] <= 25:
+            elif age <= 25:
                 score += 3
                 reasons.append(
                     "jeune profil à développer"
                 )
 
-            if player["market_value"] < 60:
+            if market_value < 60:
                 score += 2
                 reasons.append(
                     "coût encore raisonnable"
@@ -95,13 +154,16 @@ class MultiScenarioEngine:
         # =====================================
         elif scenario == "injury_crisis":
 
-            if player["injury_risk"] == "low":
+            if injury_risk == "low":
                 score += 5
                 reasons.append(
                     "très fiable physiquement"
                 )
 
-            if player["fit_level"] in ["HIGH", "ELITE"]:
+            if fit_level in [
+                "HIGH",
+                "ELITE"
+            ]:
                 score += 3
                 reasons.append(
                     "adaptation rapide"
@@ -112,19 +174,19 @@ class MultiScenarioEngine:
         # =====================================
         elif scenario == "star_departure":
 
-            if player["style"] == "offensive_player":
+            if style == "offensive_player":
                 score += 4
                 reasons.append(
                     "capacité à remplacer production offensive"
                 )
 
-            if player["xg_total"] >= 8:
+            if xg_total >= 8:
                 score += 3
                 reasons.append(
                     "fort impact offensif"
                 )
 
-            if player["success_probability"] >= 0.75:
+            if success_probability >= 0.75:
                 score += 2
                 reasons.append(
                     "transition sécurisée"

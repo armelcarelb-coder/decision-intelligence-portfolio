@@ -274,6 +274,9 @@ for target in recruitment_targets:
 
     fit_results.append(final_player)
 
+print("\nDEBUG PLAYER")
+print(simulated_player.keys())
+
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 print("📊 ANALYSE EFFECTIF BARÇA")
 print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")

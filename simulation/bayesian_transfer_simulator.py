@@ -11,39 +11,70 @@ class BayesianTransferSimulator:
         reasons = []
 
         # -----------------------------
+        # SAFE VARIABLES
+        # -----------------------------
+        fit_level = player.get(
+            "fit_level",
+            "LOW"
+        )
+
+        market_level = player.get(
+            "market_level",
+            "RISKY"
+        )
+
+        age = player.get(
+            "age",
+            0
+        )
+
+        injury_risk = player.get(
+            "injury_risk",
+            "medium"
+        )
+
+        salary = player.get(
+            "salary",
+            0
+        )
+
+        # -----------------------------
         # TACTICAL FIT
         # -----------------------------
-        if player["fit_level"] == "ELITE":
+        if fit_level == "ELITE":
             probability += 0.25
             reasons.append(
                 "compatibilité tactique exceptionnelle"
             )
 
-        elif player["fit_level"] == "HIGH":
+        elif fit_level == "HIGH":
             probability += 0.15
             reasons.append(
                 "bonne compatibilité tactique"
             )
 
-        elif player["fit_level"] == "MEDIUM":
+        elif fit_level == "MEDIUM":
             probability += 0.05
+            reasons.append(
+                "compatibilité tactique correcte"
+            )
 
         # -----------------------------
         # MARKET OPPORTUNITY
         # -----------------------------
-        if player["market_level"] == "EXCELLENT":
+        if market_level == "EXCELLENT":
             probability += 0.20
             reasons.append(
                 "opportunité marché excellente"
             )
 
-        elif player["market_level"] == "GOOD":
+        elif market_level == "GOOD":
             probability += 0.10
             reasons.append(
                 "coût marché raisonnable"
             )
 
-        elif player["market_level"] == "RISKY":
+        elif market_level == "RISKY":
             probability -= 0.10
             reasons.append(
                 "risque financier élevé"
@@ -52,13 +83,19 @@ class BayesianTransferSimulator:
         # -----------------------------
         # AGE FACTOR
         # -----------------------------
-        if 23 <= player["age"] <= 28:
+        if 23 <= age <= 28:
             probability += 0.10
             reasons.append(
                 "âge optimal de performance"
             )
 
-        elif player["age"] >= 31:
+        elif 29 <= age <= 30:
+            probability += 0.05
+            reasons.append(
+                "joueur expérimenté"
+            )
+
+        elif age >= 31:
             probability -= 0.15
             reasons.append(
                 "risque de déclin physique"
@@ -67,13 +104,16 @@ class BayesianTransferSimulator:
         # -----------------------------
         # INJURY RISK
         # -----------------------------
-        if player["injury_risk"] == "low":
+        if injury_risk == "low":
             probability += 0.10
+            reasons.append(
+                "profil physique fiable"
+            )
 
-        elif player["injury_risk"] == "medium":
+        elif injury_risk == "medium":
             probability += 0
 
-        elif player["injury_risk"] == "high":
+        elif injury_risk == "high":
             probability -= 0.20
             reasons.append(
                 "risque blessure important"
@@ -82,7 +122,7 @@ class BayesianTransferSimulator:
         # -----------------------------
         # SALARY RISK
         # -----------------------------
-        if player["salary"] >= 18:
+        if salary >= 18:
             probability -= 0.10
             reasons.append(
                 "masse salariale élevée"
@@ -91,10 +131,13 @@ class BayesianTransferSimulator:
         # -----------------------------
         # LIMITES
         # -----------------------------
-        probability = max(0.01, min(probability, 0.99))
+        probability = max(
+            0.01,
+            min(probability, 0.99)
+        )
 
         # -----------------------------
-        # RISK LEVEL
+        # DECISION
         # -----------------------------
         if probability >= 0.80:
             decision = "SIGN"
@@ -119,11 +162,15 @@ class BayesianTransferSimulator:
 
         return {
 
-            "success_probability": round(probability, 2),
+            "success_probability":
+                round(probability, 2),
 
-            "transfer_decision": decision,
+            "transfer_decision":
+                decision,
 
-            "risk_level": risk,
+            "risk_level":
+                risk,
 
-            "simulation_reasons": reasons
+            "simulation_reasons":
+                reasons
         }

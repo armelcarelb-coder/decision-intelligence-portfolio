@@ -20,8 +20,8 @@ class SquadAnalyzer:
                 offensive_players += 1
 
         conversion_rate = (
-            total_goals / total_shots
-            if total_shots > 0 else 0
+            total_goals / total_xg
+            if total_xg > 0 else 0
         )
 
         report = {
