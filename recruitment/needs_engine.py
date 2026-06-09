@@ -10,15 +10,15 @@ class RecruitmentNeedsEngine:
         needs = {
 
             "weakness_needs": [],
-
             "succession_needs": [],
-
             "depth_needs": [],
-
             "market_opportunities": [],
-
             "upgrade_needs": []
         }
+
+        succession_positions = set()
+        depth_positions = set()
+        upgrade_positions = set()
 
         # =====================================
         # WEAKNESS NEEDS
@@ -31,13 +31,9 @@ class RecruitmentNeedsEngine:
                 needs["weakness_needs"].append({
 
                     "priority": "HIGH",
-
                     "position": "LW",
-
                     "profile": "creative winger",
-
-                    "reason":
-                        "manque de création et percussion"
+                    "reason": "manque de création et percussion"
                 })
 
             elif weakness == "Faible efficacité offensive":
@@ -45,13 +41,9 @@ class RecruitmentNeedsEngine:
                 needs["weakness_needs"].append({
 
                     "priority": "HIGH",
-
                     "position": "ST",
-
                     "profile": "clinical finisher",
-
-                    "reason":
-                        "faible conversion des occasions"
+                    "reason": "faible conversion des occasions"
                 })
 
             elif weakness == "Manque de profils offensifs":
@@ -59,13 +51,9 @@ class RecruitmentNeedsEngine:
                 needs["weakness_needs"].append({
 
                     "priority": "MEDIUM",
-
                     "position": "AM/LW",
-
                     "profile": "offensive playmaker",
-
-                    "reason":
-                        "manque de danger offensif"
+                    "reason": "manque de danger offensif"
                 })
 
         # =====================================
@@ -83,41 +71,129 @@ class RecruitmentNeedsEngine:
                     "UNKNOWN"
                 )
 
-                # Succession planning
+                contract = player.get(
+                    "contract_years_left",
+                    99
+                )
 
-                if age >= 30:
+                minutes = player.get(
+                    "minutes",
+                    0
+                )
+
+                injury_risk = player.get(
+                    "injury_risk",
+                    "low"
+                )
+
+                player_score = max(
+
+                    player.get(
+                        "attacking_score",
+                        0
+                    ),
+
+                    player.get(
+                        "creative_score",
+                        0
+                    ),
+
+                    player.get(
+                        "defensive_score",
+                        0
+                    )
+                )
+
+                # -------------------------
+                # SUCCESSION
+                # -------------------------
+
+                if (
+                    age >= 32
+                    and position not in succession_positions
+                ):
+
+                    succession_positions.add(position)
 
                     needs["succession_needs"].append({
 
                         "position": position,
-
                         "priority": "MEDIUM",
-
-                        "profile":
-                            "future starter",
-
+                        "profile": "future starter",
                         "reason":
                             f"anticiper remplacement joueur {age} ans"
                     })
 
-                # Depth planning
+                if (
+                    contract <= 1
+                    and position not in succession_positions
+                ):
 
-                if player.get(
-                    "minutes",
-                    0
-                ) > 3000:
+                    succession_positions.add(position)
+
+                    needs["succession_needs"].append({
+
+                        "position": position,
+                        "priority": "HIGH",
+                        "profile": "replacement",
+                        "reason":
+                            "contrat proche expiration"
+                    })
+
+                # -------------------------
+                # DEPTH
+                # -------------------------
+
+                if (
+                    minutes > 3000
+                    and position not in depth_positions
+                ):
+
+                    depth_positions.add(position)
 
                     needs["depth_needs"].append({
 
                         "position": position,
-
                         "priority": "MEDIUM",
-
-                        "profile":
-                            "rotation player",
-
+                        "profile": "rotation player",
                         "reason":
                             "charge de minutes importante"
+                    })
+
+                elif (
+                    injury_risk == "high"
+                    and position not in depth_positions
+                ):
+
+                    depth_positions.add(position)
+
+                    needs["depth_needs"].append({
+
+                        "position": position,
+                        "priority": "HIGH",
+                        "profile": "reliable backup",
+                        "reason":
+                            "risque blessure élevé"
+                    })
+
+                # -------------------------
+                # UPGRADE
+                # -------------------------
+
+                if (
+                    player_score < 40
+                    and position not in upgrade_positions
+                ):
+
+                    upgrade_positions.add(position)
+
+                    needs["upgrade_needs"].append({
+
+                        "position": position,
+                        "priority": "LOW",
+                        "profile": "higher ceiling player",
+                        "reason":
+                            "titulaire améliorable"
                     })
 
         # =====================================
@@ -143,53 +219,19 @@ class RecruitmentNeedsEngine:
                     and contract <= 1
                 ):
 
-                    needs[
-                        "market_opportunities"
-                    ].append({
+                    needs["market_opportunities"].append({
 
                         "player":
-                            target["player"],
+                            target.get(
+                                "player",
+                                "Unknown"
+                            ),
 
                         "priority":
                             "OPPORTUNITY",
 
                         "reason":
                             "fin de contrat proche"
-                    })
-
-        # =====================================
-        # UPGRADE NEEDS
-        # =====================================
-
-        if squad:
-
-            for player in squad:
-
-                attacking_score = player.get(
-                    "attacking_score",
-                    0
-                )
-
-                position = player.get(
-                    "position",
-                    "UNKNOWN"
-                )
-
-                if attacking_score < 40:
-
-                    needs["upgrade_needs"].append({
-
-                        "position":
-                            position,
-
-                        "priority":
-                            "LOW",
-
-                        "profile":
-                            "higher ceiling player",
-
-                        "reason":
-                            "titulaire améliorable"
                     })
 
         return needs

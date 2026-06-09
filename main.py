@@ -86,8 +86,6 @@ team_report = analyzer.analyze_team(results)
 # 4. Détecter les faiblesses
 weaknesses = analyzer.detect_weaknesses(team_report)
 
-# 5. Générer besoins recrutement
-needs = needs_engine.generate_needs(weaknesses)
 
 fit_engine = TacticalFitEngine()
 
@@ -274,8 +272,17 @@ for target in recruitment_targets:
 
     fit_results.append(final_player)
 
+# 5. Générer besoins recrutement
+needs = needs_engine.generate_needs(
+    weaknesses,
+    squad=results,
+    market_targets=fit_results
+)
+
 print("\nDEBUG PLAYER")
-print(simulated_player.keys())
+for player in fit_results:
+    print(player["player"])
+    print(player.keys())
 
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 print("📊 ANALYSE EFFECTIF BARÇA")
@@ -294,13 +301,24 @@ print("\n━━━━━━━━━━━━━━━━━━━━━━━�
 print("🎯 BESOINS RECRUTEMENT")
 print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-for n in needs:
+for category, entries in needs.items():
 
-    print(f"""
-📌 Priorité : {n['priority']}
-🎯 Poste : {n['position']}
-👤 Profil recherché : {n['profile']}
-🧠 Raison : {n['reason']}
+    print(f"\n📂 {category.upper()}")
+
+    if not entries:
+        print("Aucun besoin identifié")
+        continue
+
+    for item in entries:
+
+        print(f"""
+📌 Priority : {item.get('priority', '-')}
+
+🎯 Position : {item.get('position', '-')}
+
+👤 Profile : {item.get('profile', '-')}
+
+🧠 Reason : {item.get('reason', '-')}
 """)
     
 print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
