@@ -10,6 +10,7 @@ from simulation.bayesian_transfer_simulator import BayesianTransferSimulator
 from scenario.multi_scenario_engine import MultiScenarioEngine
 from profiling.player_profiler import PlayerProfiler
 from normalization.normalization import Normalizer
+from recruitment.prioritization_engine import RecruitmentPrioritizationEngine
 
 competitions = sb.competitions()
 
@@ -79,6 +80,27 @@ for player in results:
 
     normalized_results.append(complete)
 results = normalized_results
+
+print("\nDEBUG DATA QUALITY")
+
+missing_age = 0
+missing_contract = 0
+missing_injury = 0
+
+for player in results:
+
+    if player.get("age") is None:
+        missing_age += 1
+
+    if player.get("contract_years_left") is None:
+        missing_contract += 1
+
+    if player.get("injury_risk") is None:
+        missing_injury += 1
+
+print("Missing age:", missing_age)
+print("Missing contract:", missing_contract)
+print("Missing injury:", missing_injury)
 
 # 3. Analyse l'effectif
 team_report = analyzer.analyze_team(results)
@@ -272,6 +294,12 @@ for target in recruitment_targets:
 
     fit_results.append(final_player)
 
+prioritization_engine = RecruitmentPrioritizationEngine()
+
+rankings = prioritization_engine.rank_targets(
+    fit_results
+)
+
 # 5. Générer besoins recrutement
 needs = needs_engine.generate_needs(
     weaknesses,
@@ -392,6 +420,23 @@ for player in fit_results:
 
     - Primary : {player['primary_archetype']}
     - Secondary : {player['secondary_archetypes']}
+""")
+   
+print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("🏆 FINAL RECRUITMENT RANKING")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+for player in rankings:
+
+    print(f"""
+#{player['ranking']} {player['player']}
+
+📊 Recruitment Score : {player['recruitment_score']}
+
+🎯 Priority : {player['priority']}
+
+🧠 Reasons :
+- {' | '.join(player['reasons'])}
 """)
     
 while True:
