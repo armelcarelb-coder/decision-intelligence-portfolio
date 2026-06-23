@@ -11,6 +11,10 @@ from scenario.multi_scenario_engine import MultiScenarioEngine
 from profiling.player_profiler import PlayerProfiler
 from normalization.normalization import Normalizer
 from recruitment.prioritization_engine import RecruitmentPrioritizationEngine
+from recruitment.archetype_recruitment_engine import ArchetypeRecruitmentEngine
+from planning.strategic_squad_planning_engine import (
+    StrategicSquadPlanningEngine
+)
 
 competitions = sb.competitions()
 
@@ -53,6 +57,10 @@ scenario_engine = MultiScenarioEngine()
 
 normalizer = Normalizer()
 profiler = PlayerProfiler()
+
+planning_engine = (
+    StrategicSquadPlanningEngine()
+)
 
 # 1. Lancer agent UNE FOIS pour générer les données
 agent.run("analyse initiale", players, match_ids)
@@ -300,11 +308,35 @@ rankings = prioritization_engine.rank_targets(
     fit_results
 )
 
+strategic_plan = (
+    planning_engine.generate_plan(
+        squad=results,
+        recruitment_targets=fit_results
+    )
+)
+
 # 5. Générer besoins recrutement
 needs = needs_engine.generate_needs(
     weaknesses,
     squad=results,
     market_targets=fit_results
+)
+archetype_engine = ArchetypeRecruitmentEngine()
+needs["weakness_needs"].append({
+
+    "priority": "HIGH",
+
+    "position": "ST",
+
+    "profile": "clinical finisher",
+
+    "reason": "test"
+})
+
+archetype_targets = (
+    archetype_engine.generate_archetype_targets(
+        needs
+    )
 )
 
 print("\nDEBUG PLAYER")
@@ -438,6 +470,82 @@ for player in rankings:
 🧠 Reasons :
 - {' | '.join(player['reasons'])}
 """)
+    
+print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("🧬 ARCHETYPE RECRUITMENT ENGINE")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+for target in archetype_targets:
+
+    print(f"""
+🎯 Need Type : {target['need_type']}
+⚽ Position : {target['position']}
+📌 Priority : {target['priority']}
+
+🧬 Required Archetypes :
+{', '.join(target['required_archetypes'])}
+
+🧠 Reason :
+{target['reason']}
+""")
+    
+print("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+print("🗺️ STRATEGIC SQUAD PLANNING")
+print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+
+for item in strategic_plan["succession_plan"]:
+
+    print(
+        f"🔄 {item['player']} "
+        f"({item['position']}) "
+        f"→ {item['replacement_window']}"
+    )
+
+for item in strategic_plan["departure_risks"]:
+
+    print(
+        f"🚪 {item['player']} "
+        f"({item['risk']})"
+    )
+
+for item in strategic_plan["age_curve_risks"]:
+
+    print(
+        f"📉 {item['player']} "
+        f"({item['risk']})"
+    )
+
+for item in strategic_plan["archetype_gaps"]:
+
+    print(
+        f"🧬 Missing: "
+        f"{item['missing_archetype']}"
+    )
+
+print("\n💰 Budget Scenarios")
+
+for scenario in strategic_plan[
+    "budget_scenarios"
+]:
+
+    print(
+        scenario["scenario"],
+        "→",
+        scenario["estimated_cost"],
+        "M€"
+    )
+
+print("\n🗺️ 3-Year Roadmap")
+
+for year, actions in strategic_plan[
+    "roadmap_3_years"
+].items():
+
+    print(f"\n{year.upper()}")
+
+    for action in actions:
+
+        print("-", action)
     
 while True:
     request = input("\n💬 Que veux-tu analyser ? (exit pour quitter) : ")
