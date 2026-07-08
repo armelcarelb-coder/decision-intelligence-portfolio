@@ -1,5 +1,26 @@
+# =====================================================
+# DEVELOPMENT MODE
+# =====================================================
+
+DEBUG = True
+
+DEV_PIPELINE = "recruitment"
+
+"""
+Pipelines disponibles
+
+all
+loader
+analysis
+recruitment
+planning
+ranking
+interactive
+"""
+
 import pandas as pd
 from data.football_loader import FootballDataLoader
+from football_data.loader import FootballDataLoader
 from agent.scout_agent import ScoutAgent
 from analysis.squad_analyser import SquadAnalyzer
 from statsbombpy import sb
@@ -16,6 +37,10 @@ from planning.strategic_squad_planning_engine import (
     StrategicSquadPlanningEngine
 )
 
+def dev(step):
+
+    return DEBUG and DEV_PIPELINE == step
+
 competitions = sb.competitions()
 
 print(competitions[
@@ -26,25 +51,37 @@ print(competitions[
     "season_id"
 ]])
 
+LOAD_MATCHES = not DEBUG
+
 loader = FootballDataLoader()
 
-matches_1 = loader.get_matches(11, 42)
-matches_2 = loader.get_matches(11, 90)
+if LOAD_MATCHES:
 
-matches = pd.concat([
-    matches_1,
-    matches_2
-])
+    matches_1 = loader.get_matches(11,42)
 
-matches = loader.get_barca_matches(matches)
+    matches_2 = loader.get_matches(11,90)
 
-match_ids = matches["match_id"]
+    matches = pd.concat([
 
-#players = loader.get_barca_players(match_ids)
+        matches_1,
 
-#match_ids = matches['match_id']
+        matches_2
 
-players = loader.get_barca_players_only(match_ids)
+    ])
+
+    matches = loader.get_barca_matches(matches)
+
+    match_ids = matches["match_id"]
+
+    players = loader.get_barca_players_only(
+        match_ids
+    )
+
+else:
+
+    players = []
+
+    match_ids = []
 
 agent = ScoutAgent(loader)
 analyzer = SquadAnalyzer()
@@ -63,10 +100,21 @@ planning_engine = (
 )
 
 # 1. Lancer agent UNE FOIS pour générer les données
-agent.run("analyse initiale", players, match_ids)
+if DEBUG:
 
-# 2. Récupérer les résultats du scouting
-results = agent.memory.last_results
+    print("⚡ DEBUG : utilisation des données mock.")
+
+    results = recruitment_targets.copy()
+
+else:
+
+    agent.run(
+        "analyse initiale",
+        players,
+        match_ids
+    )
+
+    results = agent.memory.last_results
 
 if results is None:
     results = []
@@ -88,6 +136,11 @@ for player in results:
 
     normalized_results.append(complete)
 results = normalized_results
+
+SHOW_DEBUG = False
+if SHOW_DEBUG:
+
+    print(...)
 
 print("\nDEBUG DATA QUALITY")
 
@@ -252,9 +305,26 @@ for target in recruitment_targets:
     # =========================
     # SIMULATION
     # =========================
-    simulation = simulator.simulate_transfer(
-        market_player
-    )
+    if DEBUG:
+
+        simulation = {
+
+            "success_probability": 0.80,
+
+            "transfer_decision": "SIGN",
+
+            "risk_level": "LOW",
+
+            "simulation_reasons": [
+                "debug mode"
+            ]
+        }
+
+    else:
+
+        simulation = simulator.simulate_transfer(
+            market_player
+        )
 
     simulated_player = {
         **market_player,
@@ -338,6 +408,12 @@ archetype_targets = (
         needs
     )
 )
+
+if dev("analysis"):
+
+    print(team_report)
+
+    quit()
 
 print("\nDEBUG PLAYER")
 for player in fit_results:
@@ -547,13 +623,21 @@ for year, actions in strategic_plan[
 
         print("-", action)
     
-while True:
-    request = input("\n💬 Que veux-tu analyser ? (exit pour quitter) : ")
+if not DEBUG:
 
-    if request.lower() == "exit":
-        break
+    while True:
 
-    response = agent.run(request, players, match_ids)
-    print(response)
+        request = input(
+            "\n💬 Que veux-tu analyser ? "
+        )
 
-print(agent.memory.get_history())
+        if request.lower() == "exit":
+            break
+
+        response = agent.run(
+            request,
+            players,
+            match_ids
+        )
+
+        print(response)
