@@ -4,3 +4,17 @@ langgraph
 pandas
 yfinance
 statsbombpy
+statsbombpy
+soccerdata
+pandas
+numpy
+scipy
+pymc
+arviz
+scikit-learn
+networkx
+matplotlib
+plotly
+requests
+beautifulsoup4
+lxml

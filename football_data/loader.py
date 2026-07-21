@@ -5,16 +5,23 @@ from football_data.statsbomb_loader import StatsBombLoader
 
 class FootballDataLoader:
 
-    def __init__(self, leagues, seasons):
+    def __init__(
+        self,
+        leagues=None,
+        seasons=None
+    ):
+
+        self.leagues = leagues or ["ESP-La Liga"]
+        self.seasons = seasons or ["2425"]
 
         self.fbref = FBrefLoader(
-            leagues,
-            seasons
+            leagues=self.leagues,
+            seasons=self.seasons
         )
 
         self.transfermarkt = TransfermarktLoader(
-            leagues,
-            seasons
+            leagues=self.leagues,
+            seasons=self.seasons
         )
 
         self.statsbomb = StatsBombLoader()

@@ -13,3 +13,7 @@ class TransfermarktLoader:
     def squads(self):
 
         return self.scraper.read_squads().reset_index()
+
+    def transfers(self):
+
+        return self.scraper.read_transfers().reset_index()

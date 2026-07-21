@@ -10,20 +10,32 @@ class FBrefLoader:
             seasons=seasons
         )
 
-    def player_standard_stats(self):
+    def standard(self):
 
         return self.scraper.read_player_season_stats(
             stat_type="standard"
         ).reset_index()
 
-    def player_shooting_stats(self):
+    def shooting(self):
 
         return self.scraper.read_player_season_stats(
             stat_type="shooting"
         ).reset_index()
 
-    def player_passing_stats(self):
+    def passing(self):
 
         return self.scraper.read_player_season_stats(
             stat_type="passing"
+        ).reset_index()
+
+    def defensive(self):
+
+        return self.scraper.read_player_season_stats(
+            stat_type="defense"
+        ).reset_index()
+
+    def possession(self):
+
+        return self.scraper.read_player_season_stats(
+            stat_type="possession"
         ).reset_index()
