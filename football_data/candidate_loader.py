@@ -186,3 +186,15 @@ class CandidateLoader:
     def get_dataframe(self):
 
         return self.dataframe
+    
+if __name__ == "__main__":
+
+    loader = CandidateLoader()
+
+    df = loader.load()
+
+    print(df.head())
+
+    print(df.columns)
+
+    print(len(df))

@@ -1,135 +1,115 @@
-from statsbombpy import sb
 import pandas as pd
+from datetime import datetime
+
+from football_data.fbref_loader import FBrefLoader
+from football_data.transfermarkt_loader import TransfermarktLoader
+from football_data.statsbomb_loader import StatsBombLoader
 
 
 class FootballDataLoader:
 
-    def __init__(self):
+    def __init__(
+        self,
+        leagues=None,
+        seasons=None
+    ):
 
-        pass
+        self.leagues = leagues or ["ESP-La Liga"]
 
-    # =========================================
-    # MATCHES
-    # =========================================
-    def get_matches(self, competition_id, season_id):
+        self.seasons = seasons or ["2425"]
 
-        return sb.matches(
-            competition_id=competition_id,
-            season_id=season_id
+        self.fbref_loader = FBrefLoader(
+
+            leagues=self.leagues,
+
+            seasons=self.seasons
+
         )
 
-    # =========================================
-    # BARÇA MATCHES
-    # =========================================
-    def get_barca_matches(self, matches):
+        self.transfermarkt_loader = TransfermarktLoader(
 
-        return matches[
-            (matches["home_team"] == "Barcelona")
-            |
-            (matches["away_team"] == "Barcelona")
-        ]
+            leagues=self.leagues,
 
-    # =========================================
-    # BARÇA PLAYERS ONLY
-    # =========================================
-    def get_barca_players_only(self, match_ids):
+            seasons=self.seasons
 
-        players = set()
+        )
 
-        for match_id in match_ids:
+        self.statsbomb_loader = StatsBombLoader()
 
-            try:
+    # =====================================================
+    # GLOBAL DATASET
+    # =====================================================
 
-                events = sb.events(match_id=match_id)
+    def build_global_scouting_dataset(self):
 
-                # équipe Barça seulement
-                barca_events = events[
-                    events["team"] == "Barcelona"
-                ]
+        print("\nLoading FBref...")
 
-                if "player" in barca_events.columns:
+        df_fbref = self.fbref_loader.load()
 
-                    unique_players = (
-                        barca_events["player"]
-                        .dropna()
-                        .unique()
-                    )
+        print(f"{len(df_fbref)} players")
 
-                    players.update(unique_players)
+        print("\nLoading Transfermarkt...")
 
-            except Exception as e:
+        df_market = self.transfermarkt_loader.load()
 
-                print(
-                    f"Erreur match {match_id}: {e}"
+        print(f"{len(df_market)} players")
+
+        # -------------------------------------
+
+        df = pd.merge(
+
+            df_fbref,
+
+            df_market,
+
+            on="player",
+
+            how="left"
+
+        )
+
+        # -------------------------------------
+
+        if "contract_expires" in df.columns:
+
+            current_year = datetime.now().year
+
+            df["contract_years_left"] = (
+
+                pd.to_numeric(
+
+                    df["contract_expires"],
+
+                    errors="coerce"
+
                 )
 
-        return list(players)
+                - current_year
 
-    # =========================================
-    # PLAYER EVENTS
-    # =========================================
-    def get_player_events(self, player_name, match_ids):
-
-        all_events = []
-
-        for match_id in match_ids:
-
-            try:
-
-                events = sb.events(match_id=match_id)
-
-                player_events = events[
-                    events["player"] == player_name
-                ]
-
-                if len(player_events) > 0:
-
-                    all_events.append(player_events)
-
-            except Exception as e:
-
-                print(
-                    f"Erreur récupération events {player_name}: {e}"
-                )
-
-        if len(all_events) == 0:
-
-            return pd.DataFrame()
-
-        return pd.concat(all_events)
-
-    # =========================================
-    # LEGACY xG/goals METHOD
-    # =========================================
-    def get_player_xg_goals(self, match_id, player_name):
-
-        try:
-
-            events = sb.events(match_id=match_id)
-
-            player_shots = events[
-                (events["player"] == player_name)
-                &
-                (events["type"] == "Shot")
-            ]
-
-            xg = (
-                player_shots["shot_statsbomb_xg"]
-                .fillna(0)
-                .tolist()
             )
 
-            goals = []
+        else:
 
-            for _, shot in player_shots.iterrows():
+            df["contract_years_left"] = None
 
-                if shot.get("shot_outcome") == "Goal":
-                    goals.append(1)
-                else:
-                    goals.append(0)
+        # -------------------------------------
 
-            return xg, goals
+        df = df.drop_duplicates(
 
-        except Exception:
+            subset=["player"]
 
-            return [], []
+        )
+
+        print()
+
+        print("Dataset created")
+
+        print()
+
+        print("Players :", len(df))
+
+        print()
+
+        print(df.columns.tolist())
+
+        return df

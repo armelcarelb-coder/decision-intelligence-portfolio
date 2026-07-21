@@ -1,19 +1,33 @@
+from football_data.base_loader import BaseLoader
+
 import soccerdata as sd
 
 
-class TransfermarktLoader:
+class TransfermarktLoader(BaseLoader):
 
-    def __init__(self, leagues, seasons):
+    def __init__(self, leagues=None, seasons=None):
+
+        super().__init__(leagues, seasons)
 
         self.scraper = sd.Transfermarkt(
-            leagues=leagues,
-            seasons=seasons
+
+            leagues=self.leagues,
+
+            seasons=self.seasons
         )
 
-    def squads(self):
+    def load(self):
 
         return self.scraper.read_squads().reset_index()
+    
+if __name__ == "__main__":
 
-    def transfers(self):
+    loader = TransfermarktLoader()
 
-        return self.scraper.read_transfers().reset_index()
+    df = loader.load()
+
+    print(df.head())
+
+    print(df.columns)
+
+    print(len(df))

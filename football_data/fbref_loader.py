@@ -1,41 +1,38 @@
+from football_data.base_loader import BaseLoader
+
 import soccerdata as sd
+import pandas as pd
 
 
-class FBrefLoader:
+class FBrefLoader(BaseLoader):
 
-    def __init__(self, leagues, seasons):
+    def __init__(self, leagues=None, seasons=None):
+
+        super().__init__(leagues, seasons)
 
         self.scraper = sd.FBref(
-            leagues=leagues,
-            seasons=seasons
+
+            leagues=self.leagues,
+
+            seasons=self.seasons
         )
 
-    def standard(self):
+    def load(self):
 
-        return self.scraper.read_player_season_stats(
+        df = self.scraper.read_player_season_stats(
             stat_type="standard"
-        ).reset_index()
+        )
 
-    def shooting(self):
+        return df.reset_index()
+    
+if __name__ == "__main__":
 
-        return self.scraper.read_player_season_stats(
-            stat_type="shooting"
-        ).reset_index()
+    loader = FBrefLoader()
 
-    def passing(self):
+    df = loader.load()
 
-        return self.scraper.read_player_season_stats(
-            stat_type="passing"
-        ).reset_index()
+    print(df.head())
 
-    def defensive(self):
+    print(df.columns)
 
-        return self.scraper.read_player_season_stats(
-            stat_type="defense"
-        ).reset_index()
-
-    def possession(self):
-
-        return self.scraper.read_player_season_stats(
-            stat_type="possession"
-        ).reset_index()
+    print(len(df))

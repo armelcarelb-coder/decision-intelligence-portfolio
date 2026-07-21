@@ -1,28 +1,26 @@
-from statsbombpy import sb
+from football_data.base_loader import BaseLoader
+
 import pandas as pd
 
 
-class StatsBombLoader:
+class StatsBombLoader(BaseLoader):
 
-    def get_matches(
-        self,
-        competition_id,
-        season_id
-    ):
+    def __init__(self):
 
-        return sb.matches(
-            competition_id=competition_id,
-            season_id=season_id
-        )
+        super().__init__()
 
-    def get_events(self, match_id):
+    def load(self):
 
-        return sb.events(match_id=match_id)
+        return pd.DataFrame()
+    
+if __name__ == "__main__":
 
-    def get_lineups(self, match_id):
+    loader = StatsBombLoader()
 
-        return sb.lineups(match_id=match_id)
+    df = loader.load()
 
-    def get_competitions(self):
+    print(df.head())
 
-        return sb.competitions()
+    print(df.columns)
+
+    print(len(df))
