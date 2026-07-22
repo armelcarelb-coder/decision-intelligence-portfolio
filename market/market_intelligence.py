@@ -1,3 +1,5 @@
+from interfaces.player_engine import PlayerEngine
+
 class MarketIntelligence:
 
     def evaluate_market(self, player):

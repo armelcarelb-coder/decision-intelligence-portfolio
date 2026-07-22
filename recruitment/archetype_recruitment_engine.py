@@ -1,3 +1,5 @@
+from interfaces.player_engine import PlayerEngine
+
 class ArchetypeRecruitmentEngine:
 
     def generate_archetype_targets(self, needs):

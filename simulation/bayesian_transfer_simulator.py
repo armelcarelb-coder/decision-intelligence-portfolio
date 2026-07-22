@@ -1,3 +1,5 @@
+from interfaces.player_engine import PlayerEngine
+
 class BayesianTransferSimulator:
 
     def __init__(self):

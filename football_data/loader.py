@@ -1,119 +1,95 @@
 import pandas as pd
-from datetime import datetime
 
 from football_data.fbref_loader import FBrefLoader
 from football_data.transfermarkt_loader import TransfermarktLoader
 from football_data.statsbomb_loader import StatsBombLoader
 from football_data.understat_loader import UnderstatLoader
+from football_data.candidate_loader import CandidateLoader
 
 
 class FootballDataLoader:
 
-    def __init__(
-        self,
-        leagues=None,
-        seasons=None
-    ):
+    def __init__(self, leagues=None, seasons=None):
 
         self.leagues = leagues or ["ESP-La Liga"]
-
         self.seasons = seasons or ["2425"]
 
         self.fbref_loader = FBrefLoader(
-
-            leagues=self.leagues,
-
-            seasons=self.seasons
-
+            self.leagues,
+            self.seasons
         )
 
         self.transfermarkt_loader = TransfermarktLoader(
+            self.leagues,
+            self.seasons
+        )
 
-            leagues=self.leagues,
-
-            seasons=self.seasons
-
+        self.understat_loader = UnderstatLoader(
+            self.leagues,
+            self.seasons
         )
 
         self.statsbomb_loader = StatsBombLoader()
 
     # =====================================================
-    # GLOBAL DATASET
+    # GLOBAL SCOUTING DATASET
     # =====================================================
 
     def build_global_scouting_dataset(self):
 
-        print("\nLoading FBref...")
+        print("Loading FBref...")
 
-        df_fbref = self.fbref_loader.load()
+        fbref_df = self.fbref_loader.load()
 
-        print(f"{len(df_fbref)} players")
+        print("Loading Transfermarkt...")
 
-        print("\nLoading Transfermarkt...")
+        market_df = self.transfermarkt_loader.load()
 
-        df_market = self.transfermarkt_loader.load()
+        print("Loading Understat...")
 
-        print(f"{len(df_market)} players")
+        understat_df = self.understat_loader.load()
 
-        # -------------------------------------
+        dataset = fbref_df.copy()
 
-        df = pd.merge(
+        if not market_df.empty:
 
-            df_fbref,
+            dataset = dataset.merge(
 
-            df_market,
+                market_df,
 
-            on="player",
+                on="player",
 
-            how="left"
-
-        )
-
-        # -------------------------------------
-
-        if "contract_expires" in df.columns:
-
-            current_year = datetime.now().year
-
-            df["contract_years_left"] = (
-
-                pd.to_numeric(
-
-                    df["contract_expires"],
-
-                    errors="coerce"
-
-                )
-
-                - current_year
-
+                how="left"
             )
 
-        else:
+        if not understat_df.empty:
 
-            df["contract_years_left"] = None
+            dataset = dataset.merge(
 
-        # -------------------------------------
+                understat_df,
 
-        df = df.drop_duplicates(
+                on="player",
 
+                how="left"
+            )
+
+        dataset = dataset.drop_duplicates(
             subset=["player"]
-
         )
 
-        print()
+        return dataset
 
-        print("Dataset created")
+        # =====================================================
+    # CANDIDATE LOADER
+    # =====================================================
 
-        print()
+    def load_global_candidates(self):
 
-        print("Players :", len(df))
+        dataset = self.build_global_scouting_dataset()
 
-        print()
-
-        print(df.columns.tolist())
-
-        return df
+        return CandidateLoader.from_dataframe(
+            dataset
+        )
 
 if __name__ == "__main__":
 

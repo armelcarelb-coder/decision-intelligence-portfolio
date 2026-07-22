@@ -1,3 +1,5 @@
+from interfaces.player_engine import PlayerEngine
+
 class TacticalFitEngine:
 
     def __init__(self):
