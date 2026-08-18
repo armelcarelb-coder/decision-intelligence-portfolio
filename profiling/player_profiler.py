@@ -1,116 +1,142 @@
-class PlayerProfiler:
+from interfaces.player_engine import PlayerEngine
+
+
+class PlayerProfiler(PlayerEngine):
 
     def __init__(self):
         pass
 
+    # ============================================================
+    # STANDARD ENGINE API
+    # ============================================================
+
+    def process(self, player):
+
+        profile = self.classify_player(player)
+
+        player.update(profile)
+
+        return player
+
+    # ============================================================
+    # PLAYER PROFILE
+    # ============================================================
+
     def classify_player(self, player):
 
-        archetypes = []
-        secondary = []
-
-        # =========================
+        # ========================================================
         # PER90 METRICS
-        # =========================
+        # ========================================================
 
-        shots = player.get("shots_per90", 0)
-        xg = player.get("xg_per90", 0)
-        goals = player.get("goals_per90", 0)
+        shots = player.get(
+            "shots_per90",
+            0
+        )
 
-        assists = player.get("assists_per90", 0)
+        xg = player.get(
+            "xg_per90",
+            0
+        )
+
+        goals = player.get(
+            "goals_per90",
+            0
+        )
+
+        assists = player.get(
+            "assists_per90",
+            0
+        )
 
         key_passes = player.get(
-            "key_passes_per90", 0
+            "key_passes_per90",
+            0
         )
 
         progressive_passes = player.get(
-            "progressive_passes_per90", 0
+            "progressive_passes_per90",
+            0
         )
 
         pressures = player.get(
-            "pressures_per90", 0
+            "pressures_per90",
+            0
         )
 
         tackles = player.get(
-            "tackles_per90", 0
+            "tackles_per90",
+            0
         )
 
         interceptions = player.get(
-            "interceptions_per90", 0
+            "interceptions_per90",
+            0
         )
 
         dribbles = player.get(
-            "dribbles_per90", 0
+            "dribbles_per90",
+            0
         )
 
-        # =========================
-        # ARCHETYPES
-        # =========================
-
-        if shots >= 2 and pressures >= 6:
-            archetypes.append("pressing_forward")
-
-        if xg >= 0.45 and shots >= 2.5:
-            archetypes.append("box_poacher")
-
-        if progressive_passes >= 4 and key_passes >= 1.5:
-            archetypes.append("vertical_creator")
-
-        if progressive_passes >= 6:
-            archetypes.append("possession_controller")
-
-        if tackles >= 2 and interceptions >= 1:
-            archetypes.append("ball_winning_6")
-
-        if dribbles >= 3 and shots >= 1.5:
-            archetypes.append("transition_monster")
-
-        if dribbles >= 4 and assists >= 0.2:
-            archetypes.append("touchline_winger")
-
-        if progressive_passes >= 7 and key_passes >= 1:
-            archetypes.append("deep_playmaker")
-
-        if shots >= 1.8 and key_passes >= 1.5:
-            archetypes.append("inverted_creator")
-
-        if progressive_passes >= 8:
-            archetypes.append("elite_progressor")
-
-        # =========================
-        # FALLBACK
-        # =========================
-
-        if not archetypes:
-            archetypes.append("balanced_player")
-
-        primary = archetypes[0]
-
-        if len(archetypes) > 1:
-            secondary = archetypes[1:]
-
-        # =========================
+        # ========================================================
         # STYLE SCORING
-        # =========================
+        # ========================================================
 
         attacking_score = 0
+
         creative_score = 0
+
         defensive_score = 0
 
+        # --------------------------------------------------------
+        # ATTACKING
+        # --------------------------------------------------------
+
         attacking_score += shots
-        attacking_score += dribbles * 0.5
-        attacking_score += xg * 4
 
-        creative_score += key_passes * 2
-        creative_score += progressive_passes * 0.5
-        creative_score += assists * 3
+        attacking_score += (
+            dribbles * 0.5
+        )
 
-        defensive_score += tackles * 2
-        defensive_score += interceptions * 2
-        defensive_score += pressures * 0.25
+        attacking_score += (
+            xg * 4
+        )
 
-        # =========================
-        # STYLE GLOBAL
-        # =========================
+        # --------------------------------------------------------
+        # CREATIVE
+        # --------------------------------------------------------
+
+        creative_score += (
+            key_passes * 2
+        )
+
+        creative_score += (
+            progressive_passes * 0.5
+        )
+
+        creative_score += (
+            assists * 3
+        )
+
+        # --------------------------------------------------------
+        # DEFENSIVE
+        # --------------------------------------------------------
+
+        defensive_score += (
+            tackles * 2
+        )
+
+        defensive_score += (
+            interceptions * 2
+        )
+
+        defensive_score += (
+            pressures * 0.25
+        )
+
+        # ========================================================
+        # GLOBAL STYLE
+        # ========================================================
 
         max_score = max(
             attacking_score,
@@ -119,58 +145,152 @@ class PlayerProfiler:
         )
 
         if max_score == attacking_score:
+
             style = "offensive_player"
 
         elif max_score == creative_score:
+
             style = "playmaker"
 
-        elif max_score == defensive_score:
+        else:
+
             style = "defensive_player"
 
-        else:
-            style = "balanced_player"
-
-        # =========================
+        # ========================================================
         # FINISHING EFFICIENCY
-        # =========================
+        # ========================================================
 
         delta = goals - xg
 
         if delta >= 0.25:
+
             efficiency = "clinical_finisher"
 
         elif delta >= 0.10:
+
             efficiency = "elite_finisher"
 
         elif delta >= -0.05:
+
             efficiency = "average_finisher"
 
         else:
+
             efficiency = "underperforming"
 
-        # =========================
-        # RETURN
-        # =========================
+        # ========================================================
+        # RETURN PROFILE ONLY
+        # ========================================================
 
         return {
-
-            "primary_archetype": primary,
-
-            "secondary_archetypes": secondary,
-
-            "all_archetypes": archetypes,
 
             "style": style,
 
             "efficiency": efficiency,
 
-            # Jour 7
             "attacking_score":
-                round(attacking_score, 2),
+                round(
+                    attacking_score,
+                    2
+                ),
 
             "creative_score":
-                round(creative_score, 2),
+                round(
+                    creative_score,
+                    2
+                ),
 
             "defensive_score":
-                round(defensive_score, 2)
+                round(
+                    defensive_score,
+                    2
+                )
         }
+
+
+# ================================================================
+# DIRECT TEST
+# ================================================================
+
+if __name__ == "__main__":
+
+    engine = PlayerProfiler()
+
+    test_player = {
+
+        "player": "Test Player",
+
+        "position": "ST",
+
+        "shots_per90": 3.0,
+
+        "xg_per90": 0.50,
+
+        "goals_per90": 0.60,
+
+        "assists_per90": 0.20,
+
+        "key_passes_per90": 1.6,
+
+        "progressive_passes_per90": 4.5,
+
+        "pressures_per90": 7.0,
+
+        "tackles_per90": 1.0,
+
+        "interceptions_per90": 0.5,
+
+        "dribbles_per90": 3.5
+    }
+
+    result = engine.process(
+        test_player
+    )
+
+    print("\n" + "=" * 60)
+    print("PLAYER PROFILER TEST")
+    print("=" * 60)
+
+    print(
+        f"\nPlayer : "
+        f"{result['player']}"
+    )
+
+    print(
+        f"Style : "
+        f"{result['style']}"
+    )
+
+    print(
+        f"Efficiency : "
+        f"{result['efficiency']}"
+    )
+
+    print(
+        f"Attacking score : "
+        f"{result['attacking_score']}"
+    )
+
+    print(
+        f"Creative score : "
+        f"{result['creative_score']}"
+    )
+
+    print(
+        f"Defensive score : "
+        f"{result['defensive_score']}"
+    )
+
+    print(
+        "\nArchetype fields present :",
+        any(
+            key in result
+            for key in [
+                "primary_archetype",
+                "secondary_archetypes",
+                "all_archetypes"
+            ]
+        )
+    )
+
+    print("\n" + "=" * 60)

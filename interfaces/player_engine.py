@@ -1,11 +1,8 @@
-from abc import abstractmethod
-
-from interfaces.engine import BaseEngine
+from abc import ABC, abstractmethod
 
 
-class PlayerEngine(BaseEngine):
+class PlayerEngine(ABC):
 
     @abstractmethod
     def process(self, player):
-
         pass
