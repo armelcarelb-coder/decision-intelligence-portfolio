@@ -1,0 +1,5 @@
+player,season,team,position,minutes,appearances,starts,goals,assists,xg,xa
+Test Player,2223,Test FC,FW,2700,30,30,20,8,18.5,7.2
+Test Player,2324,Test FC,FW,2800,32,31,22,10,20.1,8.5
+Another Player,2223,Other FC,MF,2400,29,27,8,12,7.4,10.2
+Another Player,2324,Other FC,MF,2100,27,23,7,9,6.8,8.7
