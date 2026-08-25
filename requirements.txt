@@ -18,3 +18,11 @@ plotly
 requests
 beautifulsoup4
 lxml
+soccerdata
+seleniumbase
+pandas
+numpy
+duckdb
+scikit-learn
+scipy
+pyarrow
