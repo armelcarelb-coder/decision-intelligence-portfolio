@@ -1,14 +1,49 @@
-from football_data.loader import FootballDataLoader
-from football_data.performance_loader import PerformanceLoader
+import soccerdata as sd
 
-football_loader = FootballDataLoader(
+
+print("=" * 70)
+print("TEST EXTRACTION FBREF RÉELLE")
+print("=" * 70)
+
+print("\n[1] Initialisation FBref...")
+
+fbref = sd.FBref(
     leagues=["ESP-La Liga"],
-    seasons=["2425"]
+    seasons=["2425"],
 )
 
-performance_loader = PerformanceLoader(
-    football_loader=football_loader,
-    offline=False
-)
+print("✓ FBref initialisé")
 
-df = performance_loader.load()
+print("\n[2] Extraction des statistiques joueurs...")
+
+try:
+
+    df = fbref.read_player_season_stats(
+        stat_type="standard"
+    )
+
+    print("✓ Extraction réussie")
+
+    print("\nDATASET")
+    print("-" * 70)
+
+    print(f"Shape : {df.shape}")
+
+    print("\nCOLONNES")
+    print("-" * 70)
+
+    print(df.columns.tolist())
+
+    print("\nAPERÇU")
+    print("-" * 70)
+
+    print(df.head())
+
+except Exception as e:
+
+    print("\n✗ EXTRACTION FBREF ÉCHOUÉE")
+    print(f"Erreur : {type(e).__name__}: {e}")
+
+print("\n" + "=" * 70)
+print("FIN DU TEST")
+print("=" * 70)
