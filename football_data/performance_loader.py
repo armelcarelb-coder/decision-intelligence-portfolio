@@ -1,5 +1,3 @@
-# football_data/performance_loader.py
-
 from __future__ import annotations
 
 from pathlib import Path
@@ -17,6 +15,8 @@ class PerformanceLoader:
     - Charger les performances depuis une source distante ou locale.
     - Normaliser les noms de colonnes.
     - Nettoyer les types de données.
+    - Normaliser les informations temporelles des saisons.
+    - Conserver les informations de compétition et de niveau.
     - Calculer les métriques simples par 90 minutes.
     - Fournir des méthodes de filtrage et de résumé.
 
@@ -40,9 +40,17 @@ class PerformanceLoader:
         TransferPerformanceBuilder
     """
 
+    # ==========================================================
+    # SCHEMA
+    # ==========================================================
+
     REQUIRED_COLUMNS = [
         "player",
         "season",
+        "season_start_date",
+        "season_end_date",
+        "competition",
+        "competition_level",
         "team",
         "position",
         "minutes",
@@ -64,9 +72,18 @@ class PerformanceLoader:
         "xa",
     ]
 
+    DATE_COLUMNS = [
+        "season_start_date",
+        "season_end_date",
+    ]
+
     OUTPUT_COLUMNS = [
         "player",
         "season",
+        "season_start_date",
+        "season_end_date",
+        "competition",
+        "competition_level",
         "team",
         "position",
         "minutes",
@@ -81,6 +98,10 @@ class PerformanceLoader:
         "xg_per90",
         "xa_per90",
     ]
+
+    # ==========================================================
+    # INITIALIZATION
+    # ==========================================================
 
     def __init__(
         self,
@@ -342,8 +363,15 @@ class PerformanceLoader:
         """
         Normalise le DataFrame provenant de la source.
 
-        Cette méthode ne calcule pas de percentile.
-        Elle prépare uniquement les données.
+        Cette méthode :
+        - harmonise les noms ;
+        - construit les dates de saison si nécessaire ;
+        - conserve compétition et niveau ;
+        - nettoie les types ;
+        - calcule les métriques /90 ;
+        - déduplique les observations.
+
+        Elle ne calcule PAS de percentile.
         """
 
         # ------------------------------------------------------
@@ -368,6 +396,31 @@ class PerformanceLoader:
             "Player": "player",
             "player_name": "player",
             "Player Name": "player",
+
+            # Season
+            "Season": "season",
+            "season_name": "season",
+            "year": "season",
+
+            # Season dates
+            "Season Start Date": "season_start_date",
+            "season_start": "season_start_date",
+            "start_date": "season_start_date",
+
+            "Season End Date": "season_end_date",
+            "season_end": "season_end_date",
+            "end_date": "season_end_date",
+
+            # Competition
+            "Competition": "competition",
+            "League": "competition",
+            "league": "competition",
+
+            # Competition level
+            "Competition Level": "competition_level",
+            "League Level": "competition_level",
+            "league_level": "competition_level",
+            "level": "competition_level",
 
             # Team
             "Squad": "team",
@@ -417,25 +470,52 @@ class PerformanceLoader:
 
         if "season" not in df.columns:
 
-            if "Season" in df.columns:
+            df["season"] = pd.NA
 
-                df = df.rename(
-                    columns={
-                        "Season": "season"
-                    }
+        # ------------------------------------------------------
+        # COMPETITION
+        # ------------------------------------------------------
+
+        if "competition" not in df.columns:
+
+            df["competition"] = pd.NA
+
+        # ------------------------------------------------------
+        # COMPETITION LEVEL
+        # ------------------------------------------------------
+
+        if "competition_level" not in df.columns:
+
+            df["competition_level"] = pd.NA
+
+        # ------------------------------------------------------
+        # DATES DE SAISON
+        # ------------------------------------------------------
+
+        if (
+            "season_start_date" not in df.columns
+            or "season_end_date" not in df.columns
+        ):
+
+            generated_dates = df["season"].apply(
+                self._season_to_dates
+            )
+
+            if "season_start_date" not in df.columns:
+
+                df["season_start_date"] = (
+                    generated_dates.apply(
+                        lambda x: x[0]
+                    )
                 )
 
-            elif "year" in df.columns:
+            if "season_end_date" not in df.columns:
 
-                df = df.rename(
-                    columns={
-                        "year": "season"
-                    }
+                df["season_end_date"] = (
+                    generated_dates.apply(
+                        lambda x: x[1]
+                    )
                 )
-
-            else:
-
-                df["season"] = None
 
         # ------------------------------------------------------
         # COLONNES MANQUANTES
@@ -445,7 +525,7 @@ class PerformanceLoader:
 
             if column not in df.columns:
 
-                df[column] = None
+                df[column] = pd.NA
 
         # ------------------------------------------------------
         # TYPES NUMÉRIQUES
@@ -459,21 +539,46 @@ class PerformanceLoader:
             )
 
         # ------------------------------------------------------
-        # IDENTIFICATION JOUEUR
+        # TYPES DATES
         # ------------------------------------------------------
 
-        for column in [
+        for column in self.DATE_COLUMNS:
+
+            df[column] = pd.to_datetime(
+                df[column],
+                errors="coerce"
+            )
+
+        # ------------------------------------------------------
+        # IDENTIFICATION / TEXTE
+        # ------------------------------------------------------
+
+        text_columns = [
             "player",
+            "season",
+            "competition",
+            "competition_level",
             "team",
             "position",
-            "season",
-        ]:
+        ]
+
+        for column in text_columns:
 
             df[column] = (
                 df[column]
                 .astype("string")
                 .str.strip()
             )
+
+        # ------------------------------------------------------
+        # NORMALISATION POSITION
+        # ------------------------------------------------------
+
+        df["position"] = (
+            df["position"]
+            .str.upper()
+            .str.strip()
+        )
 
         # ------------------------------------------------------
         # PER 90
@@ -514,7 +619,7 @@ class PerformanceLoader:
         )
 
         # ------------------------------------------------------
-        # NETTOYAGE DES VALEURS INFINIES
+        # NETTOYAGE VALEURS INFINIES
         # ------------------------------------------------------
 
         df = df.replace(
@@ -531,6 +636,7 @@ class PerformanceLoader:
                 "player",
                 "season",
                 "team",
+                "competition",
             ],
             keep="first",
         )
@@ -543,7 +649,7 @@ class PerformanceLoader:
 
             if column not in df.columns:
 
-                df[column] = None
+                df[column] = pd.NA
 
         df = df[
             self.OUTPUT_COLUMNS
@@ -552,6 +658,163 @@ class PerformanceLoader:
         return df.reset_index(
             drop=True
         )
+
+    # ==========================================================
+    # SEASON DATE HELPER
+    # ==========================================================
+
+    @staticmethod
+    def _season_to_dates(season):
+        """
+        Transforme une saison football en dates.
+
+        Exemples
+        --------
+        2020/21
+            -> 2020-07-01 / 2021-06-30
+
+        2023/24
+            -> 2023-07-01 / 2024-06-30
+
+        2023-24
+            -> 2023-07-01 / 2024-06-30
+
+        2324
+            -> 2023-07-01 / 2024-06-30
+
+        2223
+            -> 2022-07-01 / 2023-06-30
+        """
+
+        if pd.isna(season):
+
+            return pd.NaT, pd.NaT
+
+        value = str(season).strip()
+
+        # ------------------------------------------------------
+        # FORMAT 2020/21
+        # ------------------------------------------------------
+
+        if "/" in value:
+
+            parts = value.split("/")
+
+            if len(parts) == 2:
+
+                try:
+
+                    start_year = int(parts[0])
+
+                    end_part = parts[1]
+
+                    if len(end_part) == 2:
+
+                        end_year = (
+                            start_year // 100 * 100
+                            + int(end_part)
+                        )
+
+                    else:
+
+                        end_year = int(end_part)
+
+                    return (
+                        pd.Timestamp(
+                            year=start_year,
+                            month=7,
+                            day=1
+                        ),
+                        pd.Timestamp(
+                            year=end_year,
+                            month=6,
+                            day=30
+                        ),
+                    )
+
+                except ValueError:
+
+                    pass
+
+        # ------------------------------------------------------
+        # FORMAT 2020-21
+        # ------------------------------------------------------
+
+        if "-" in value:
+
+            parts = value.split("-")
+
+            if len(parts) == 2:
+
+                try:
+
+                    start_year = int(parts[0])
+
+                    end_part = parts[1]
+
+                    if len(end_part) == 2:
+
+                        end_year = (
+                            start_year // 100 * 100
+                            + int(end_part)
+                        )
+
+                    else:
+
+                        end_year = int(end_part)
+
+                    return (
+                        pd.Timestamp(
+                            year=start_year,
+                            month=7,
+                            day=1
+                        ),
+                        pd.Timestamp(
+                            year=end_year,
+                            month=6,
+                            day=30
+                        ),
+                    )
+
+                except ValueError:
+
+                    pass
+
+        # ------------------------------------------------------
+        # FORMAT 2324 / 2223
+        # ------------------------------------------------------
+
+        if (
+            len(value) == 4
+            and value.isdigit()
+        ):
+
+            try:
+
+                first_two = int(value[:2])
+                last_two = int(value[2:])
+
+                start_year = 2000 + first_two
+                end_year = 2000 + last_two
+
+                return (
+                    pd.Timestamp(
+                        year=start_year,
+                        month=7,
+                        day=1
+                    ),
+                    pd.Timestamp(
+                        year=end_year,
+                        month=6,
+                        day=30
+                    ),
+                )
+
+            except ValueError:
+
+                pass
+
+        return pd.NaT, pd.NaT
 
     # ==========================================================
     # FILTER PLAYERS
@@ -621,9 +884,68 @@ class PerformanceLoader:
 
         self._check_loaded()
 
+        normalized_positions = [
+            str(position).upper().strip()
+            for position in positions
+        ]
+
         return self.dataframe[
             self.dataframe["position"]
-            .isin(positions)
+            .isin(normalized_positions)
+        ].copy().reset_index(
+            drop=True
+        )
+
+    # ==========================================================
+    # FILTER COMPETITION
+    # ==========================================================
+
+    def filter_competitions(
+        self,
+        competitions: List[str]
+    ) -> pd.DataFrame:
+        """
+        Filtre le dataset sur certaines compétitions.
+        """
+
+        self._check_loaded()
+
+        normalized = {
+            str(value).strip().lower()
+            for value in competitions
+        }
+
+        return self.dataframe[
+            self.dataframe["competition"]
+            .str.lower()
+            .isin(normalized)
+        ].copy().reset_index(
+            drop=True
+        )
+
+    # ==========================================================
+    # FILTER COMPETITION LEVEL
+    # ==========================================================
+
+    def filter_competition_levels(
+        self,
+        levels: List[str]
+    ) -> pd.DataFrame:
+        """
+        Filtre le dataset sur le niveau de championnat.
+        """
+
+        self._check_loaded()
+
+        normalized = {
+            str(value).strip().lower()
+            for value in levels
+        }
+
+        return self.dataframe[
+            self.dataframe["competition_level"]
+            .str.lower()
+            .isin(normalized)
         ].copy().reset_index(
             drop=True
         )
@@ -647,7 +969,11 @@ class PerformanceLoader:
             .str.lower()
             == player_name.strip().lower()
         ].copy().sort_values(
-            by="season"
+            by=[
+                "season_start_date",
+                "season",
+            ],
+            na_position="last",
         ).reset_index(
             drop=True
         )
@@ -682,6 +1008,15 @@ class PerformanceLoader:
             "unique_positions":
                 df["position"].nunique(),
 
+            "unique_competitions":
+                df["competition"].nunique(),
+
+            "competition_levels":
+                df["competition_level"]
+                .dropna()
+                .unique()
+                .tolist(),
+
             "missing_minutes":
                 int(
                     df["minutes"]
@@ -706,6 +1041,34 @@ class PerformanceLoader:
             "missing_xa":
                 int(
                     df["xa"]
+                    .isna()
+                    .sum()
+                ),
+
+            "missing_season_start_date":
+                int(
+                    df["season_start_date"]
+                    .isna()
+                    .sum()
+                ),
+
+            "missing_season_end_date":
+                int(
+                    df["season_end_date"]
+                    .isna()
+                    .sum()
+                ),
+
+            "missing_competition":
+                int(
+                    df["competition"]
+                    .isna()
+                    .sum()
+                ),
+
+            "missing_competition_level":
+                int(
+                    df["competition_level"]
                     .isna()
                     .sum()
                 ),
@@ -734,6 +1097,23 @@ class PerformanceLoader:
 
             "has_season":
                 df["season"].notna().any(),
+
+            "has_season_dates":
+                (
+                    df["season_start_date"]
+                    .notna()
+                    .any()
+                    and
+                    df["season_end_date"]
+                    .notna()
+                    .any()
+                ),
+
+            "has_competition":
+                df["competition"].notna().any(),
+
+            "has_competition_level":
+                df["competition_level"].notna().any(),
 
             "has_position":
                 df["position"].notna().any(),
@@ -785,24 +1165,6 @@ if __name__ == "__main__":
     # --------------------------------------------------------------
     # MODE OFFLINE
     # --------------------------------------------------------------
-    #
-    # IMPORTANT :
-    # Nous ne créons PAS FootballDataLoader ici.
-    #
-    # Cela évite :
-    #
-    # FootballDataLoader
-    #       ↓
-    # FBrefLoader
-    #       ↓
-    # soccerdata
-    #       ↓
-    # Selenium
-    #       ↓
-    # Chrome
-    #
-    # Le test porte uniquement sur PerformanceLoader.
-    # --------------------------------------------------------------
 
     LOCAL_PATH = (
         "data/performances/performance_sample.csv"
@@ -846,7 +1208,7 @@ if __name__ == "__main__":
         for key, value in summary.items():
 
             print(
-                f"{key:<25}: {value}"
+                f"{key:<30}: {value}"
             )
 
         # ==========================================================
@@ -864,7 +1226,7 @@ if __name__ == "__main__":
             status = "✓" if value else "✗"
 
             print(
-                f"{status} {key:<25}: {value}"
+                f"{status} {key:<30}: {value}"
             )
 
         # ==========================================================
@@ -979,6 +1341,37 @@ if __name__ == "__main__":
             print(
                 f"TEST FILTRE POSITION : "
                 f"{test_position}"
+            )
+
+            print(
+                f"Lignes : {len(filtered)}"
+            )
+
+        # ==========================================================
+        # FILTER COMPETITION TEST
+        # ==========================================================
+
+        competitions = (
+            df["competition"]
+            .dropna()
+            .unique()
+            .tolist()
+        )
+
+        if competitions:
+
+            test_competition = competitions[0]
+
+            filtered = (
+                loader.filter_competitions(
+                    [test_competition]
+                )
+            )
+
+            print()
+            print(
+                f"TEST FILTRE COMPETITION : "
+                f"{test_competition}"
             )
 
             print(
