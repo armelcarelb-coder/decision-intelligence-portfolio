@@ -1,82 +1,60 @@
 """
-football_data/transfer_performance_builder.py
+transfer_performance_builder.py
 
-Construction du dataset historique de performance des transferts.
+Construction du dataset performance pré/post-transfert.
 
-Architecture
-------------
+Objectif
+--------
+Jointure entre :
 
-HistoricalTransferLoader
+    HistoricalTransferLoader
         +
-PerformanceLoader
-        |
-        v
-TransferPerformanceBuilder
-        |
-        +--> fenêtre PRE  : 36 mois avant transfert
-        |
-        +--> fenêtre POST : 18 mois après transfert
-        |
-        +--> contexte position + niveau de championnat
-        |
-        v
-Dataset transfert / performances
-        |
-        v
-Future PerformanceNormalizer
-        |
-        v
-Future TransferOutcomeBuilder
+    PerformanceLoader
 
+afin de construire le dataset d'analyse des performances
+autour d'un transfert.
 
-Méthodologie
-------------
+Fenêtres méthodologiques
+------------------------
+PRE:
+    36 mois avant la date du transfert.
 
-PRE
----
-36 mois avant la date du transfert.
+POST:
+    18 mois après la date du transfert.
 
-POST
-----
-18 mois après la date du transfert.
+Règle importante:
+    La saison durant laquelle le transfert intervient est exclue.
 
-Important
----------
-Les performances sont agrégées par saison.
+    Une saison est considérée comme POST uniquement si :
 
-Nous utilisons les vraies dates :
+        season_start_date > transfer_date
 
-    season_start_date
-    season_end_date
+    et :
 
-fournies par PerformanceLoader.
+        season_start_date < transfer_date + 18 mois
 
-Une saison PRE est retenue si elle est entièrement
-située avant le transfert et qu'elle intersecte
-la fenêtre des 36 mois.
+Cette convention permet d'éviter de considérer une saison commencée
+avant le transfert comme une véritable saison post-transfert.
 
-Une saison POST est retenue si elle commence après
-le transfert et qu'elle intersecte la fenêtre des
-18 mois.
+Normalisation
+-------------
+Le calcul définitif de performance_percentile sera réalisé dans
+une étape dédiée.
 
-La saison contenant le transfert est volontairement
-exclue afin d'éviter le mélange entre performance
-pré-transfert et post-transfert.
+Il devra être calculé selon :
 
-Le percentile de performance est calculé ici au niveau
-saison + position + niveau de championnat.
+    position
+    +
+    niveau de championnat
+    +
+    saison / contexte temporel
 
-Cependant, cette étape reste préparatoire :
+Pour le moment, une valeur neutre de 0.5 est utilisée uniquement
+pour tester la mécanique de jointure et des fenêtres temporelles.
 
-    performance_percentile
-
-sera ensuite amélioré avec le futur PerformanceNormalizer
-lorsque nous disposerons d'un véritable dataset FBref
-suffisamment large.
-
-Le builder ne dépend donc pas d'une valeur artificielle
-de percentile lorsque le groupe de comparaison est trop
-petit.
+Usage
+-----
+    python -m football_data.transfer_performance_builder
 """
 
 from __future__ import annotations
@@ -93,82 +71,69 @@ import pandas as pd
 # CONFIGURATION
 # ============================================================================
 
+DEFAULT_OUTPUT_PATH = Path(
+    "data/performances/transfer_performance_dataset.csv"
+)
+
+DEFAULT_PERFORMANCE_LOCAL_PATH = Path(
+    "data/performances/performance_sample.csv"
+)
+
+PRE_WINDOW_MONTHS = 36
+POST_WINDOW_MONTHS = 18
+
+
+# ============================================================================
+# COLONNES ATTENDUES
+# ============================================================================
+
+TRANSFER_REQUIRED_COLUMNS = [
+    "player_id",
+    "player_name",
+    "transfer_date",
+    "transfer_season",
+]
+
+PERFORMANCE_REQUIRED_COLUMNS = [
+    "player",
+    "season",
+    "season_start_date",
+    "season_end_date",
+    "competition",
+    "competition_level",
+    "team",
+    "position",
+    "minutes",
+    "appearances",
+    "starts",
+    "goals",
+    "assists",
+    "xg",
+    "xa",
+    "goals_per90",
+    "assists_per90",
+    "xg_per90",
+    "xa_per90",
+]
+
+
+# ============================================================================
+# CONFIGURATION BUILDER
+# ============================================================================
+
 @dataclass
 class TransferPerformanceConfig:
     """
     Configuration méthodologique du builder.
     """
 
-    # ------------------------------------------------------------------
-    # Fenêtres temporelles
-    # ------------------------------------------------------------------
-
-    pre_months: int = 36
-    post_months: int = 18
-
-    # ------------------------------------------------------------------
-    # Minimums de données
-    # ------------------------------------------------------------------
-
-    min_pre_minutes: int = 900
-    min_post_minutes: int = 450
+    pre_window_months: int = PRE_WINDOW_MONTHS
+    post_window_months: int = POST_WINDOW_MONTHS
 
     min_pre_seasons: int = 1
     min_post_seasons: int = 1
 
-    # ------------------------------------------------------------------
-    # Métriques de performance
-    # ------------------------------------------------------------------
-
-    performance_metrics: tuple[str, ...] = (
-        "goals_per90",
-        "assists_per90",
-        "xg_per90",
-        "xa_per90",
-    )
-
-    # ------------------------------------------------------------------
-    # Poids du score de performance
-    # ------------------------------------------------------------------
-
-    metric_weights: Optional[dict[str, float]] = None
-
-    # ------------------------------------------------------------------
-    # Valeurs inconnues
-    # ------------------------------------------------------------------
-
-    unknown_competition_level: str = "UNKNOWN"
-    unknown_position: str = "UNKNOWN"
-
-    # ------------------------------------------------------------------
-    # Export
-    # ------------------------------------------------------------------
-
-    output_path: str = (
-        "data/performances/transfer_performance_dataset.csv"
-    )
-
-    def __post_init__(self) -> None:
-
-        if self.metric_weights is None:
-            self.metric_weights = {
-                "goals_per90": 0.30,
-                "assists_per90": 0.20,
-                "xg_per90": 0.30,
-                "xa_per90": 0.20,
-            }
-
-        # Vérification des poids
-
-        total_weight = sum(
-            self.metric_weights.get(metric, 0.0)
-            for metric in self.performance_metrics
-        )
-
-        if total_weight <= 0:
-            raise ValueError(
-                "La somme des poids des métriques doit être > 0."
-            )
+    output_path: Path = DEFAULT_OUTPUT_PATH
 
 
 # ============================================================================
@@ -177,17 +142,15 @@ class TransferPerformanceConfig:
 
 class TransferPerformanceBuilder:
     """
-    Construit le dataset de performances PRE / POST transfert.
+    Construit le dataset performance pré/post-transfert.
     """
 
     def __init__(
         self,
-        transfers: Optional[pd.DataFrame] = None,
-        performances: Optional[pd.DataFrame] = None,
+        transfers_df: pd.DataFrame,
+        performances_df: pd.DataFrame,
         config: Optional[TransferPerformanceConfig] = None,
-    ):
-        self.transfers = transfers
-        self.performances = performances
+    ) -> None:
 
         self.config = (
             config
@@ -195,162 +158,67 @@ class TransferPerformanceBuilder:
             else TransferPerformanceConfig()
         )
 
+        self.transfers_df = transfers_df.copy()
+        self.performances_df = performances_df.copy()
+
+        self._validate_inputs()
+
+        self.transfers_df = self._prepare_transfers(
+            self.transfers_df
+        )
+
+        self.performances_df = self._prepare_performances(
+            self.performances_df
+        )
+
         self.dataset: Optional[pd.DataFrame] = None
 
-    # ======================================================================
-    # PUBLIC API
-    # ======================================================================
+    # ========================================================================
+    # VALIDATION DES INPUTS
+    # ========================================================================
 
-    def build(
-        self,
-        transfers: Optional[pd.DataFrame] = None,
-        performances: Optional[pd.DataFrame] = None,
-    ) -> pd.DataFrame:
+    def _validate_inputs(self) -> None:
         """
-        Construit le dataset transfert + performances PRE/POST.
+        Vérifie la présence des colonnes nécessaires.
         """
 
-        if transfers is not None:
-            self.transfers = transfers
+        missing_transfer = [
+            column
+            for column in TRANSFER_REQUIRED_COLUMNS
+            if column not in self.transfers_df.columns
+        ]
 
-        if performances is not None:
-            self.performances = performances
-
-        if self.transfers is None:
+        if missing_transfer:
             raise ValueError(
-                "Les données de transferts sont obligatoires."
+                "Colonnes manquantes dans transfers_df : "
+                f"{missing_transfer}"
             )
 
-        if self.performances is None:
+        missing_performance = [
+            column
+            for column in PERFORMANCE_REQUIRED_COLUMNS
+            if column not in self.performances_df.columns
+        ]
+
+        if missing_performance:
             raise ValueError(
-                "Les données de performances sont obligatoires."
+                "Colonnes manquantes dans performances_df : "
+                f"{missing_performance}"
             )
 
-        transfers_df = self._prepare_transfers(
-            self.transfers.copy()
-        )
+    # ========================================================================
+    # PREPARATION TRANSFERTS
+    # ========================================================================
 
-        performances_df = self._prepare_performances(
-            self.performances.copy()
-        )
-
-        if transfers_df.empty:
-            raise ValueError(
-                "Aucun transfert exploitable après préparation."
-            )
-
-        if performances_df.empty:
-            raise ValueError(
-                "Aucune performance exploitable après préparation."
-            )
-
-        # --------------------------------------------------------------
-        # Percentiles contemporains
-        # --------------------------------------------------------------
-
-        performances_df = (
-            self._calculate_performance_percentiles(
-                performances_df
-            )
-        )
-
-        # --------------------------------------------------------------
-        # Construction du dataset
-        # --------------------------------------------------------------
-
-        rows = []
-
-        for _, transfer in transfers_df.iterrows():
-
-            player_id = transfer["player_id"]
-
-            player_perf = performances_df[
-                performances_df["player_id"].astype(str)
-                == str(player_id)
-            ].copy()
-
-            # ----------------------------------------------------------
-            # Fallback par nom
-            # ----------------------------------------------------------
-            #
-            # Utile lorsque PerformanceLoader ne possède pas encore
-            # l'identifiant Transfermarkt du joueur.
-            #
-
-            if player_perf.empty and "player_name" in transfer.index:
-
-                transfer_name = str(
-                    transfer["player_name"]
-                ).strip().lower()
-
-                player_perf = performances_df[
-                    performances_df["player"]
-                    .astype(str)
-                    .str.strip()
-                    .str.lower()
-                    == transfer_name
-                ].copy()
-
-            if player_perf.empty:
-                continue
-
-            pre = self._build_pre_transfer_profile(
-                transfer,
-                player_perf,
-            )
-
-            post = self._build_post_transfer_profile(
-                transfer,
-                player_perf,
-            )
-
-            row = self._merge_transfer_profiles(
-                transfer,
-                pre,
-                post,
-            )
-
-            rows.append(row)
-
-        if not rows:
-
-            self.dataset = pd.DataFrame()
-
-            return self.dataset
-
-        self.dataset = pd.DataFrame(rows)
-
-        return self.dataset
-
-    # ======================================================================
-    # PREPARE TRANSFERS
-    # ======================================================================
-
+    @staticmethod
     def _prepare_transfers(
-        self,
         df: pd.DataFrame,
     ) -> pd.DataFrame:
         """
-        Prépare les données de transferts.
+        Nettoyage minimal du dataset des transferts.
         """
 
-        required = [
-            "player_id",
-            "player_name",
-            "transfer_date",
-        ]
-
-        missing = [
-            col
-            for col in required
-            if col not in df.columns
-        ]
-
-        if missing:
-            raise ValueError(
-                "Colonnes manquantes dans les transferts : "
-                + ", ".join(missing)
-            )
+        df = df.copy()
 
         df["transfer_date"] = pd.to_datetime(
             df["transfer_date"],
@@ -359,128 +227,32 @@ class TransferPerformanceBuilder:
 
         df = df.dropna(
             subset=[
-                "player_id",
+                "player_name",
                 "transfer_date",
             ]
         )
 
-        # --------------------------------------------------------------
-        # Destination
-        # --------------------------------------------------------------
+        df["player_name"] = (
+            df["player_name"]
+            .astype(str)
+            .str.strip()
+        )
 
-        if "to_club_name" in df.columns:
+        return df
 
-            df = df[
-                df["to_club_name"]
-                .fillna("")
-                .astype(str)
-                .str.strip()
-                != ""
-            ]
+    # ========================================================================
+    # PREPARATION PERFORMANCES
+    # ========================================================================
 
-        # --------------------------------------------------------------
-        # Suppression doublons
-        # --------------------------------------------------------------
-
-        duplicate_columns = [
-            col
-            for col in [
-                "player_id",
-                "transfer_date",
-                "from_club_name",
-                "to_club_name",
-            ]
-            if col in df.columns
-        ]
-
-        if duplicate_columns:
-
-            df = df.drop_duplicates(
-                subset=duplicate_columns,
-                keep="first",
-            )
-
-        return df.reset_index(drop=True)
-
-    # ======================================================================
-    # PREPARE PERFORMANCES
-    # ======================================================================
-
+    @staticmethod
     def _prepare_performances(
-        self,
         df: pd.DataFrame,
     ) -> pd.DataFrame:
         """
-        Prépare le dataset PerformanceLoader.
-
-        Nouveau schéma attendu :
-
-            player
-            season
-            season_start_date
-            season_end_date
-            competition
-            competition_level
-            team
-            position
-            minutes
-            appearances
-            starts
-            goals
-            assists
-            xg
-            xa
-            goals_per90
-            assists_per90
-            xg_per90
-            xa_per90
+        Nettoyage et typage du dataset de performances.
         """
 
-        required = [
-            "player",
-            "season",
-            "season_start_date",
-            "season_end_date",
-            "competition",
-            "competition_level",
-            "team",
-            "position",
-            "minutes",
-            "starts",
-            "goals_per90",
-            "assists_per90",
-            "xg_per90",
-            "xa_per90",
-        ]
-
-        missing = [
-            col
-            for col in required
-            if col not in df.columns
-        ]
-
-        if missing:
-            raise ValueError(
-                "Colonnes manquantes dans les performances : "
-                + ", ".join(missing)
-            )
-
-        # --------------------------------------------------------------
-        # Identifiant joueur
-        # --------------------------------------------------------------
-
-        if "player_id" not in df.columns:
-
-            df["player_id"] = (
-                df["player"]
-                .astype(str)
-                .str.strip()
-                .str.lower()
-            )
-
-        # --------------------------------------------------------------
-        # Dates de saison
-        # --------------------------------------------------------------
+        df = df.copy()
 
         df["season_start_date"] = pd.to_datetime(
             df["season_start_date"],
@@ -492,58 +264,11 @@ class TransferPerformanceBuilder:
             errors="coerce",
         )
 
-        # --------------------------------------------------------------
-        # Saison
-        # --------------------------------------------------------------
-
-        df["season"] = (
-            df["season"]
+        df["player"] = (
+            df["player"]
             .astype(str)
             .str.strip()
         )
-
-        # --------------------------------------------------------------
-        # Compétition
-        # --------------------------------------------------------------
-
-        df["competition"] = (
-            df["competition"]
-            .fillna("UNKNOWN")
-            .astype(str)
-            .str.strip()
-        )
-
-        # --------------------------------------------------------------
-        # Niveau de championnat
-        # --------------------------------------------------------------
-
-        df["competition_level"] = (
-            df["competition_level"]
-            .fillna(
-                self.config.unknown_competition_level
-            )
-            .astype(str)
-            .str.upper()
-            .str.strip()
-        )
-
-        # --------------------------------------------------------------
-        # Position
-        # --------------------------------------------------------------
-
-        df["position"] = (
-            df["position"]
-            .fillna(
-                self.config.unknown_position
-            )
-            .astype(str)
-            .str.upper()
-            .str.strip()
-        )
-
-        # --------------------------------------------------------------
-        # Numériques
-        # --------------------------------------------------------------
 
         numeric_columns = [
             "minutes",
@@ -559,1428 +284,828 @@ class TransferPerformanceBuilder:
             "xa_per90",
         ]
 
-        for col in numeric_columns:
+        for column in numeric_columns:
 
-            if col in df.columns:
+            if column in df.columns:
 
-                df[col] = pd.to_numeric(
-                    df[col],
+                df[column] = pd.to_numeric(
+                    df[column],
                     errors="coerce",
                 )
-
-        # --------------------------------------------------------------
-        # Sécurité
-        # --------------------------------------------------------------
-
-        for col in [
-            "minutes",
-            "appearances",
-            "starts",
-        ]:
-
-            df[col] = (
-                df[col]
-                .fillna(0)
-                .clip(lower=0)
-            )
-
-        # --------------------------------------------------------------
-        # Dates obligatoires
-        # --------------------------------------------------------------
-
-        df = df.dropna(
-            subset=[
-                "season_start_date",
-                "season_end_date",
-            ]
-        )
-
-        # --------------------------------------------------------------
-        # Cohérence des dates
-        # --------------------------------------------------------------
-
-        df = df[
-            df["season_end_date"]
-            >= df["season_start_date"]
-        ]
-
-        # --------------------------------------------------------------
-        # Performances jouables
-        # --------------------------------------------------------------
-
-        df = df[
-            df["minutes"] > 0
-        ]
-
-        return df.reset_index(drop=True)
-
-    # ======================================================================
-    # PERCENTILES
-    # ======================================================================
-
-    def _calculate_performance_percentiles(
-        self,
-        df: pd.DataFrame,
-    ) -> pd.DataFrame:
-        """
-        Calcule les percentiles contemporains.
-
-        Groupe :
-
-            season
-            position
-            competition_level
-
-        Remarque importante
-        -------------------
-        Cette étape est actuellement une première normalisation.
-
-        Avec le vrai dataset FBref, nous disposerons d'un nombre
-        beaucoup plus important de joueurs par groupe.
-
-        Lorsqu'un groupe contient un seul joueur, le percentile
-        est fixé à 0.50 car aucune comparaison statistique
-        n'est possible.
-        """
-
-        df = df.copy()
-
-        group_columns = [
-            "season",
-            "position",
-            "competition_level",
-        ]
-
-        percentile_columns = []
-
-        # --------------------------------------------------------------
-        # Percentile par métrique
-        # --------------------------------------------------------------
-
-        for metric in self.config.performance_metrics:
-
-            if metric not in df.columns:
-                continue
-
-            percentile_col = (
-                f"{metric}_percentile"
-            )
-
-            percentile_columns.append(
-                percentile_col
-            )
-
-            def percentile_rank(group):
-
-                values = pd.to_numeric(
-                    group,
-                    errors="coerce",
-                )
-
-                valid_count = values.notna().sum()
-
-                if valid_count <= 1:
-
-                    return pd.Series(
-                        0.50,
-                        index=group.index,
-                    )
-
-                return values.rank(
-                    pct=True,
-                    method="average",
-                )
-
-            df[percentile_col] = (
-                df.groupby(
-                    group_columns,
-                    dropna=False,
-                )[metric]
-                .transform(percentile_rank)
-            )
-
-        # --------------------------------------------------------------
-        # Score pondéré
-        # --------------------------------------------------------------
-
-        weighted_sum = pd.Series(
-            0.0,
-            index=df.index,
-        )
-
-        total_weight = pd.Series(
-            0.0,
-            index=df.index,
-        )
-
-        for metric in self.config.performance_metrics:
-
-            percentile_col = (
-                f"{metric}_percentile"
-            )
-
-            if percentile_col not in df.columns:
-                continue
-
-            weight = self.config.metric_weights.get(
-                metric,
-                0.0,
-            )
-
-            valid = (
-                df[percentile_col].notna()
-            )
-
-            weighted_sum += (
-                df[percentile_col]
-                .fillna(0.0)
-                * weight
-            )
-
-            total_weight += (
-                valid.astype(float)
-                * weight
-            )
-
-        df["performance_percentile"] = np.where(
-            total_weight > 0,
-            weighted_sum / total_weight,
-            np.nan,
-        )
-
-        df["performance_percentile"] = (
-            df["performance_percentile"]
-            .clip(0, 1)
-        )
 
         return df
 
-    # ======================================================================
-    # PRE TRANSFER
-    # ======================================================================
+    # ========================================================================
+    # FENETRES TEMPORELLES
+    # ========================================================================
 
-    def _build_pre_transfer_profile(
+    def _calculate_windows(
         self,
-        transfer: pd.Series,
-        performances: pd.DataFrame,
-    ) -> dict:
+        transfer_date: pd.Timestamp,
+    ) -> tuple[
+        pd.Timestamp,
+        pd.Timestamp,
+        pd.Timestamp,
+        pd.Timestamp,
+    ]:
         """
-        Construit le profil PRE.
-
-        Fenêtre :
-
-            transfer_date - 36 mois
-            jusqu'à
-            transfer_date
-
-        Une saison doit :
-
-            1. être entièrement terminée avant le transfert ;
-            2. intersecter la fenêtre PRE.
-
-        La saison contenant le transfert est donc exclue.
+        Calcule les bornes PRE et POST.
         """
-
-        transfer_date = pd.Timestamp(
-            transfer["transfer_date"]
-        )
 
         pre_start = (
             transfer_date
             - pd.DateOffset(
-                months=self.config.pre_months
+                months=self.config.pre_window_months
             )
         )
 
-        selected = performances[
-            (
-                performances["season_end_date"]
-                < transfer_date
-            )
-            &
-            (
-                performances["season_end_date"]
-                >= pre_start
-            )
-        ].copy()
+        pre_end = transfer_date
 
-        if selected.empty:
-
-            return self._empty_profile(
-                prefix="pre"
-            )
-
-        return self._aggregate_profile(
-            selected,
-            prefix="pre",
-        )
-
-    # ======================================================================
-    # POST TRANSFER
-    # ======================================================================
-
-    def _build_post_transfer_profile(
-        self,
-        transfer: pd.Series,
-        performances: pd.DataFrame,
-    ) -> dict:
-        """
-        Construit le profil POST.
-
-        Fenêtre :
-
-            transfer_date
-            jusqu'à
-            transfer_date + 18 mois
-
-        Une saison doit commencer après le transfert
-        et commencer avant la fin de la fenêtre.
-
-        La saison du transfert est donc exclue.
-        """
-
-        transfer_date = pd.Timestamp(
-            transfer["transfer_date"]
-        )
+        post_start = transfer_date
 
         post_end = (
             transfer_date
             + pd.DateOffset(
-                months=self.config.post_months
+                months=self.config.post_window_months
             )
         )
 
-        selected = performances[
-            (
-                performances["season_start_date"]
-                > transfer_date
-            )
-            &
-            (
-                performances["season_start_date"]
-                <= post_end
-            )
-        ].copy()
-
-        if selected.empty:
-
-            return self._empty_profile(
-                prefix="post"
-            )
-
-        return self._aggregate_profile(
-            selected,
-            prefix="post",
+        return (
+            pre_start,
+            pre_end,
+            post_start,
+            post_end,
         )
 
-    # ======================================================================
-    # AGGREGATION
-    # ======================================================================
+    # ========================================================================
+    # SELECTION PRE
+    # ========================================================================
 
-    def _aggregate_profile(
+    def _select_pre_performances(
         self,
-        df: pd.DataFrame,
-        prefix: str,
-    ) -> dict:
-        """
-        Agrège les performances sur plusieurs saisons.
-
-        Les métriques de performance sont pondérées
-        par le nombre de minutes.
-        """
-
-        result = {}
-
-        # --------------------------------------------------------------
-        # Volumes
-        # --------------------------------------------------------------
-
-        total_minutes = (
-            df["minutes"]
-            .fillna(0)
-            .sum()
-        )
-
-        total_starts = (
-            df["starts"]
-            .fillna(0)
-            .sum()
-        )
-
-        total_appearances = (
-            df["appearances"]
-            .fillna(0)
-            .sum()
-        )
-
-        # --------------------------------------------------------------
-        # Métriques pondérées par minutes
-        # --------------------------------------------------------------
-
-        metrics = [
-            "goals_per90",
-            "assists_per90",
-            "xg_per90",
-            "xa_per90",
-            "performance_percentile",
-        ]
-
-        for metric in metrics:
-
-            if metric not in df.columns:
-                continue
-
-            values = pd.to_numeric(
-                df[metric],
-                errors="coerce",
-            )
-
-            weights = (
-                df["minutes"]
-                .fillna(0)
-            )
-
-            valid = (
-                values.notna()
-                & weights.gt(0)
-            )
-
-            if valid.any():
-
-                weighted_value = np.average(
-                    values[valid],
-                    weights=weights[valid],
-                )
-
-            else:
-
-                weighted_value = np.nan
-
-            result[
-                f"{prefix}_{metric}"
-            ] = weighted_value
-
-        # --------------------------------------------------------------
-        # Volumes
-        # --------------------------------------------------------------
-
-        result[
-            f"{prefix}_minutes"
-        ] = total_minutes
-
-        result[
-            f"{prefix}_appearances"
-        ] = total_appearances
-
-        result[
-            f"{prefix}_starts"
-        ] = total_starts
-
-        # --------------------------------------------------------------
-        # Starter rate
-        # --------------------------------------------------------------
-
-        if total_appearances > 0:
-
-            result[
-                f"{prefix}_starter_rate"
-            ] = (
-                total_starts
-                / total_appearances
-            )
-
-        else:
-
-            result[
-                f"{prefix}_starter_rate"
-            ] = np.nan
-
-        # --------------------------------------------------------------
-        # Nombre de saisons
-        # --------------------------------------------------------------
-
-        result[
-            f"{prefix}_seasons"
-        ] = (
-            df["season"]
-            .nunique()
-        )
-
-        # --------------------------------------------------------------
-        # Compétitions utilisées
-        # --------------------------------------------------------------
-
-        if "competition" in df.columns:
-
-            competitions = (
-                df["competition"]
-                .dropna()
-                .astype(str)
-                .unique()
-                .tolist()
-            )
-
-            result[
-                f"{prefix}_competitions"
-            ] = "|".join(
-                sorted(competitions)
-            )
-
-        else:
-
-            result[
-                f"{prefix}_competitions"
-            ] = ""
-
-        # --------------------------------------------------------------
-        # Niveaux de championnat
-        # --------------------------------------------------------------
-
-        if "competition_level" in df.columns:
-
-            levels = (
-                df["competition_level"]
-                .dropna()
-                .astype(str)
-                .unique()
-                .tolist()
-            )
-
-            result[
-                f"{prefix}_competition_levels"
-            ] = "|".join(
-                sorted(levels)
-            )
-
-        else:
-
-            result[
-                f"{prefix}_competition_levels"
-            ] = ""
-
-        # --------------------------------------------------------------
-        # Positions
-        # --------------------------------------------------------------
-
-        if "position" in df.columns:
-
-            positions = (
-                df["position"]
-                .dropna()
-                .astype(str)
-                .unique()
-                .tolist()
-            )
-
-            result[
-                f"{prefix}_positions"
-            ] = "|".join(
-                sorted(positions)
-            )
-
-        else:
-
-            result[
-                f"{prefix}_positions"
-            ] = ""
-
-        # --------------------------------------------------------------
-        # Qualité des données
-        # --------------------------------------------------------------
-
-        minimum_minutes = (
-            self.config.min_pre_minutes
-            if prefix == "pre"
-            else self.config.min_post_minutes
-        )
-
-        minimum_seasons = (
-            self.config.min_pre_seasons
-            if prefix == "pre"
-            else self.config.min_post_seasons
-        )
-
-        result[
-            f"{prefix}_data_sufficient"
-        ] = bool(
-            total_minutes >= minimum_minutes
-            and
-            df["season"].nunique()
-            >= minimum_seasons
-        )
-
-        # --------------------------------------------------------------
-        # Stabilité de la performance
-        # --------------------------------------------------------------
-
-        if "performance_percentile" in df.columns:
-
-            values = pd.to_numeric(
-                df["performance_percentile"],
-                errors="coerce",
-            )
-
-            result[
-                f"{prefix}_performance_min"
-            ] = values.min()
-
-            result[
-                f"{prefix}_performance_max"
-            ] = values.max()
-
-            result[
-                f"{prefix}_performance_std"
-            ] = values.std()
-
-        return result
-
-    # ======================================================================
-    # EMPTY PROFILE
-    # ======================================================================
-
-    @staticmethod
-    def _empty_profile(
-        prefix: str,
-    ) -> dict:
-        """
-        Profil vide lorsque aucune donnée n'est disponible.
-        """
-
-        return {
-
-            f"{prefix}_minutes":
-                np.nan,
-
-            f"{prefix}_appearances":
-                np.nan,
-
-            f"{prefix}_starts":
-                np.nan,
-
-            f"{prefix}_starter_rate":
-                np.nan,
-
-            f"{prefix}_goals_per90":
-                np.nan,
-
-            f"{prefix}_assists_per90":
-                np.nan,
-
-            f"{prefix}_xg_per90":
-                np.nan,
-
-            f"{prefix}_xa_per90":
-                np.nan,
-
-            f"{prefix}_performance_percentile":
-                np.nan,
-
-            f"{prefix}_seasons":
-                0,
-
-            f"{prefix}_competitions":
-                "",
-
-            f"{prefix}_competition_levels":
-                "",
-
-            f"{prefix}_positions":
-                "",
-
-            f"{prefix}_data_sufficient":
-                False,
-
-            f"{prefix}_performance_min":
-                np.nan,
-
-            f"{prefix}_performance_max":
-                np.nan,
-
-            f"{prefix}_performance_std":
-                np.nan,
-        }
-
-    # ======================================================================
-    # MERGE
-    # ======================================================================
-
-    def _merge_transfer_profiles(
-        self,
-        transfer: pd.Series,
-        pre: dict,
-        post: dict,
-    ) -> dict:
-        """
-        Fusionne transfert + profils PRE/POST.
-        """
-
-        result = {}
-
-        # --------------------------------------------------------------
-        # Informations transfert
-        # --------------------------------------------------------------
-
-        transfer_columns = [
-            "player_id",
-            "player_name",
-            "transfer_date",
-            "transfer_season",
-            "from_club_id",
-            "from_club_name",
-            "to_club_id",
-            "to_club_name",
-            "transfer_fee",
-            "market_value_in_eur",
-            "position",
-            "sub_position",
-            "age_at_transfer",
-            "is_free_transfer",
-            "transfer_fee_known",
-        ]
-
-        for col in transfer_columns:
-
-            if col in transfer.index:
-
-                result[col] = transfer[col]
-
-        # --------------------------------------------------------------
-        # Profiles
-        # --------------------------------------------------------------
-
-        result.update(pre)
-        result.update(post)
-
-        # --------------------------------------------------------------
-        # Delta performance
-        # --------------------------------------------------------------
-
-        pre_perf = pre.get(
-            "pre_performance_percentile",
-            np.nan,
-        )
-
-        post_perf = post.get(
-            "post_performance_percentile",
-            np.nan,
-        )
-
-        if (
-            pd.notna(pre_perf)
-            and
-            pd.notna(post_perf)
-        ):
-
-            result[
-                "performance_percentile_delta"
-            ] = (
-                post_perf
-                - pre_perf
-            )
-
-        else:
-
-            result[
-                "performance_percentile_delta"
-            ] = np.nan
-
-        # --------------------------------------------------------------
-        # Delta minutes
-        # --------------------------------------------------------------
-
-        pre_minutes = pre.get(
-            "pre_minutes",
-            np.nan,
-        )
-
-        post_minutes = post.get(
-            "post_minutes",
-            np.nan,
-        )
-
-        if (
-            pd.notna(pre_minutes)
-            and
-            pd.notna(post_minutes)
-        ):
-
-            result[
-                "minutes_delta"
-            ] = (
-                post_minutes
-                - pre_minutes
-            )
-
-        else:
-
-            result[
-                "minutes_delta"
-            ] = np.nan
-
-        # --------------------------------------------------------------
-        # Qualité
-        # --------------------------------------------------------------
-
-        result[
-            "performance_data_quality"
-        ] = self._data_quality(
-            pre,
-            post,
-        )
-
-        return result
-
-    # ======================================================================
-    # DATA QUALITY
-    # ======================================================================
-
-    @staticmethod
-    def _data_quality(
-        pre: dict,
-        post: dict,
-    ) -> str:
-        """
-        Classe la complétude du dossier performance.
-        """
-
-        pre_ok = pre.get(
-            "pre_data_sufficient",
-            False,
-        )
-
-        post_ok = post.get(
-            "post_data_sufficient",
-            False,
-        )
-
-        if pre_ok and post_ok:
-            return "COMPLETE"
-
-        if pre_ok:
-            return "PRE_ONLY"
-
-        if post_ok:
-            return "POST_ONLY"
-
-        return "INSUFFICIENT"
-
-    # ======================================================================
-    # FILTERS
-    # ======================================================================
-
-    def filter_complete_cases(
-        self,
+        player_performances: pd.DataFrame,
+        transfer_date: pd.Timestamp,
     ) -> pd.DataFrame:
         """
-        Retourne uniquement les observations
-        ayant suffisamment de données PRE et POST.
+        Sélectionne les saisons PRE.
+
+        Une saison PRE doit :
+
+            1. être terminée avant ou à la date du transfert
+            2. avoir une date de fin strictement après la borne
+               de 36 mois.
+
+        Cela garantit qu'une saison contenant le transfert
+        n'est pas utilisée comme saison PRE.
         """
 
-        if self.dataset is None:
+        pre_start, pre_end, _, _ = (
+            self._calculate_windows(
+                transfer_date
+            )
+        )
 
-            raise ValueError(
-                "Construis d'abord le dataset avec build()."
+        data = player_performances.copy()
+
+        mask = (
+            (data["season_end_date"] <= pre_end)
+            &
+            (data["season_end_date"] > pre_start)
+        )
+
+        result = data.loc[mask].copy()
+
+        return result.sort_values(
+            "season_start_date"
+        )
+
+    # ========================================================================
+    # SELECTION POST
+    # ========================================================================
+
+    def _select_post_performances(
+        self,
+        player_performances: pd.DataFrame,
+        transfer_date: pd.Timestamp,
+    ) -> pd.DataFrame:
+        """
+        Sélectionne les saisons POST.
+
+        Règle méthodologique :
+
+            season_start_date > transfer_date
+
+        Une saison commencée avant ou le jour du transfert
+        est donc exclue.
+
+        La saison doit également commencer avant la fin
+        de la fenêtre de 18 mois.
+        """
+
+        _, _, post_start, post_end = (
+            self._calculate_windows(
+                transfer_date
+            )
+        )
+
+        data = player_performances.copy()
+
+        mask = (
+            (data["season_start_date"] > post_start)
+            &
+            (data["season_start_date"] < post_end)
+        )
+
+        result = data.loc[mask].copy()
+
+        return result.sort_values(
+            "season_start_date"
+        )
+
+    # ========================================================================
+    # AGREGER LES PERFORMANCES
+    # ========================================================================
+
+    @staticmethod
+    def _aggregate_performances(
+        df: pd.DataFrame,
+    ) -> dict:
+        """
+        Agrège les performances d'une fenêtre.
+        """
+
+        if df.empty:
+
+            return {
+                "minutes": np.nan,
+                "seasons": 0,
+                "performance_percentile": np.nan,
+            }
+
+        minutes = df["minutes"].sum(
+            min_count=1
+        )
+
+        seasons = df["season"].nunique()
+
+        # --------------------------------------------------------------------
+        # VALEUR TEMPORAIRE
+        #
+        # Le vrai percentile sera calculé dans l'étape suivante.
+        # --------------------------------------------------------------------
+
+        performance_percentile = 0.5
+
+        return {
+            "minutes": minutes,
+            "seasons": seasons,
+            "performance_percentile": (
+                performance_percentile
+            ),
+        }
+
+    # ========================================================================
+    # CONSTRUCTION D'UNE LIGNE DE TRANSFERT
+    # ========================================================================
+
+    def _build_transfer_row(
+        self,
+        transfer: pd.Series,
+    ) -> dict:
+        """
+        Construit une observation pour un transfert.
+        """
+
+        player_name = transfer["player_name"]
+
+        transfer_date = transfer["transfer_date"]
+
+        # --------------------------------------------------------------------
+        # IDENTIFICATION JOUEUR
+        # --------------------------------------------------------------------
+
+        player_mask = (
+            self.performances_df["player"]
+            .str.casefold()
+            == str(player_name).casefold()
+        )
+
+        player_performances = (
+            self.performances_df.loc[
+                player_mask
+            ].copy()
+        )
+
+        # --------------------------------------------------------------------
+        # PRE
+        # --------------------------------------------------------------------
+
+        pre_data = self._select_pre_performances(
+            player_performances,
+            transfer_date,
+        )
+
+        # --------------------------------------------------------------------
+        # POST
+        # --------------------------------------------------------------------
+
+        post_data = self._select_post_performances(
+            player_performances,
+            transfer_date,
+        )
+
+        # --------------------------------------------------------------------
+        # AGREGATION
+        # --------------------------------------------------------------------
+
+        pre = self._aggregate_performances(
+            pre_data
+        )
+
+        post = self._aggregate_performances(
+            post_data
+        )
+
+        # --------------------------------------------------------------------
+        # QUALITE DES DONNEES
+        # --------------------------------------------------------------------
+
+        has_pre = (
+            pre["seasons"]
+            >= self.config.min_pre_seasons
+        )
+
+        has_post = (
+            post["seasons"]
+            >= self.config.min_post_seasons
+        )
+
+        if has_pre and has_post:
+
+            quality = "COMPLETE"
+
+        elif has_pre:
+
+            quality = "PRE_ONLY"
+
+        elif has_post:
+
+            quality = "POST_ONLY"
+
+        else:
+
+            quality = "INSUFFICIENT"
+
+        # --------------------------------------------------------------------
+        # DELTA
+        # --------------------------------------------------------------------
+
+        if (
+            pd.notna(
+                pre["performance_percentile"]
+            )
+            and pd.notna(
+                post["performance_percentile"]
+            )
+        ):
+
+            delta = (
+                post["performance_percentile"]
+                - pre["performance_percentile"]
             )
 
-        return self.dataset[
-            self.dataset[
-                "performance_data_quality"
-            ]
-            == "COMPLETE"
-        ].copy()
+        else:
 
-    # ======================================================================
+            delta = np.nan
+
+        # --------------------------------------------------------------------
+        # RESULTAT
+        # --------------------------------------------------------------------
+
+        return {
+            "player_id": transfer.get(
+                "player_id",
+                np.nan,
+            ),
+
+            "player_name": player_name,
+
+            "transfer_date": transfer_date,
+
+            "transfer_season": transfer.get(
+                "transfer_season",
+                np.nan,
+            ),
+
+            "pre_minutes": pre["minutes"],
+
+            "pre_seasons": pre["seasons"],
+
+            "pre_performance_percentile": (
+                pre["performance_percentile"]
+            ),
+
+            "post_minutes": post["minutes"],
+
+            "post_seasons": post["seasons"],
+
+            "post_performance_percentile": (
+                post["performance_percentile"]
+            ),
+
+            "performance_percentile_delta": delta,
+
+            "performance_data_quality": quality,
+        }
+
+    # ========================================================================
+    # BUILD
+    # ========================================================================
+
+    def build(self) -> pd.DataFrame:
+        """
+        Construit le dataset final.
+        """
+
+        rows = []
+
+        for _, transfer in self.transfers_df.iterrows():
+
+            row = self._build_transfer_row(
+                transfer
+            )
+
+            rows.append(row)
+
+        result = pd.DataFrame(
+            rows
+        )
+
+        if not result.empty:
+
+            result = result.sort_values(
+                [
+                    "transfer_date",
+                    "player_name",
+                ]
+            ).reset_index(
+                drop=True
+            )
+
+        self.dataset = result
+
+        return result
+
+    # ========================================================================
+    # SUMMARY
+    # ========================================================================
+
+    def summary(
+        self,
+        dataset: Optional[pd.DataFrame] = None,
+    ) -> dict:
+        """
+        Produit un résumé du dataset.
+        """
+
+        if dataset is None:
+
+            dataset = (
+                self.dataset
+                if self.dataset is not None
+                else pd.DataFrame()
+            )
+
+        if dataset.empty:
+
+            return {
+                "rows": 0,
+                "unique_players": 0,
+                "complete_cases": 0,
+                "pre_only": 0,
+                "post_only": 0,
+                "insufficient": 0,
+                "mean_pre_percentile": np.nan,
+                "mean_post_percentile": np.nan,
+                "mean_percentile_delta": np.nan,
+            }
+
+        quality = dataset[
+            "performance_data_quality"
+        ]
+
+        return {
+            "rows": len(dataset),
+
+            "unique_players": dataset[
+                "player_name"
+            ].nunique(),
+
+            "complete_cases": (
+                quality == "COMPLETE"
+            ).sum(),
+
+            "pre_only": (
+                quality == "PRE_ONLY"
+            ).sum(),
+
+            "post_only": (
+                quality == "POST_ONLY"
+            ).sum(),
+
+            "insufficient": (
+                quality == "INSUFFICIENT"
+            ).sum(),
+
+            "mean_pre_percentile": dataset[
+                "pre_performance_percentile"
+            ].mean(),
+
+            "mean_post_percentile": dataset[
+                "post_performance_percentile"
+            ].mean(),
+
+            "mean_percentile_delta": dataset[
+                "performance_percentile_delta"
+            ].mean(),
+        }
+
+    # ========================================================================
     # SAVE
-    # ======================================================================
+    # ========================================================================
 
     def save(
         self,
-        path: Optional[str] = None,
+        dataset: Optional[pd.DataFrame] = None,
+        path: Optional[Path] = None,
     ) -> Path:
         """
         Sauvegarde le dataset au format CSV.
         """
 
-        if self.dataset is None:
+        if dataset is None:
 
-            raise ValueError(
-                "Aucun dataset à sauvegarder."
+            dataset = (
+                self.dataset
+                if self.dataset is not None
+                else self.build()
             )
 
-        output = Path(
-            path
+        output_path = (
+            Path(path)
             if path is not None
             else self.config.output_path
         )
 
-        output.parent.mkdir(
+        output_path.parent.mkdir(
             parents=True,
             exist_ok=True,
         )
 
-        self.dataset.to_csv(
-            output,
+        dataset.to_csv(
+            output_path,
             index=False,
         )
 
         print(
             "[TransferPerformanceBuilder] "
-            f"Dataset sauvegardé : {output}"
+            f"Dataset sauvegardé : {output_path}"
         )
 
-        return output
-
-    # ======================================================================
-    # SUMMARY
-    # ======================================================================
-
-    def summary(self) -> dict:
-        """
-        Retourne un résumé du dataset construit.
-        """
-
-        if self.dataset is None:
-
-            return {
-                "rows": 0
-            }
-
-        df = self.dataset
-
-        return {
-
-            "rows":
-                len(df),
-
-            "unique_players":
-                (
-                    df["player_id"].nunique()
-                    if "player_id" in df.columns
-                    else 0
-                ),
-
-            "complete_cases":
-                int(
-                    (
-                        df["performance_data_quality"]
-                        == "COMPLETE"
-                    ).sum()
-                ),
-
-            "pre_only":
-                int(
-                    (
-                        df["performance_data_quality"]
-                        == "PRE_ONLY"
-                    ).sum()
-                ),
-
-            "post_only":
-                int(
-                    (
-                        df["performance_data_quality"]
-                        == "POST_ONLY"
-                    ).sum()
-                ),
-
-            "insufficient":
-                int(
-                    (
-                        df["performance_data_quality"]
-                        == "INSUFFICIENT"
-                    ).sum()
-                ),
-
-            "mean_pre_percentile":
-                df[
-                    "pre_performance_percentile"
-                ].mean(),
-
-            "mean_post_percentile":
-                df[
-                    "post_performance_percentile"
-                ].mean(),
-
-            "mean_percentile_delta":
-                df[
-                    "performance_percentile_delta"
-                ].mean(),
-        }
+        return output_path
 
 
 # ============================================================================
-# TEST DATA
+# VALIDATION DES FENETRES
 # ============================================================================
 
-def _build_test_transfers() -> pd.DataFrame:
+def validate_windows(
+    builder: TransferPerformanceBuilder,
+    dataset: pd.DataFrame,
+    expected_pre_seasons: int = 3,
+    expected_post_seasons: int = 1,
+) -> bool:
     """
-    Jeu de données de test.
-
-    Les transferts sont volontairement placés
-    au milieu de la saison 2023/24 afin de vérifier
-    que cette saison est exclue du PRE et du POST.
+    Vérifie le nombre de saisons PRE et POST.
     """
-
-    return pd.DataFrame({
-
-        "player_id": [
-            "P001",
-            "P002",
-        ],
-
-        "player_name": [
-            "Test Player",
-            "Another Player",
-        ],
-
-        "transfer_date": [
-            "2023-07-10",
-            "2023-07-15",
-        ],
-
-        "transfer_season": [
-            "23/24",
-            "23/24",
-        ],
-
-        "from_club_id": [
-            "C001",
-            "C002",
-        ],
-
-        "from_club_name": [
-            "Old FC",
-            "Other FC",
-        ],
-
-        "to_club_id": [
-            "C003",
-            "C004",
-        ],
-
-        "to_club_name": [
-            "New FC",
-            "New Other FC",
-        ],
-
-        "transfer_fee": [
-            20_000_000,
-            0,
-        ],
-
-        "market_value_in_eur": [
-            25_000_000,
-            8_000_000,
-        ],
-
-        "position": [
-            "FW",
-            "MF",
-        ],
-
-        "age_at_transfer": [
-            24,
-            27,
-        ],
-
-        "is_free_transfer": [
-            False,
-            True,
-        ],
-
-        "transfer_fee_known": [
-            True,
-            True,
-        ],
-    })
-
-
-def _build_test_performances() -> pd.DataFrame:
-    """
-    Dataset de test aligné sur les 19 colonnes
-    du nouveau performance_sample.csv.
-
-    Chaque joueur dispose de :
-
-        2020/21
-        2021/22
-        2022/23
-        2023/24
-        2024/25
-
-    Pour un transfert en juillet 2023 :
-
-        PRE 36 mois :
-            2020/21
-            2021/22
-            2022/23
-
-        POST 18 mois :
-            2024/25
-
-    La saison 2023/24 est volontairement exclue
-    car elle contient la date du transfert.
-    """
-
-    rows = [
-
-        # ==============================================================
-        # TEST PLAYER
-        # ==============================================================
-
-        {
-            "player_id": "P001",
-            "player": "Test Player",
-            "season": "2020/21",
-            "season_start_date": "2020-08-01",
-            "season_end_date": "2021-05-23",
-            "competition": "Ligue 1",
-            "competition_level": "TOP_5",
-            "team": "Old FC",
-            "position": "FW",
-            "minutes": 1800,
-            "appearances": 24,
-            "starts": 18,
-            "goals": 10,
-            "assists": 5,
-            "xg": 9.2,
-            "xa": 4.1,
-            "goals_per90": 0.50,
-            "assists_per90": 0.25,
-            "xg_per90": 0.46,
-            "xa_per90": 0.205,
-        },
-
-        {
-            "player_id": "P001",
-            "player": "Test Player",
-            "season": "2021/22",
-            "season_start_date": "2021-08-01",
-            "season_end_date": "2022-05-23",
-            "competition": "Ligue 1",
-            "competition_level": "TOP_5",
-            "team": "Old FC",
-            "position": "FW",
-            "minutes": 2400,
-            "appearances": 30,
-            "starts": 27,
-            "goals": 15,
-            "assists": 7,
-            "xg": 13.5,
-            "xa": 6.2,
-            "goals_per90": 0.5625,
-            "assists_per90": 0.2625,
-            "xg_per90": 0.50625,
-            "xa_per90": 0.2325,
-        },
-
-        {
-            "player_id": "P001",
-            "player": "Test Player",
-            "season": "2022/23",
-            "season_start_date": "2022-08-01",
-            "season_end_date": "2023-06-03",
-            "competition": "Ligue 1",
-            "competition_level": "TOP_5",
-            "team": "Old FC",
-            "position": "FW",
-            "minutes": 2700,
-            "appearances": 32,
-            "starts": 30,
-            "goals": 20,
-            "assists": 8,
-            "xg": 18.5,
-            "xa": 7.2,
-            "goals_per90": 0.6667,
-            "assists_per90": 0.2667,
-            "xg_per90": 0.6167,
-            "xa_per90": 0.2400,
-        },
-
-        # Saison du transfert -> doit être exclue du PRE et POST
-
-        {
-            "player_id": "P001",
-            "player": "Test Player",
-            "season": "2023/24",
-            "season_start_date": "2023-08-01",
-            "season_end_date": "2024-05-19",
-            "competition": "Ligue 1",
-            "competition_level": "TOP_5",
-            "team": "New FC",
-            "position": "FW",
-            "minutes": 2500,
-            "appearances": 30,
-            "starts": 28,
-            "goals": 17,
-            "assists": 9,
-            "xg": 16.8,
-            "xa": 8.1,
-            "goals_per90": 0.6120,
-            "assists_per90": 0.3240,
-            "xg_per90": 0.6048,
-            "xa_per90": 0.2916,
-        },
-
-        {
-            "player_id": "P001",
-            "player": "Test Player",
-            "season": "2024/25",
-            "season_start_date": "2024-08-01",
-            "season_end_date": "2025-05-25",
-            "competition": "Ligue 1",
-            "competition_level": "TOP_5",
-            "team": "New FC",
-            "position": "FW",
-            "minutes": 2600,
-            "appearances": 31,
-            "starts": 29,
-            "goals": 19,
-            "assists": 10,
-            "xg": 18.2,
-            "xa": 9.0,
-            "goals_per90": 0.6577,
-            "assists_per90": 0.3462,
-            "xg_per90": 0.6300,
-            "xa_per90": 0.3115,
-        },
-
-        # ==============================================================
-        # ANOTHER PLAYER
-        # ==============================================================
-
-        {
-            "player_id": "P002",
-            "player": "Another Player",
-            "season": "2020/21",
-            "season_start_date": "2020-08-01",
-            "season_end_date": "2021-05-23",
-            "competition": "Ligue 2",
-            "competition_level": "SECOND_TIER",
-            "team": "Other FC",
-            "position": "MF",
-            "minutes": 2100,
-            "appearances": 28,
-            "starts": 24,
-            "goals": 7,
-            "assists": 10,
-            "xg": 6.5,
-            "xa": 8.9,
-            "goals_per90": 0.3000,
-            "assists_per90": 0.4286,
-            "xg_per90": 0.2786,
-            "xa_per90": 0.3814,
-        },
-
-        {
-            "player_id": "P002",
-            "player": "Another Player",
-            "season": "2021/22",
-            "season_start_date": "2021-08-01",
-            "season_end_date": "2022-05-14",
-            "competition": "Ligue 2",
-            "competition_level": "SECOND_TIER",
-            "team": "Other FC",
-            "position": "MF",
-            "minutes": 2400,
-            "appearances": 30,
-            "starts": 27,
-            "goals": 8,
-            "assists": 12,
-            "xg": 7.4,
-            "xa": 10.2,
-            "goals_per90": 0.3000,
-            "assists_per90": 0.4500,
-            "xg_per90": 0.2775,
-            "xa_per90": 0.3825,
-        },
-
-        {
-            "player_id": "P002",
-            "player": "Another Player",
-            "season": "2022/23",
-            "season_start_date": "2022-08-01",
-            "season_end_date": "2023-06-02",
-            "competition": "Ligue 2",
-            "competition_level": "SECOND_TIER",
-            "team": "Other FC",
-            "position": "MF",
-            "minutes": 2300,
-            "appearances": 29,
-            "starts": 25,
-            "goals": 9,
-            "assists": 11,
-            "xg": 8.1,
-            "xa": 9.8,
-            "goals_per90": 0.3522,
-            "assists_per90": 0.4304,
-            "xg_per90": 0.3170,
-            "xa_per90": 0.3835,
-        },
-
-        # Saison du transfert
-
-        {
-            "player_id": "P002",
-            "player": "Another Player",
-            "season": "2023/24",
-            "season_start_date": "2023-08-01",
-            "season_end_date": "2024-05-17",
-            "competition": "Ligue 2",
-            "competition_level": "SECOND_TIER",
-            "team": "New Other FC",
-            "position": "MF",
-            "minutes": 2200,
-            "appearances": 28,
-            "starts": 24,
-            "goals": 8,
-            "assists": 13,
-            "xg": 7.6,
-            "xa": 10.5,
-            "goals_per90": 0.3273,
-            "assists_per90": 0.5318,
-            "xg_per90": 0.3109,
-            "xa_per90": 0.4295,
-        },
-
-        {
-            "player_id": "P002",
-            "player": "Another Player",
-            "season": "2024/25",
-            "season_start_date": "2024-08-01",
-            "season_end_date": "2025-05-17",
-            "competition": "Ligue 2",
-            "competition_level": "SECOND_TIER",
-            "team": "New Other FC",
-            "position": "MF",
-            "minutes": 2500,
-            "appearances": 30,
-            "starts": 27,
-            "goals": 10,
-            "assists": 14,
-            "xg": 9.2,
-            "xa": 11.4,
-            "goals_per90": 0.3600,
-            "assists_per90": 0.5040,
-            "xg_per90": 0.3312,
-            "xa_per90": 0.4104,
-        },
-    ]
-
-    return pd.DataFrame(rows)
-
-
-# ============================================================================
-# MAIN TEST
-# ============================================================================
-
-if __name__ == "__main__":
 
     print()
+    print("VALIDATION FENETRES")
+    print("-" * 70)
+
+    success = True
+
+    for _, row in dataset.iterrows():
+
+        pre_ok = (
+            row["pre_seasons"]
+            == expected_pre_seasons
+        )
+
+        post_ok = (
+            row["post_seasons"]
+            == expected_post_seasons
+        )
+
+        print(
+            f"{str(row['player_name']):<25}"
+            f" PRE={row['pre_seasons']} "
+            f"(attendu {expected_pre_seasons}) "
+            f"{'✓' if pre_ok else '✗'}"
+            f" | "
+            f"POST={row['post_seasons']} "
+            f"(attendu {expected_post_seasons}) "
+            f"{'✓' if post_ok else '✗'}"
+        )
+
+        if not pre_ok or not post_ok:
+
+            success = False
+
+    return success
+
+
+# ============================================================================
+# VALIDATION EXCLUSION SAISON TRANSFERT
+# ============================================================================
+
+def validate_transfer_season_exclusion(
+    builder: TransferPerformanceBuilder,
+) -> bool:
+    """
+    Vérifie qu'aucune saison commencée avant ou à la date
+    du transfert n'est considérée comme POST.
+    """
+
+    print()
+    print(
+        "VALIDATION EXCLUSION SAISON TRANSFERT"
+    )
+    print("-" * 70)
+
+    success = True
+
+    for _, transfer in builder.transfers_df.iterrows():
+
+        player_name = transfer["player_name"]
+
+        transfer_date = transfer["transfer_date"]
+
+        player_mask = (
+            builder.performances_df["player"]
+            .str.casefold()
+            == str(player_name).casefold()
+        )
+
+        player_performances = (
+            builder.performances_df.loc[
+                player_mask
+            ].copy()
+        )
+
+        post_data = (
+            builder._select_post_performances(
+                player_performances,
+                transfer_date,
+            )
+        )
+
+        invalid = post_data[
+            post_data["season_start_date"]
+            <= transfer_date
+        ]
+
+        if not invalid.empty:
+
+            print(
+                f"✗ {player_name} : "
+                "une saison de transfert apparaît dans POST."
+            )
+
+            success = False
+
+        else:
+
+            print(
+                f"✓ {player_name} : "
+                "saison du transfert correctement exclue."
+            )
+
+    return success
+
+
+# ============================================================================
+# VALIDATION SPECIFIQUE DES BORNES
+# ============================================================================
+
+def validate_post_boundary(
+    builder: TransferPerformanceBuilder,
+) -> bool:
+    """
+    Vérifie explicitement que les saisons POST respectent
+    la borne de 18 mois.
+    """
+
+    print()
+    print(
+        "VALIDATION BORNE POST 18 MOIS"
+    )
+    print("-" * 70)
+
+    success = True
+
+    for _, transfer in builder.transfers_df.iterrows():
+
+        player_name = transfer["player_name"]
+
+        transfer_date = transfer["transfer_date"]
+
+        _, _, _, post_end = (
+            builder._calculate_windows(
+                transfer_date
+            )
+        )
+
+        player_mask = (
+            builder.performances_df["player"]
+            .str.casefold()
+            == str(player_name).casefold()
+        )
+
+        player_performances = (
+            builder.performances_df.loc[
+                player_mask
+            ].copy()
+        )
+
+        post_data = (
+            builder._select_post_performances(
+                player_performances,
+                transfer_date,
+            )
+        )
+
+        invalid = post_data[
+            post_data["season_start_date"]
+            >= post_end
+        ]
+
+        if not invalid.empty:
+
+            print(
+                f"✗ {player_name} : "
+                "une saison dépasse la borne POST."
+            )
+
+            success = False
+
+        else:
+
+            print(
+                f"✓ {player_name} : "
+                "borne POST respectée."
+            )
+
+    return success
+
+
+# ============================================================================
+# TEST PRINCIPAL
+# ============================================================================
+
+def run_test() -> None:
+
     print("=" * 70)
     print("TEST TRANSFER PERFORMANCE BUILDER")
     print("=" * 70)
 
-    # ------------------------------------------------------------------
-    # Données de test
-    # ------------------------------------------------------------------
+    # ========================================================================
+    # IMPORTS
+    # ========================================================================
 
-    transfers = _build_test_transfers()
+    try:
 
-    performances = _build_test_performances()
+        from football_data.historical_transfer_loader import (
+            HistoricalTransferLoader,
+        )
 
-    # ------------------------------------------------------------------
-    # Configuration
-    # ------------------------------------------------------------------
+        from football_data.performance_loader import (
+            PerformanceLoader,
+        )
 
-    config = TransferPerformanceConfig(
+    except ImportError as exc:
 
-        pre_months=36,
+        print(
+            "Erreur import modules :",
+            exc,
+        )
 
-        post_months=18,
+        return
 
-        min_pre_minutes=900,
+    # ========================================================================
+    # HISTORIQUE TRANSFERTS
+    # ========================================================================
 
-        min_post_minutes=450,
-
-        min_pre_seasons=1,
-
-        min_post_seasons=1,
+    historical_loader = HistoricalTransferLoader(
+        offline=True
     )
 
-    # ------------------------------------------------------------------
-    # Builder
-    # ------------------------------------------------------------------
+    transfers = historical_loader.load()
+
+    # ========================================================================
+    # PERFORMANCES
+    # ========================================================================
+
+    performance_loader = PerformanceLoader(
+        offline=True,
+        local_path=DEFAULT_PERFORMANCE_LOCAL_PATH,
+    )
+
+    performances = performance_loader.load()
+
+    # ========================================================================
+    # FILTRAGE DU DATASET DE TEST
+    # ========================================================================
+
+    test_players = [
+        "Test Player",
+        "Another Player",
+    ]
+
+    transfers_test = transfers[
+        transfers["player_name"].isin(
+            test_players
+        )
+    ].copy()
+
+    transfers_test = transfers_test[
+        transfers_test["transfer_date"].between(
+            "2023-07-01",
+            "2023-07-31",
+        )
+    ].copy()
+
+    # ========================================================================
+    # VERIFICATION DU TEST
+    # ========================================================================
+
+    if transfers_test.empty:
+
+        raise ValueError(
+            "Aucun transfert de test trouvé pour "
+            "Test Player / Another Player "
+            "sur juillet 2023."
+        )
+
+    # ========================================================================
+    # BUILDER
+    # ========================================================================
 
     builder = TransferPerformanceBuilder(
-
-        transfers=transfers,
-
-        performances=performances,
-
-        config=config,
+        transfers_df=transfers_test,
+        performances_df=performances,
     )
-
-    # ------------------------------------------------------------------
-    # Build
-    # ------------------------------------------------------------------
 
     dataset = builder.build()
 
-    # ------------------------------------------------------------------
-    # Dataset
-    # ------------------------------------------------------------------
+    # ========================================================================
+    # DATASET
+    # ========================================================================
 
     print()
     print("DATASET")
     print("-" * 70)
 
-    display_columns = [
-
+    columns_to_display = [
         "player_name",
-
         "transfer_date",
-
         "pre_minutes",
-
         "pre_seasons",
-
         "pre_performance_percentile",
-
         "post_minutes",
-
         "post_seasons",
-
         "post_performance_percentile",
-
         "performance_percentile_delta",
-
         "performance_data_quality",
     ]
 
-    available_columns = [
-        col
-        for col in display_columns
-        if col in dataset.columns
+    display_columns = [
+        column
+        for column in columns_to_display
+        if column in dataset.columns
     ]
 
-    if dataset.empty:
-
-        print("Dataset vide.")
-
-    else:
-
-        print(
-            dataset[
-                available_columns
-            ].to_string(
-                index=False
-            )
+    print(
+        dataset[
+            display_columns
+        ].to_string(
+            index=False
         )
+    )
 
-    # ------------------------------------------------------------------
-    # Fenêtres utilisées
-    # ------------------------------------------------------------------
+    # ========================================================================
+    # FENETRES ATTENDUES
+    # ========================================================================
 
     print()
     print("FENÊTRES ATTENDUES")
@@ -1998,37 +1123,49 @@ if __name__ == "__main__":
         "Saison du transfert : EXCLUE"
     )
 
-    # ------------------------------------------------------------------
-    # Summary
-    # ------------------------------------------------------------------
+    print(
+        "PRE attendu : 3 saisons"
+    )
+
+    print(
+        "POST attendu : 1 saison"
+    )
+
+    # ========================================================================
+    # SUMMARY
+    # ========================================================================
+
+    summary = builder.summary(
+        dataset
+    )
 
     print()
     print("SUMMARY")
     print("-" * 70)
 
-    for key, value in builder.summary().items():
+    for key, value in summary.items():
 
         print(
-            f"{key:30}: {value}"
+            f"{key:<30}: {value}"
         )
 
-    # ------------------------------------------------------------------
-    # Complete cases
-    # ------------------------------------------------------------------
+    # ========================================================================
+    # COMPLETE CASES
+    # ========================================================================
 
     print()
     print("COMPLETE CASES")
     print("-" * 70)
 
-    complete = (
-        builder
-        .filter_complete_cases()
-    )
+    complete = dataset[
+        dataset["performance_data_quality"]
+        == "COMPLETE"
+    ]
 
     if complete.empty:
 
         print(
-            "Aucun cas complet."
+            "Aucun COMPLETE case."
         )
 
     else:
@@ -2043,103 +1180,69 @@ if __name__ == "__main__":
                     "post_minutes",
                     "performance_data_quality",
                 ]
-            ]
-            .to_string(
+            ].to_string(
                 index=False
             )
         )
 
-    # ------------------------------------------------------------------
-    # Vérification des colonnes temporelles
-    # ------------------------------------------------------------------
+    # ========================================================================
+    # VALIDATION FENETRES
+    # ========================================================================
 
-    print()
-    print("VALIDATION FENETRES")
-    print("-" * 70)
+    windows_ok = validate_windows(
+        builder,
+        dataset,
+        expected_pre_seasons=3,
+        expected_post_seasons=1,
+    )
 
-    expected_pre_seasons = {
-        "Test Player": 3,
-        "Another Player": 3,
-    }
+    # ========================================================================
+    # VALIDATION EXCLUSION
+    # ========================================================================
 
-    expected_post_seasons = {
-        "Test Player": 1,
-        "Another Player": 1,
-    }
-
-    validation_ok = True
-
-    for _, row in dataset.iterrows():
-
-        player = row["player_name"]
-
-        pre_expected = (
-            expected_pre_seasons
-            .get(player)
+    exclusion_ok = (
+        validate_transfer_season_exclusion(
+            builder
         )
+    )
 
-        post_expected = (
-            expected_post_seasons
-            .get(player)
+    # ========================================================================
+    # VALIDATION BORNE POST
+    # ========================================================================
+
+    boundary_ok = (
+        validate_post_boundary(
+            builder
         )
+    )
 
-        pre_actual = int(
-            row["pre_seasons"]
-        )
+    # ========================================================================
+    # SAVE
+    # ========================================================================
 
-        post_actual = int(
-            row["post_seasons"]
-        )
-
-        pre_ok = (
-            pre_actual
-            == pre_expected
-        )
-
-        post_ok = (
-            post_actual
-            == post_expected
-        )
-
-        print(
-            f"{player:25} "
-            f"PRE={pre_actual} "
-            f"(attendu {pre_expected}) "
-            f"{'✓' if pre_ok else '✗'} | "
-            f"POST={post_actual} "
-            f"(attendu {post_expected}) "
-            f"{'✓' if post_ok else '✗'}"
-        )
-
-        if not pre_ok or not post_ok:
-
-            validation_ok = False
-
-    # ------------------------------------------------------------------
-    # Save
-    # ------------------------------------------------------------------
-
-    output_path = builder.save()
+    output_path = builder.save(
+        dataset
+    )
 
     print()
     print(
         f"Dataset exporté : {output_path}"
     )
 
-    # ------------------------------------------------------------------
-    # Final
-    # ------------------------------------------------------------------
+    # ========================================================================
+    # RESULTAT FINAL
+    # ========================================================================
 
     print()
 
-    if validation_ok:
+    if (
+        windows_ok
+        and exclusion_ok
+        and boundary_ok
+    ):
 
         print(
-            "✓ VALIDATION FENETRES 36/18 MOIS OK"
-        )
-
-        print(
-            "✓ TEST TRANSFER PERFORMANCE BUILDER TERMINÉ"
+            "✓ VALIDATION DES FENETRES RÉUSSIE"
         )
 
     else:
@@ -2148,4 +1251,13 @@ if __name__ == "__main__":
             "✗ VALIDATION DES FENETRES ÉCHOUÉE"
         )
 
-        raise SystemExit(1)
+    print()
+
+
+# ============================================================================
+# MAIN
+# ============================================================================
+
+if __name__ == "__main__":
+
+    run_test()
