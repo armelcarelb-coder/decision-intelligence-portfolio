@@ -22,24 +22,44 @@ PRE:
 POST:
     18 mois après la date du transfert.
 
-Règle importante:
-    La saison durant laquelle le transfert intervient est exclue.
+Règles importantes
+------------------
+PRE :
+    La saison doit être entièrement terminée avant le transfert
+    et son season_end_date doit être strictement supérieur
+    à la borne de 36 mois.
 
-    Une saison est considérée comme POST uniquement si :
+POST :
+    La saison doit :
 
-        season_start_date > transfer_date
+        1. commencer strictement après le transfert ;
+        2. être entièrement terminée avant la fin de la fenêtre
+           de 18 mois.
 
-    et :
+Cette deuxième condition est importante.
 
-        season_start_date < transfer_date + 18 mois
+Exemple pour un transfert en juillet 2023 :
 
-Cette convention permet d'éviter de considérer une saison commencée
-avant le transfert comme une véritable saison post-transfert.
+    2023/24 :
+        début août 2023
+        fin mai 2024
+        -> POST
+
+    2024/25 :
+        début août 2024
+        fin mai 2025
+        -> dépasse la fenêtre de 18 mois
+        -> EXCLUE
+
+Ainsi, le test attendu est :
+
+    PRE  = 3 saisons
+    POST = 1 saison
 
 Normalisation
 -------------
-Le calcul définitif de performance_percentile sera réalisé dans
-une étape dédiée.
+Le calcul définitif de performance_percentile sera réalisé
+dans une étape dédiée.
 
 Il devra être calculé selon :
 
@@ -49,8 +69,9 @@ Il devra être calculé selon :
     +
     saison / contexte temporel
 
-Pour le moment, une valeur neutre de 0.5 est utilisée uniquement
-pour tester la mécanique de jointure et des fenêtres temporelles.
+Pour le moment, une valeur neutre de 0.5 est utilisée
+uniquement pour tester la mécanique de jointure et des
+fenêtres temporelles.
 
 Usage
 -----
@@ -349,14 +370,17 @@ class TransferPerformanceBuilder:
         """
         Sélectionne les saisons PRE.
 
-        Une saison PRE doit :
+        Une saison PRE doit être entièrement terminée avant
+        la date du transfert et se trouver dans la fenêtre
+        de 36 mois.
 
-            1. être terminée avant ou à la date du transfert
-            2. avoir une date de fin strictement après la borne
-               de 36 mois.
+        Conditions :
 
-        Cela garantit qu'une saison contenant le transfert
-        n'est pas utilisée comme saison PRE.
+            season_end_date <= transfer_date
+
+        et :
+
+            season_end_date > transfer_date - 36 mois
         """
 
         pre_start, pre_end, _, _ = (
@@ -391,15 +415,24 @@ class TransferPerformanceBuilder:
         """
         Sélectionne les saisons POST.
 
-        Règle méthodologique :
+        Une saison POST doit :
+
+            1. commencer strictement après le transfert ;
+
+            2. être entièrement terminée avant la fin
+               de la fenêtre de 18 mois.
+
+        Conditions :
 
             season_start_date > transfer_date
 
-        Une saison commencée avant ou le jour du transfert
-        est donc exclue.
+        et :
 
-        La saison doit également commencer avant la fin
-        de la fenêtre de 18 mois.
+            season_end_date <= transfer_date + 18 mois
+
+        Cette définition évite de considérer comme POST
+        une saison qui commence après le transfert mais
+        dépasse la fenêtre temporelle de 18 mois.
         """
 
         _, _, post_start, post_end = (
@@ -413,7 +446,7 @@ class TransferPerformanceBuilder:
         mask = (
             (data["season_start_date"] > post_start)
             &
-            (data["season_start_date"] < post_end)
+            (data["season_end_date"] <= post_end)
         )
 
         result = data.loc[mask].copy()
@@ -487,7 +520,8 @@ class TransferPerformanceBuilder:
         player_mask = (
             self.performances_df["player"]
             .str.casefold()
-            == str(player_name).casefold()
+            ==
+            str(player_name).casefold()
         )
 
         player_performances = (
@@ -564,14 +598,16 @@ class TransferPerformanceBuilder:
             pd.notna(
                 pre["performance_percentile"]
             )
-            and pd.notna(
+            and
+            pd.notna(
                 post["performance_percentile"]
             )
         ):
 
             delta = (
                 post["performance_percentile"]
-                - pre["performance_percentile"]
+                -
+                pre["performance_percentile"]
             )
 
         else:
@@ -854,7 +890,8 @@ def validate_transfer_season_exclusion(
         player_mask = (
             builder.performances_df["player"]
             .str.casefold()
-            == str(player_name).casefold()
+            ==
+            str(player_name).casefold()
         )
 
         player_performances = (
@@ -895,15 +932,15 @@ def validate_transfer_season_exclusion(
 
 
 # ============================================================================
-# VALIDATION SPECIFIQUE DES BORNES
+# VALIDATION BORNE POST
 # ============================================================================
 
 def validate_post_boundary(
     builder: TransferPerformanceBuilder,
 ) -> bool:
     """
-    Vérifie explicitement que les saisons POST respectent
-    la borne de 18 mois.
+    Vérifie explicitement que les saisons POST sont
+    entièrement contenues dans la fenêtre de 18 mois.
     """
 
     print()
@@ -929,7 +966,8 @@ def validate_post_boundary(
         player_mask = (
             builder.performances_df["player"]
             .str.casefold()
-            == str(player_name).casefold()
+            ==
+            str(player_name).casefold()
         )
 
         player_performances = (
@@ -945,16 +983,25 @@ def validate_post_boundary(
             )
         )
 
-        invalid = post_data[
+        invalid_start = post_data[
             post_data["season_start_date"]
-            >= post_end
+            <= transfer_date
         ]
 
-        if not invalid.empty:
+        invalid_end = post_data[
+            post_data["season_end_date"]
+            > post_end
+        ]
+
+        if (
+            not invalid_start.empty
+            or
+            not invalid_end.empty
+        ):
 
             print(
                 f"✗ {player_name} : "
-                "une saison dépasse la borne POST."
+                "une saison POST sort des bornes."
             )
 
             success = False
@@ -967,6 +1014,228 @@ def validate_post_boundary(
             )
 
     return success
+
+
+# ============================================================================
+# VALIDATION CONTENU DES FENETRES
+# ============================================================================
+
+def validate_window_contents(
+    builder: TransferPerformanceBuilder,
+) -> bool:
+    """
+    Affiche les saisons réellement sélectionnées pour chaque joueur.
+
+    Cette validation permet de vérifier explicitement que :
+
+        PRE
+            2020/21
+            2021/22
+            2022/23
+
+        POST
+            2023/24
+
+    sont sélectionnées pour les transferts de juillet 2023.
+    """
+
+    print()
+    print(
+        "VALIDATION CONTENU DES FENETRES"
+    )
+    print("-" * 70)
+
+    success = True
+
+    for _, transfer in builder.transfers_df.iterrows():
+
+        player_name = transfer["player_name"]
+
+        transfer_date = transfer["transfer_date"]
+
+        player_mask = (
+            builder.performances_df["player"]
+            .str.casefold()
+            ==
+            str(player_name).casefold()
+        )
+
+        player_performances = (
+            builder.performances_df.loc[
+                player_mask
+            ].copy()
+        )
+
+        pre_data = builder._select_pre_performances(
+            player_performances,
+            transfer_date,
+        )
+
+        post_data = builder._select_post_performances(
+            player_performances,
+            transfer_date,
+        )
+
+        pre_seasons = (
+            pre_data["season"]
+            .tolist()
+        )
+
+        post_seasons = (
+            post_data["season"]
+            .tolist()
+        )
+
+        print(
+            f"{player_name}"
+        )
+
+        print(
+            f"  PRE  : {pre_seasons}"
+        )
+
+        print(
+            f"  POST : {post_seasons}"
+        )
+
+        # Pour notre dataset de test :
+        expected_pre = [
+            "2020/21",
+            "2021/22",
+            "2022/23",
+        ]
+
+        expected_post = [
+            "2023/24",
+        ]
+
+        if pre_seasons != expected_pre:
+
+            print(
+                "  ✗ Contenu PRE inattendu."
+            )
+
+            success = False
+
+        else:
+
+            print(
+                "  ✓ Contenu PRE correct."
+            )
+
+        if post_seasons != expected_post:
+
+            print(
+                "  ✗ Contenu POST inattendu."
+            )
+
+            success = False
+
+        else:
+
+            print(
+                "  ✓ Contenu POST correct."
+            )
+
+    return success
+
+
+# ============================================================================
+# CREATION DU DATASET DE TRANSFERTS DE TEST
+# ============================================================================
+
+def build_test_transfers(
+    real_transfers: Optional[pd.DataFrame] = None,
+) -> pd.DataFrame:
+    """
+    Construit les transferts utilisés par le test.
+
+    Priorité :
+
+        1. utiliser les transferts réels si Test Player /
+           Another Player existent en juillet 2023 ;
+
+        2. sinon utiliser un jeu de transferts synthétique
+           cohérent avec performance_sample.csv.
+
+    Cette approche évite que le test du Builder dépende
+    de données externes ou de la présence de joueurs fictifs
+    dans DuckDB.
+    """
+
+    test_players = [
+        "Test Player",
+        "Another Player",
+    ]
+
+    if real_transfers is not None:
+
+        required_columns = [
+            column
+            for column in TRANSFER_REQUIRED_COLUMNS
+            if column in real_transfers.columns
+        ]
+
+        if len(required_columns) == len(
+            TRANSFER_REQUIRED_COLUMNS
+        ):
+
+            real_test = real_transfers[
+                real_transfers["player_name"].isin(
+                    test_players
+                )
+            ].copy()
+
+            real_test = real_test[
+                real_test["transfer_date"].between(
+                    "2023-07-01",
+                    "2023-07-31",
+                )
+            ].copy()
+
+            if not real_test.empty:
+
+                print(
+                    "[TEST] Transferts réels trouvés."
+                )
+
+                return real_test
+
+    # ------------------------------------------------------------------------
+    # FALLBACK SYNTHETIQUE
+    # ------------------------------------------------------------------------
+
+    print(
+        "[TEST] Aucun transfert réel trouvé pour les joueurs "
+        "de test."
+    )
+
+    print(
+        "[TEST] Utilisation des transferts synthétiques."
+    )
+
+    synthetic = pd.DataFrame(
+        [
+            {
+                "player_id": "TEST-001",
+                "player_name": "Test Player",
+                "transfer_date": "2023-07-10",
+                "transfer_season": "2023/24",
+            },
+            {
+                "player_id": "TEST-002",
+                "player_name": "Another Player",
+                "transfer_date": "2023-07-15",
+                "transfer_season": "2023/24",
+            },
+        ]
+    )
+
+    synthetic["transfer_date"] = pd.to_datetime(
+        synthetic["transfer_date"]
+    )
+
+    return synthetic
 
 
 # ============================================================================
@@ -1006,11 +1275,37 @@ def run_test() -> None:
     # HISTORIQUE TRANSFERTS
     # ========================================================================
 
-    historical_loader = HistoricalTransferLoader(
-        offline=True
-    )
+    real_transfers = None
 
-    transfers = historical_loader.load()
+    try:
+
+        historical_loader = HistoricalTransferLoader(
+            offline=True
+        )
+
+        real_transfers = historical_loader.load()
+
+    except Exception as exc:
+
+        print(
+            "[TEST] Impossible de charger les transferts réels."
+        )
+
+        print(
+            f"[TEST] Cause : {type(exc).__name__}: {exc}"
+        )
+
+        print(
+            "[TEST] Le test continuera avec les transferts synthétiques."
+        )
+
+    # ========================================================================
+    # TRANSFERTS DE TEST
+    # ========================================================================
+
+    transfers_test = build_test_transfers(
+        real_transfers
+    )
 
     # ========================================================================
     # PERFORMANCES
@@ -1024,7 +1319,7 @@ def run_test() -> None:
     performances = performance_loader.load()
 
     # ========================================================================
-    # FILTRAGE DU DATASET DE TEST
+    # VERIFICATION DES JOUEURS
     # ========================================================================
 
     test_players = [
@@ -1032,29 +1327,25 @@ def run_test() -> None:
         "Another Player",
     ]
 
-    transfers_test = transfers[
-        transfers["player_name"].isin(
-            test_players
-        )
-    ].copy()
+    available_players = (
+        performances["player"]
+        .astype(str)
+        .str.strip()
+        .tolist()
+    )
 
-    transfers_test = transfers_test[
-        transfers_test["transfer_date"].between(
-            "2023-07-01",
-            "2023-07-31",
-        )
-    ].copy()
+    missing_players = [
+        player
+        for player in test_players
+        if player not in available_players
+    ]
 
-    # ========================================================================
-    # VERIFICATION DU TEST
-    # ========================================================================
-
-    if transfers_test.empty:
+    if missing_players:
 
         raise ValueError(
-            "Aucun transfert de test trouvé pour "
-            "Test Player / Another Player "
-            "sur juillet 2023."
+            "Les joueurs suivants sont absents de "
+            "performance_sample.csv : "
+            f"{missing_players}"
         )
 
     # ========================================================================
@@ -1121,6 +1412,11 @@ def run_test() -> None:
 
     print(
         "Saison du transfert : EXCLUE"
+    )
+
+    print(
+        "Une saison POST doit être entièrement "
+        "contenue dans les 18 mois."
     )
 
     print(
@@ -1217,6 +1513,16 @@ def run_test() -> None:
     )
 
     # ========================================================================
+    # VALIDATION CONTENU
+    # ========================================================================
+
+    contents_ok = (
+        validate_window_contents(
+            builder
+        )
+    )
+
+    # ========================================================================
     # SAVE
     # ========================================================================
 
@@ -1239,6 +1545,7 @@ def run_test() -> None:
         windows_ok
         and exclusion_ok
         and boundary_ok
+        and contents_ok
     ):
 
         print(
