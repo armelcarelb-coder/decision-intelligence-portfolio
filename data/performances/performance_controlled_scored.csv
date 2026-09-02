@@ -1,0 +1,11 @@
+player,season,season_start_date,season_end_date,competition,competition_level,team,position,minutes,appearances,starts,goals,assists,xg,xa,goals_per90,assists_per90,xg_per90,xa_per90,performance_score,performance_percentile,performance_score_status
+Controlled Player A,2020/21,2020-08-01,2021-05-31,Controlled League,Top,Controlled FC,FW,1800,25,20,10,4,12.0,5.0,0.5,0.2,0.6,0.25,0.42,0.5,VALID
+Controlled Player A,2021/22,2021-08-01,2022-05-31,Controlled League,Top,Controlled FC,FW,1900,26,21,11,4,13.3,5.54,0.525,0.21000000000000002,0.63,0.2625,0.441,0.5,VALID
+Controlled Player A,2022/23,2022-08-01,2023-05-31,Controlled League,Top,Controlled FC,FW,2000,27,22,12,5,14.67,6.11,0.55,0.22000000000000003,0.66,0.275,0.462,0.5,VALID
+Controlled Player A,2023/24,2023-08-01,2024-05-31,Controlled League,Top,Controlled FC,FW,2100,28,23,13,5,16.1,6.71,0.575,0.22999999999999998,0.69,0.2875,0.483,0.5,VALID
+Controlled Player A,2024/25,2024-08-01,2025-05-31,Controlled League,Top,Controlled FC,FW,2200,29,24,15,6,17.6,7.33,0.6,0.24,0.72,0.3,0.504,0.5,VALID
+Controlled Player B,2020/21,2020-08-01,2021-05-31,Controlled League,Top,Controlled FC,FW,1800,25,20,14,6,16.0,7.0,0.7,0.3,0.8,0.35,0.58,1.0,VALID
+Controlled Player B,2021/22,2021-08-01,2022-05-31,Controlled League,Top,Controlled FC,FW,1900,26,21,16,7,17.73,7.76,0.735,0.315,0.8400000000000001,0.3675,0.609,1.0,VALID
+Controlled Player B,2022/23,2022-08-01,2023-05-31,Controlled League,Top,Controlled FC,FW,2000,27,22,17,7,19.56,8.56,0.77,0.33,0.8800000000000001,0.385,0.6379999999999999,1.0,VALID
+Controlled Player B,2023/24,2023-08-01,2024-05-31,Controlled League,Top,Controlled FC,FW,2100,28,23,19,8,21.47,9.39,0.8049999999999999,0.345,0.9199999999999999,0.40249999999999997,0.6669999999999999,1.0,VALID
+Controlled Player B,2024/25,2024-08-01,2025-05-31,Controlled League,Top,Controlled FC,FW,2200,29,24,21,9,23.47,10.27,0.84,0.36,0.96,0.42,0.696,1.0,VALID
