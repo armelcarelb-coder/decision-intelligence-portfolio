@@ -605,6 +605,369 @@ def print_dict(
         else:
             print(f"{prefix}{key}: {value}")
 
+def audit_season_calendar_anomalies(self) -> dict:
+    """
+    Analyse les saisons dont les bornes calendaires semblent anormales.
+
+    L'objectif est d'identifier :
+        - les compétitions responsables des dates extrêmes ;
+        - les types de compétition concernés ;
+        - les joueurs concernés ;
+        - les dates minimales/maximales observées ;
+        - les éventuelles incohérences entre season et match_date.
+
+    Aucun enregistrement n'est supprimé ou modifié.
+    """
+
+    df = self.df.copy()
+
+    required_columns = {
+        "player_id",
+        "player",
+        "season",
+        "competition_id",
+        "competition_name",
+        "competition_type",
+        "competition_sub_type",
+        "competition_level",
+        "first_match_date",
+        "last_match_date",
+    }
+
+    missing = required_columns - set(df.columns)
+
+    if missing:
+        raise ValueError(
+            "Colonnes nécessaires à l'audit du calendrier absentes : "
+            + ", ".join(sorted(missing))
+        )
+
+    df["first_match_date"] = pd.to_datetime(
+        df["first_match_date"],
+        errors="coerce",
+    )
+
+    df["last_match_date"] = pd.to_datetime(
+        df["last_match_date"],
+        errors="coerce",
+    )
+
+    df["season"] = df["season"].astype(str)
+
+    # --------------------------------------------------------------
+    # Bornes globales par saison
+    # --------------------------------------------------------------
+
+    season_bounds = (
+        df.groupby("season", as_index=False)
+        .agg(
+            season_start=("first_match_date", "min"),
+            season_end=("last_match_date", "max"),
+            rows=("player_id", "size"),
+            players=("player_id", "nunique"),
+            competitions=("competition_id", "nunique"),
+        )
+        .sort_values("season")
+    )
+
+    # --------------------------------------------------------------
+    # Détection des saisons suspectes
+    #
+    # Une saison est considérée suspecte si :
+    #   - elle couvre plus de 450 jours ;
+    #   - ou son début est très tôt (< 1er juin) ;
+    #   - ou sa fin est très tardive (> 31 juillet de l'année suivante).
+    #
+    # Ce sont des indicateurs d'audit, pas des règles de suppression.
+    # --------------------------------------------------------------
+
+    season_bounds["duration_days"] = (
+        season_bounds["season_end"]
+        - season_bounds["season_start"]
+    ).dt.days
+
+    season_bounds["season_year"] = pd.to_numeric(
+        season_bounds["season"],
+        errors="coerce",
+    )
+
+    season_bounds["expected_year_start"] = pd.to_datetime(
+        season_bounds["season_year"].astype("Int64").astype(str)
+        + "-06-01",
+        errors="coerce",
+    )
+
+    season_bounds["expected_year_end"] = pd.to_datetime(
+        (season_bounds["season_year"] + 1)
+        .astype("Int64")
+        .astype(str)
+        + "-07-31",
+        errors="coerce",
+    )
+
+    suspicious = season_bounds[
+        (
+            season_bounds["duration_days"] > 450
+        )
+        |
+        (
+            season_bounds["season_start"]
+            < season_bounds["expected_year_start"]
+        )
+        |
+        (
+            season_bounds["season_end"]
+            > season_bounds["expected_year_end"]
+        )
+    ].copy()
+
+    # --------------------------------------------------------------
+    # Détail des compétitions responsables des bornes
+    # --------------------------------------------------------------
+
+    details = []
+
+    for _, row in suspicious.iterrows():
+        season = row["season"]
+
+        season_df = df[
+            df["season"] == season
+        ].copy()
+
+        if season_df.empty:
+            continue
+
+        competition_details = (
+            season_df.groupby(
+                [
+                    "competition_id",
+                    "competition_name",
+                    "competition_type",
+                    "competition_sub_type",
+                    "competition_level",
+                ],
+                dropna=False,
+            )
+            .agg(
+                first_date=(
+                    "first_match_date",
+                    "min",
+                ),
+                last_date=(
+                    "last_match_date",
+                    "max",
+                ),
+                rows=(
+                    "player_id",
+                    "size",
+                ),
+                players=(
+                    "player_id",
+                    "nunique",
+                ),
+            )
+            .reset_index()
+        )
+
+        competition_details["season"] = season
+
+        competition_details["duration_days"] = (
+            competition_details["last_date"]
+            - competition_details["first_date"]
+        ).dt.days
+
+        competition_details["is_start_extreme"] = (
+            competition_details["first_date"]
+            == row["season_start"]
+        )
+
+        competition_details["is_end_extreme"] = (
+            competition_details["last_date"]
+            == row["season_end"]
+        )
+
+        details.append(
+            competition_details
+        )
+
+    if details:
+        competition_details_df = pd.concat(
+            details,
+            ignore_index=True,
+        )
+    else:
+        competition_details_df = pd.DataFrame()
+
+    # --------------------------------------------------------------
+    # Enregistrements responsables des dates extrêmes
+    # --------------------------------------------------------------
+
+    extreme_records = []
+
+    for _, row in suspicious.iterrows():
+        season = row["season"]
+
+        season_df = df[
+            df["season"] == season
+        ].copy()
+
+        if season_df.empty:
+            continue
+
+        start_records = season_df[
+            season_df["first_match_date"]
+            == row["season_start"]
+        ].copy()
+
+        end_records = season_df[
+            season_df["last_match_date"]
+            == row["season_end"]
+        ].copy()
+
+        start_records["extreme_type"] = "SEASON_START"
+        end_records["extreme_type"] = "SEASON_END"
+
+        extreme_records.append(start_records)
+        extreme_records.append(end_records)
+
+    if extreme_records:
+        extreme_records_df = pd.concat(
+            extreme_records,
+            ignore_index=True,
+        )
+    else:
+        extreme_records_df = pd.DataFrame()
+
+    return {
+        "season_bounds": season_bounds,
+        "suspicious_seasons": suspicious,
+        "competition_details": competition_details_df,
+        "extreme_records": extreme_records_df,
+    }
+
+def print_season_calendar_anomalies(
+    self,
+    report: dict,
+) -> None:
+    """
+    Affiche l'analyse détaillée des anomalies de calendrier.
+    """
+
+    print_section(
+        "SEASON CALENDAR — TARGETED ANOMALY ANALYSIS"
+    )
+
+    suspicious = report[
+        "suspicious_seasons"
+    ]
+
+    if suspicious.empty:
+        print("Aucune saison suspecte détectée.")
+        return
+
+    print(
+        f"Saisons suspectes : "
+        f"{len(suspicious)}"
+    )
+
+    print()
+
+    print(
+        suspicious[
+            [
+                "season",
+                "season_start",
+                "season_end",
+                "duration_days",
+                "rows",
+                "players",
+                "competitions",
+            ]
+        ]
+        .to_string(index=False)
+    )
+
+    competition_details = report[
+        "competition_details"
+    ]
+
+    if competition_details.empty:
+        return
+
+    print()
+    print("-" * 80)
+    print("COMPETITIONS RESPONSIBLE FOR EXTREME DATES")
+    print("-" * 80)
+
+    display_columns = [
+        "season",
+        "competition_id",
+        "competition_name",
+        "competition_type",
+        "competition_sub_type",
+        "competition_level",
+        "first_date",
+        "last_date",
+        "duration_days",
+        "rows",
+        "players",
+        "is_start_extreme",
+        "is_end_extreme",
+    ]
+
+    print(
+        competition_details[
+            display_columns
+        ]
+        .sort_values(
+            [
+                "season",
+                "first_date",
+                "last_date",
+            ]
+        )
+        .to_string(index=False)
+    )
+
+    extreme_records = report[
+        "extreme_records"
+    ]
+
+    if extreme_records.empty:
+        return
+
+    print()
+    print("-" * 80)
+    print("EXTREME RECORDS")
+    print("-" * 80)
+
+    extreme_columns = [
+        "season",
+        "extreme_type",
+        "player_id",
+        "player",
+        "competition_id",
+        "competition_name",
+        "competition_type",
+        "competition_sub_type",
+        "competition_level",
+        "first_match_date",
+        "last_match_date",
+    ]
+
+    print(
+        extreme_records[
+            extreme_columns
+        ]
+        .sort_values(
+            [
+                "season",
+                "extreme_type",
+                "first_match_date",
+            ]
+        )
+        .to_string(index=False)
+    )
 
 def main() -> None:
     """Run the real performance dataset audit."""
@@ -615,12 +978,22 @@ def main() -> None:
             "player_competition_season_performance.csv"
         ),
         database_path=Path(
-            "data/transfermarkt-datasets.duckdb"
+            "data/historical/transfermarkt-datasets.duckdb"
         ),
     )
+    
+    season_calendar_report = (
+        audit_season_calendar_anomalies()
+    )
 
-    audit = RealPerformanceAudit(config)
+    print_season_calendar_anomalies(
+        season_calendar_report
+    )
+    
     report = audit.run()
+    report["season_calendar_anomalies"] = (
+        season_calendar_report
+    )
 
     print()
     print("=" * 80)

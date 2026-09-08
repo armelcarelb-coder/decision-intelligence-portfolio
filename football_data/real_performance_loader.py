@@ -603,27 +603,55 @@ class RealPerformanceLoader:
         df: pd.DataFrame,
     ) -> pd.DataFrame:
         """
-        Construit les bornes de saison.
+        Construit les bornes calendaires de chaque saison.
 
-        Important :
-        les dates de saison ne doivent pas être calculées à partir
-        de toutes les compétitions du joueur.
+        Les bornes sont calculées à partir de l'ensemble des compétitions
+        club présentes dans le dataset pour chaque saison.
 
-        On privilégie les matchs de TOP_LEAGUE afin d'éviter que les
-        compétitions internationales ou les qualifications UEFA
-        étendent artificiellement la saison.
+        Cette définition permet notamment d'intégrer :
 
-        Pour une saison ne disposant pas de TOP_LEAGUE dans le dataset,
-        on utilise ensuite les dates observées comme fallback.
+        - les championnats nationaux ;
+        - les coupes nationales ;
+        - les super coupes ;
+        - les compétitions européennes ;
+        - les qualifications européennes ;
+        - les playoffs ;
+        - les autres compétitions club présentes dans les données.
 
-        Les bornes sont donc déterministes et conservées dans le
-        dataset final.
+        Les compétitions de sélections nationales ont déjà été exclues
+        dans la requête DuckDB lorsque exclude_national_team=True.
+
+        Définition :
+
+            season_start = première date de match observée
+                           pour la saison
+
+            season_end   = dernière date de match observée
+                           pour la saison
+
+        Cette approche évite de considérer artificiellement comme
+        "hors saison" les compétitions qui commencent avant le premier
+        match du TOP_LEAGUE, notamment les qualifications UEFA.
         """
+
+        required_columns = {
+            "season",
+            "first_match_date",
+            "last_match_date",
+        }
+
+        missing_columns = required_columns - set(df.columns)
+
+        if missing_columns:
+            raise ValueError(
+                "Colonnes nécessaires à la construction des bornes "
+                "de saison absentes : "
+                + ", ".join(sorted(missing_columns))
+            )
 
         work = df[
             [
                 "season",
-                "competition_level",
                 "first_match_date",
                 "last_match_date",
             ]
@@ -640,16 +668,30 @@ class RealPerformanceLoader:
         )
 
         # --------------------------------------------------------------
-        # Priorité 1 : TOP_LEAGUE
+        # Validation des dates observées
         # --------------------------------------------------------------
 
-        top_league = work[
-            work["competition_level"] == "TOP_LEAGUE"
+        work = work[
+            work["first_match_date"].notna()
+            & work["last_match_date"].notna()
         ].copy()
 
-        top_bounds = (
-            top_league
-            .groupby("season", as_index=False)
+        if work.empty:
+            raise ValueError(
+                "Impossible de construire les bornes de saison : "
+                "aucune date de match valide."
+            )
+
+        # --------------------------------------------------------------
+        # Saison complète = enveloppe de toutes les compétitions club
+        # --------------------------------------------------------------
+
+        season_bounds = (
+            work
+            .groupby(
+                "season",
+                as_index=False,
+            )
             .agg(
                 season_start=(
                     "first_match_date",
@@ -663,51 +705,30 @@ class RealPerformanceLoader:
         )
 
         # --------------------------------------------------------------
-        # Fallback : toutes les compétitions club
+        # Contrôle structurel
         # --------------------------------------------------------------
 
-        fallback_bounds = (
-            work
-            .groupby("season", as_index=False)
-            .agg(
-                fallback_start=(
-                    "first_match_date",
-                    "min",
-                ),
-                fallback_end=(
-                    "last_match_date",
-                    "max",
-                ),
+        invalid_bounds = (
+            season_bounds["season_start"]
+            > season_bounds["season_end"]
+        )
+
+        if invalid_bounds.any():
+            invalid_seasons = (
+                season_bounds.loc[
+                    invalid_bounds,
+                    "season",
+                ]
+                .astype(str)
+                .tolist()
             )
-        )
 
-        bounds = fallback_bounds.merge(
-            top_bounds,
-            on="season",
-            how="left",
-        )
+            raise ValueError(
+                "Bornes de saison invalides pour les saisons : "
+                + ", ".join(invalid_seasons)
+            )
 
-        bounds["season_start"] = bounds[
-            "season_start"
-        ].fillna(
-            bounds["fallback_start"]
-        )
-
-        bounds["season_end"] = bounds[
-            "season_end"
-        ].fillna(
-            bounds["fallback_end"]
-        )
-
-        bounds = bounds[
-            [
-                "season",
-                "season_start",
-                "season_end",
-            ]
-        ]
-
-        return bounds
+        return season_bounds
 
     # ------------------------------------------------------------------
     # VALIDATION
@@ -967,6 +988,21 @@ def main() -> None:
         df["competition_level"]
         .value_counts()
         .to_string()
+    )
+
+    print()
+    print("Season bounds:")
+    print(
+        df[
+            [
+                "season",
+                "season_start",
+                "season_end",
+            ]
+        ]
+        .drop_duplicates()
+        .sort_values("season")
+        .to_string(index=False)
     )
 
     print()
