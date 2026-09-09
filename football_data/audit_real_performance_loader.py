@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -9,26 +7,32 @@ import pandas as pd
 
 @dataclass(frozen=True)
 class AuditConfig:
-    """Configuration for the real performance dataset audit."""
-
     performance_path: Path
     database_path: Path
+
     minimum_minutes: int = 900
     expected_seasons: int = 14
-    national_team_competition: str = (
-        "national_team_competition"
-    )
+
+    national_team_competition: str = "national_team_competition"
+
+    suspicious_duration_days: int = 450
+
+    expected_season_start_month: int = 6
+    expected_season_start_day: int = 1
+
+    expected_season_end_month: int = 7
+    expected_season_end_day: int = 31
 
 
 class RealPerformanceAudit:
-    """Audit the real player performance dataset."""
-
-    def __init__(self, config: AuditConfig) -> None:
+    def __init__(self, config: AuditConfig):
         self.config = config
 
-    def load_performance_dataset(self) -> pd.DataFrame:
-        """Load the generated performance dataset."""
+    # ============================================================
+    # LOAD DATA
+    # ============================================================
 
+    def load_performance_dataset(self) -> pd.DataFrame:
         path = self.config.performance_path
 
         if not path.exists():
@@ -36,402 +40,330 @@ class RealPerformanceAudit:
                 f"Performance dataset not found: {path}"
             )
 
-        return pd.read_csv(
-            path,
-            parse_dates=[
-                "season_start",
-                "season_end",
-                "first_match_date",
-                "last_match_date",
-            ],
-        )
+        df = pd.read_csv(path)
 
-    def load_transfers(self) -> pd.DataFrame:
-        """Load transfer records from DuckDB."""
+        required_columns = {
+            "player_id",
+            "player",
+            "season",
+            "season_start",
+            "season_end",
+            "competition_id",
+            "competition_name",
+            "competition_level",
+            "first_match_date",
+            "last_match_date",
+            "appearances",
+            "minutes",
+            "goals",
+            "assists",
+            "xg",
+            "xa",
+        }
 
-        path = self.config.database_path
+        missing = required_columns - set(df.columns)
 
-        if not path.exists():
-            raise FileNotFoundError(
-                f"DuckDB database not found: {path}"
+        if missing:
+            raise ValueError(
+                f"Missing columns in performance dataset: {sorted(missing)}"
             )
 
-        connection = duckdb.connect(
-            str(path),
+        for column in [
+            "season_start",
+            "season_end",
+            "first_match_date",
+            "last_match_date",
+        ]:
+            df[column] = pd.to_datetime(
+                df[column],
+                errors="coerce",
+            )
+
+        return df
+
+    def load_transfers(self) -> pd.DataFrame:
+        if not self.config.database_path.exists():
+            raise FileNotFoundError(
+                f"Transfermarkt database not found: "
+                f"{self.config.database_path}"
+            )
+
+        query = """
+            SELECT
+                player_id,
+                player_name,
+                transfer_date,
+                transfer_season,
+                from_club_id,
+                to_club_id,
+                from_club_name,
+                to_club_name,
+                transfer_fee,
+                market_value_in_eur
+            FROM transfers
+        """
+
+        with duckdb.connect(
+            str(self.config.database_path),
             read_only=True,
+        ) as con:
+            transfers = con.execute(query).df()
+
+        transfers["transfer_date"] = pd.to_datetime(
+            transfers["transfer_date"],
+            errors="coerce",
         )
 
-        try:
-            return connection.execute(
-                """
-                SELECT
-                    player_id,
-                    player_name,
-                    transfer_date,
-                    transfer_season
-                FROM transfers
-                """
-            ).fetchdf()
-        finally:
-            connection.close()
+        return transfers
 
-    @staticmethod
-    def audit_global(
-        df: pd.DataFrame,
-    ) -> dict[str, object]:
-        """Audit global dataset dimensions."""
+    # ============================================================
+    # GLOBAL AUDIT
+    # ============================================================
 
+    def audit_global(self, df: pd.DataFrame) -> dict:
         return {
             "rows": len(df),
-            "players": df["player_id"].nunique(),
+            "unique_players": df["player_id"].nunique(),
             "seasons": df["season"].nunique(),
             "competitions": df["competition_id"].nunique(),
         }
 
-    def audit_season_bounds(
-        self,
-        df: pd.DataFrame,
-    ) -> pd.DataFrame:
-        """Audit season boundaries."""
+    # ============================================================
+    # SEASON BOUNDS
+    # ============================================================
 
-        seasons = (
-            df.groupby("season", dropna=False)
+    def audit_season_bounds(self, df: pd.DataFrame) -> pd.DataFrame:
+        result = (
+            df.groupby("season")
             .agg(
                 season_start=("season_start", "min"),
                 season_end=("season_end", "max"),
                 first_match=("first_match_date", "min"),
                 last_match=("last_match_date", "max"),
-                players=("player_id", "nunique"),
                 rows=("player_id", "size"),
+                players=("player_id", "nunique"),
             )
             .reset_index()
             .sort_values("season")
         )
 
-        seasons["duration_days"] = (
-            seasons["season_end"] - seasons["season_start"]
+        result["duration_days"] = (
+            result["season_end"] - result["season_start"]
         ).dt.days
 
-        return seasons
+        return result
 
-    @staticmethod
-    def audit_players(
-        df: pd.DataFrame,
-    ) -> dict[str, object]:
-        """Audit player identifiers."""
+    # ============================================================
+    # PLAYERS
+    # ============================================================
 
-        null_ids = int(
-            df["player_id"].isna().sum()
-        )
-
-        names_per_player = (
+    def audit_players(self, df: pd.DataFrame) -> dict:
+        name_counts = (
             df.groupby("player_id")["player"]
             .nunique()
         )
 
+        players_with_multiple_names = (
+            name_counts[name_counts > 1]
+        )
+
         return {
             "unique_players": df["player_id"].nunique(),
-            "null_player_ids": null_ids,
-            "players_with_multiple_names": int(
-                names_per_player.gt(1).sum()
+            "null_player_ids": int(df["player_id"].isna().sum()),
+            "players_with_multiple_names": len(
+                players_with_multiple_names
             ),
         }
 
-    def audit_minutes(
-        self,
-        df: pd.DataFrame,
-    ) -> dict[str, object]:
-        """Audit player minutes."""
+    # ============================================================
+    # MINUTES
+    # ============================================================
 
+    def audit_minutes(self, df: pd.DataFrame) -> dict:
         minutes = pd.to_numeric(
             df["minutes"],
             errors="coerce",
         )
 
         return {
-            "total": float(minutes.sum()),
-            "minimum": float(minutes.min()),
-            "maximum": float(minutes.max()),
-            "mean": float(minutes.mean()),
-            "median": float(minutes.median()),
-            "null": int(minutes.isna().sum()),
-            "negative": int((minutes < 0).sum()),
-            "zero": int((minutes == 0).sum()),
+            "total_minutes": float(minutes.sum()),
+            "min_minutes": float(minutes.min()),
+            "max_minutes": float(minutes.max()),
+            "mean_minutes": float(minutes.mean()),
+            "median_minutes": float(minutes.median()),
+            "null_minutes": int(minutes.isna().sum()),
+            "negative_minutes": int((minutes < 0).sum()),
+            "zero_minutes": int((minutes == 0).sum()),
             "above_threshold": int(
-                (
-                    minutes
-                    >= self.config.minimum_minutes
-                ).sum()
+                (minutes >= self.config.minimum_minutes).sum()
             ),
         }
 
-    @staticmethod
-    def audit_duplicates(
-        df: pd.DataFrame,
-    ) -> dict[str, object]:
-        """Audit duplicate player-season-competition records."""
+    # ============================================================
+    # DUPLICATES
+    # ============================================================
 
-        key = [
+    def audit_duplicates(self, df: pd.DataFrame) -> dict:
+        key_columns = [
             "player_id",
             "season",
             "competition_id",
         ]
 
         duplicate_mask = df.duplicated(
-            subset=key,
+            subset=key_columns,
             keep=False,
         )
 
+        duplicate_rows = df.loc[duplicate_mask]
+
+        duplicate_groups = (
+            duplicate_rows.groupby(key_columns)
+            .size()
+            if not duplicate_rows.empty
+            else pd.Series(dtype="int64")
+        )
+
         return {
-            "duplicate_rows": int(
-                duplicate_mask.sum()
-            ),
+            "duplicate_rows": len(duplicate_rows),
             "duplicate_groups": int(
-                df.loc[duplicate_mask]
-                .groupby(key)
-                .ngroups
+                (duplicate_groups > 1).sum()
             ),
         }
 
-    def audit_competitions(
-        self,
-        df: pd.DataFrame,
-    ) -> dict[str, object]:
-        """Audit competition classification."""
+    # ============================================================
+    # COMPETITIONS
+    # ============================================================
 
-        unknown_rows = int(
+    def audit_competitions(self, df: pd.DataFrame) -> dict:
+        level_counts = (
             df["competition_level"]
-            .fillna("")
-            .eq("UNKNOWN")
-            .sum()
+            .value_counts(dropna=False)
+            .to_dict()
         )
 
         national_team_rows = int(
-            df["competition_type"]
-            .fillna("")
-            .eq(
-                self.config.national_team_competition
-            )
-            .sum()
+            (
+                df["competition_type"]
+                == self.config.national_team_competition
+            ).sum()
+        )
+
+        unknown_rows = int(
+            (
+                df["competition_level"]
+                == "UNKNOWN"
+            ).sum()
         )
 
         return {
-            "levels": (
-                df["competition_level"]
-                .fillna("NULL")
-                .value_counts()
-                .to_dict()
-            ),
+            "competition_levels": level_counts,
             "unknown_rows": unknown_rows,
-            "national_team_rows": (
-                national_team_rows
-            ),
+            "national_team_rows": national_team_rows,
         }
 
-    def audit_dates(
+    # ============================================================
+    # DATES
+    # ============================================================
+
+    def audit_dates(self, df: pd.DataFrame) -> dict:
+        invalid_season_dates = int(
+            (
+                df["season_start"].isna()
+                | df["season_end"].isna()
+            ).sum()
+        )
+
+        invalid_match_dates = int(
+            (
+                df["first_match_date"].isna()
+                | df["last_match_date"].isna()
+            ).sum()
+        )
+
+        matches_outside_season = int(
+            (
+                (df["first_match_date"] < df["season_start"])
+                | (df["last_match_date"] > df["season_end"])
+            ).sum()
+        )
+
+        return {
+            "invalid_season_dates": invalid_season_dates,
+            "invalid_match_dates": invalid_match_dates,
+            "matches_outside_season": matches_outside_season,
+        }
+
+    # ============================================================
+    # OUTSIDE SEASON DETAILS
+    # ============================================================
+
+    def audit_outside_season_details(
         self,
         df: pd.DataFrame,
-    ) -> dict[str, int]:
-        """Audit date consistency."""
+    ) -> pd.DataFrame:
 
-        invalid_season_dates = (
-            df["season_start"].isna()
-            | df["season_end"].isna()
-            | (
-                df["season_start"]
-                > df["season_end"]
-            )
+        mask = (
+            (df["first_match_date"] < df["season_start"])
+            | (df["last_match_date"] > df["season_end"])
         )
 
-        invalid_match_dates = (
-            df["first_match_date"].notna()
-            & df["last_match_date"].notna()
-            & (
-                df["first_match_date"]
-                > df["last_match_date"]
-            )
-        )
-
-        matches_outside_season = (
-            (
-                df["first_match_date"].notna()
-                & df["season_start"].notna()
-                & (
-                    df["first_match_date"]
-                    < df["season_start"]
-                )
-            )
-            |
-            (
-                df["last_match_date"].notna()
-                & df["season_end"].notna()
-                & (
-                    df["last_match_date"]
-                    > df["season_end"]
-                )
-            )
-        )
-
-        return {
-            "invalid_season_dates": int(
-                invalid_season_dates.sum()
-            ),
-            "invalid_match_dates": int(
-                invalid_match_dates.sum()
-            ),
-            "matches_outside_season": int(
-                matches_outside_season.sum()
-            ),
-        }
-
-    @staticmethod
-    def audit_outside_season_details(
-        df: pd.DataFrame,
-    ) -> dict[str, object]:
-        """Analyse records outside season boundaries."""
-
-        outside_start = (
-            df["first_match_date"].notna()
-            & df["season_start"].notna()
-            & (
-                df["first_match_date"]
-                < df["season_start"]
-            )
-        )
-
-        outside_end = (
-            df["last_match_date"].notna()
-            & df["season_end"].notna()
-            & (
-                df["last_match_date"]
-                > df["season_end"]
-            )
-        )
-
-        outside = df[
-            outside_start | outside_end
-        ].copy()
-
-        if outside.empty:
-            return {
-                "rows": 0,
-                "by_competition": {},
-                "by_season": {},
-                "by_competition_type": {},
-                "examples": [],
-            }
-
-        competition_breakdown = (
-            outside.groupby(
-                [
-                    "competition_id",
-                    "competition_name",
-                    "competition_level",
-                ]
-            )
-            .size()
-            .sort_values(ascending=False)
-        )
-
-        season_breakdown = (
-            outside.groupby("season")
-            .size()
-            .sort_index()
-        )
-
-        competition_type_breakdown = (
-            outside["competition_type"]
-            .fillna("NULL")
-            .value_counts()
-        )
-
-        example_columns = [
+        columns = [
             "player_id",
             "player",
             "season",
             "competition_id",
             "competition_name",
             "competition_level",
-            "season_start",
-            "season_end",
             "first_match_date",
             "last_match_date",
+            "season_start",
+            "season_end",
         ]
 
-        examples = (
-            outside[
-                example_columns
-            ]
+        return (
+            df.loc[mask, columns]
             .sort_values(
                 [
                     "season",
-                    "competition_id",
-                    "player_id",
+                    "first_match_date",
                 ]
             )
-            .head(30)
+            .reset_index(drop=True)
         )
 
+    # ============================================================
+    # XG / XA
+    # ============================================================
+
+    def audit_xg_xa(self, df: pd.DataFrame) -> dict:
         return {
-            "rows": len(outside),
-            "by_competition": (
-                competition_breakdown
-                .reset_index(name="rows")
-                .to_dict("records")
-            ),
-            "by_season": (
-                season_breakdown
-                .to_dict()
-            ),
-            "by_competition_type": (
-                competition_type_breakdown
-                .to_dict()
-            ),
-            "examples": (
-                examples.to_dict("records")
-            ),
+            "xg_rows": int(df["xg"].notna().sum()),
+            "xg_null_rows": int(df["xg"].isna().sum()),
+            "xa_rows": int(df["xa"].notna().sum()),
+            "xa_null_rows": int(df["xa"].isna().sum()),
         }
 
-    @staticmethod
-    def audit_xg_xa(
-        df: pd.DataFrame,
-    ) -> dict[str, object]:
-        """Verify that xG/xA are not fabricated."""
-
-        return {
-            "xg_null": int(
-                df["xg"].isna().sum()
-            ),
-            "xa_null": int(
-                df["xa"].isna().sum()
-            ),
-            "xg_all_null": bool(
-                df["xg"].isna().all()
-            ),
-            "xa_all_null": bool(
-                df["xa"].isna().all()
-            ),
-        }
+    # ============================================================
+    # TRANSFER COVERAGE
+    # ============================================================
 
     def audit_transfer_coverage(
         self,
         df: pd.DataFrame,
         transfers: pd.DataFrame,
-    ) -> dict[str, object]:
-        """Audit performance coverage against transfers."""
+    ) -> dict:
 
         performance_players = set(
             df["player_id"]
             .dropna()
             .astype(int)
-            .unique()
         )
 
         transfer_players = set(
             transfers["player_id"]
             .dropna()
             .astype(int)
-            .unique()
         )
 
         common_players = (
@@ -450,15 +382,11 @@ class RealPerformanceAudit:
         )
 
         eligible_players = set(
-            df.groupby("player_id")["minutes"]
-            .sum()
-            .loc[
-                lambda values: (
-                    values
-                    >= self.config.minimum_minutes
-                )
+            df.loc[
+                df["minutes"] >= self.config.minimum_minutes,
+                "player_id",
             ]
-            .index
+            .dropna()
             .astype(int)
         )
 
@@ -467,10 +395,10 @@ class RealPerformanceAudit:
             & transfer_players
         )
 
-        coverage = (
+        coverage_ratio = (
             len(common_players)
-            / len(transfer_players)
-            if transfer_players
+            / len(performance_players)
+            if performance_players
             else 0.0
         )
 
@@ -490,7 +418,7 @@ class RealPerformanceAudit:
             "transfer_only": len(
                 transfer_only
             ),
-            "coverage_ratio": coverage,
+            "coverage_ratio": coverage_ratio,
             "eligible_players": len(
                 eligible_players
             ),
@@ -499,74 +427,267 @@ class RealPerformanceAudit:
             ),
         }
 
+    # ============================================================
+    # SEASON COVERAGE
+    # ============================================================
+
     def audit_season_coverage(
         self,
         df: pd.DataFrame,
     ) -> pd.DataFrame:
-        """Audit dataset coverage by season."""
 
-        coverage = (
+        result = (
             df.groupby("season")
             .agg(
                 rows=("player_id", "size"),
                 players=("player_id", "nunique"),
-                competitions=(
-                    "competition_id",
-                    "nunique",
-                ),
+                competitions=("competition_id", "nunique"),
                 total_minutes=("minutes", "sum"),
-                total_appearances=(
-                    "appearances",
-                    "sum",
-                ),
+                appearances=("appearances", "sum"),
             )
             .reset_index()
             .sort_values("season")
         )
 
-        players_900 = (
-            df.assign(
-                eligible=(
-                    df["minutes"]
-                    >= self.config.minimum_minutes
-                )
-            )
-            .groupby("season")["eligible"]
-            .sum()
+        eligible = (
+            df[df["minutes"] >= self.config.minimum_minutes]
+            .groupby("season")["player_id"]
+            .nunique()
+            .rename("players_900min")
         )
 
-        coverage["players_900min"] = (
-            coverage["season"]
-            .map(players_900)
+        result = result.merge(
+            eligible,
+            on="season",
+            how="left",
+        )
+
+        result["players_900min"] = (
+            result["players_900min"]
             .fillna(0)
             .astype(int)
         )
 
-        return coverage
+        return result
 
-    def run(self) -> dict[str, object]:
-        """Run the complete audit."""
+    # ============================================================
+    # TARGETED SEASON CALENDAR AUDIT
+    # ============================================================
 
+    def audit_season_calendar_anomalies(
+        self,
+        df: pd.DataFrame,
+    ) -> dict:
+
+        season_bounds = (
+            df.groupby("season")
+            .agg(
+                actual_start=("first_match_date", "min"),
+                actual_end=("last_match_date", "max"),
+            )
+            .reset_index()
+            .sort_values("season")
+        )
+
+        season_bounds["duration_days"] = (
+            season_bounds["actual_end"]
+            - season_bounds["actual_start"]
+        ).dt.days
+
+        # --------------------------------------------------------
+        # Expected calendar envelope
+        #
+        # This is ONLY an audit heuristic.
+        # It does NOT modify the dataset.
+        # --------------------------------------------------------
+
+        season_bounds["expected_start"] = pd.to_datetime(
+            season_bounds["season"].astype(str)
+            + f"-{self.config.expected_season_start_month:02d}"
+            + f"-{self.config.expected_season_start_day:02d}"
+        )
+
+        season_bounds["expected_end"] = pd.to_datetime(
+            (
+                season_bounds["season"] + 1
+            ).astype(str)
+            + f"-{self.config.expected_season_end_month:02d}"
+            + f"-{self.config.expected_season_end_day:02d}"
+        )
+
+        season_bounds["start_before_expected"] = (
+            season_bounds["actual_start"]
+            < season_bounds["expected_start"]
+        )
+
+        season_bounds["end_after_expected"] = (
+            season_bounds["actual_end"]
+            > season_bounds["expected_end"]
+        )
+
+        season_bounds["duration_suspicious"] = (
+            season_bounds["duration_days"]
+            > self.config.suspicious_duration_days
+        )
+
+        suspicious_seasons = season_bounds[
+            (
+                season_bounds["start_before_expected"]
+                | season_bounds["end_after_expected"]
+                | season_bounds["duration_suspicious"]
+            )
+        ].copy()
+
+        # --------------------------------------------------------
+        # Competition-level analysis
+        # --------------------------------------------------------
+
+        competition_bounds = (
+            df.groupby(
+                [
+                    "season",
+                    "competition_id",
+                    "competition_name",
+                    "competition_level",
+                ]
+            )
+            .agg(
+                first_match=("first_match_date", "min"),
+                last_match=("last_match_date", "max"),
+                rows=("player_id", "size"),
+                players=("player_id", "nunique"),
+            )
+            .reset_index()
+        )
+
+        competition_bounds["duration_days"] = (
+            competition_bounds["last_match"]
+            - competition_bounds["first_match"]
+        ).dt.days
+
+        # --------------------------------------------------------
+        # Extreme records
+        # --------------------------------------------------------
+
+        earliest_records = (
+            df[
+                [
+                    "season",
+                    "player_id",
+                    "player",
+                    "competition_id",
+                    "competition_name",
+                    "competition_level",
+                    "first_match_date",
+                    "last_match_date",
+                ]
+            ]
+            .sort_values("first_match_date")
+            .head(20)
+            .reset_index(drop=True)
+        )
+
+        latest_records = (
+            df[
+                [
+                    "season",
+                    "player_id",
+                    "player",
+                    "competition_id",
+                    "competition_name",
+                    "competition_level",
+                    "first_match_date",
+                    "last_match_date",
+                ]
+            ]
+            .sort_values(
+                "last_match_date",
+                ascending=False,
+            )
+            .head(20)
+            .reset_index(drop=True)
+        )
+
+        # --------------------------------------------------------
+        # Records outside expected envelope
+        # --------------------------------------------------------
+
+        merged = df.merge(
+            season_bounds[
+                [
+                    "season",
+                    "expected_start",
+                    "expected_end",
+                ]
+            ],
+            on="season",
+            how="left",
+        )
+
+        expected_envelope_violations = merged[
+            (
+                merged["first_match_date"]
+                < merged["expected_start"]
+            )
+            | (
+                merged["last_match_date"]
+                > merged["expected_end"]
+            )
+        ].copy()
+
+        expected_envelope_violations = (
+            expected_envelope_violations[
+                [
+                    "season",
+                    "player_id",
+                    "player",
+                    "competition_id",
+                    "competition_name",
+                    "competition_level",
+                    "first_match_date",
+                    "last_match_date",
+                    "expected_start",
+                    "expected_end",
+                ]
+            ]
+            .sort_values(
+                [
+                    "season",
+                    "first_match_date",
+                ]
+            )
+            .reset_index(drop=True)
+        )
+
+        return {
+            "season_bounds": season_bounds,
+            "suspicious_seasons": suspicious_seasons,
+            "competition_bounds": competition_bounds,
+            "earliest_records": earliest_records,
+            "latest_records": latest_records,
+            "expected_envelope_violations": (
+                expected_envelope_violations
+            ),
+        }
+
+    # ============================================================
+    # RUN COMPLETE AUDIT
+    # ============================================================
+
+    def run(self) -> dict:
         df = self.load_performance_dataset()
         transfers = self.load_transfers()
 
-        seasons = self.audit_season_bounds(df)
-
-        return {
+        report = {
             "global": self.audit_global(df),
+            "season_bounds": self.audit_season_bounds(df),
             "players": self.audit_players(df),
             "minutes": self.audit_minutes(df),
-            "competitions": (
-                self.audit_competitions(df)
-            ),
-            "duplicates": (
-                self.audit_duplicates(df)
-            ),
+            "duplicates": self.audit_duplicates(df),
+            "competitions": self.audit_competitions(df),
             "dates": self.audit_dates(df),
-            "outside_season": (
-                self.audit_outside_season_details(
-                    df
-                )
+            "outside_season_details": (
+                self.audit_outside_season_details(df)
             ),
             "xg_xa": self.audit_xg_xa(df),
             "transfer_coverage": (
@@ -575,402 +696,148 @@ class RealPerformanceAudit:
                     transfers,
                 )
             ),
-            "season_bounds": seasons,
             "season_coverage": (
                 self.audit_season_coverage(df)
             ),
+            "season_calendar_anomalies": (
+                self.audit_season_calendar_anomalies(df)
+            ),
         }
 
+        return report
 
-def print_section(title: str) -> None:
-    """Print a formatted audit section."""
+    # ============================================================
+    # PRINT TARGETED CALENDAR AUDIT
+    # ============================================================
 
-    print()
-    print("=" * 80)
-    print(title)
-    print("=" * 80)
+    def print_season_calendar_anomalies(
+        self,
+        report: dict,
+    ) -> None:
 
+        calendar = report[
+            "season_calendar_anomalies"
+        ]
 
-def print_dict(
-    data: dict[str, object],
-    indent: int = 2,
-) -> None:
-    """Print dictionary values."""
+        print()
+        print("=" * 80)
+        print("TARGETED SEASON CALENDAR AUDIT")
+        print("=" * 80)
 
-    prefix = " " * indent
+        print()
+        print("--- SEASON BOUNDS ---")
 
-    for key, value in data.items():
-        if isinstance(value, float):
-            print(f"{prefix}{key}: {value:.4f}")
+        print(
+            calendar[
+                "season_bounds"
+            ].to_string(index=False)
+        )
+
+        print()
+        print("--- SUSPICIOUS SEASONS ---")
+
+        suspicious = calendar[
+            "suspicious_seasons"
+        ]
+
+        if suspicious.empty:
+            print("No suspicious seasons detected.")
         else:
-            print(f"{prefix}{key}: {value}")
+            print(
+                suspicious.to_string(
+                    index=False
+                )
+            )
 
-def audit_season_calendar_anomalies(self) -> dict:
-    """
-    Analyse les saisons dont les bornes calendaires semblent anormales.
+        print()
+        print("--- COMPETITION BOUNDS FOR SUSPICIOUS SEASONS ---")
 
-    L'objectif est d'identifier :
-        - les compétitions responsables des dates extrêmes ;
-        - les types de compétition concernés ;
-        - les joueurs concernés ;
-        - les dates minimales/maximales observées ;
-        - les éventuelles incohérences entre season et match_date.
-
-    Aucun enregistrement n'est supprimé ou modifié.
-    """
-
-    df = self.df.copy()
-
-    required_columns = {
-        "player_id",
-        "player",
-        "season",
-        "competition_id",
-        "competition_name",
-        "competition_type",
-        "competition_sub_type",
-        "competition_level",
-        "first_match_date",
-        "last_match_date",
-    }
-
-    missing = required_columns - set(df.columns)
-
-    if missing:
-        raise ValueError(
-            "Colonnes nécessaires à l'audit du calendrier absentes : "
-            + ", ".join(sorted(missing))
+        suspicious_season_ids = set(
+            suspicious["season"].tolist()
         )
 
-    df["first_match_date"] = pd.to_datetime(
-        df["first_match_date"],
-        errors="coerce",
-    )
+        competition_bounds = calendar[
+            "competition_bounds"
+        ]
 
-    df["last_match_date"] = pd.to_datetime(
-        df["last_match_date"],
-        errors="coerce",
-    )
-
-    df["season"] = df["season"].astype(str)
-
-    # --------------------------------------------------------------
-    # Bornes globales par saison
-    # --------------------------------------------------------------
-
-    season_bounds = (
-        df.groupby("season", as_index=False)
-        .agg(
-            season_start=("first_match_date", "min"),
-            season_end=("last_match_date", "max"),
-            rows=("player_id", "size"),
-            players=("player_id", "nunique"),
-            competitions=("competition_id", "nunique"),
-        )
-        .sort_values("season")
-    )
-
-    # --------------------------------------------------------------
-    # Détection des saisons suspectes
-    #
-    # Une saison est considérée suspecte si :
-    #   - elle couvre plus de 450 jours ;
-    #   - ou son début est très tôt (< 1er juin) ;
-    #   - ou sa fin est très tardive (> 31 juillet de l'année suivante).
-    #
-    # Ce sont des indicateurs d'audit, pas des règles de suppression.
-    # --------------------------------------------------------------
-
-    season_bounds["duration_days"] = (
-        season_bounds["season_end"]
-        - season_bounds["season_start"]
-    ).dt.days
-
-    season_bounds["season_year"] = pd.to_numeric(
-        season_bounds["season"],
-        errors="coerce",
-    )
-
-    season_bounds["expected_year_start"] = pd.to_datetime(
-        season_bounds["season_year"].astype("Int64").astype(str)
-        + "-06-01",
-        errors="coerce",
-    )
-
-    season_bounds["expected_year_end"] = pd.to_datetime(
-        (season_bounds["season_year"] + 1)
-        .astype("Int64")
-        .astype(str)
-        + "-07-31",
-        errors="coerce",
-    )
-
-    suspicious = season_bounds[
-        (
-            season_bounds["duration_days"] > 450
-        )
-        |
-        (
-            season_bounds["season_start"]
-            < season_bounds["expected_year_start"]
-        )
-        |
-        (
-            season_bounds["season_end"]
-            > season_bounds["expected_year_end"]
-        )
-    ].copy()
-
-    # --------------------------------------------------------------
-    # Détail des compétitions responsables des bornes
-    # --------------------------------------------------------------
-
-    details = []
-
-    for _, row in suspicious.iterrows():
-        season = row["season"]
-
-        season_df = df[
-            df["season"] == season
-        ].copy()
-
-        if season_df.empty:
-            continue
-
-        competition_details = (
-            season_df.groupby(
+        suspicious_competitions = (
+            competition_bounds[
+                competition_bounds["season"].isin(
+                    suspicious_season_ids
+                )
+            ]
+            .sort_values(
                 [
-                    "competition_id",
-                    "competition_name",
-                    "competition_type",
-                    "competition_sub_type",
-                    "competition_level",
-                ],
-                dropna=False,
+                    "season",
+                    "first_match",
+                ]
             )
-            .agg(
-                first_date=(
-                    "first_match_date",
-                    "min",
-                ),
-                last_date=(
-                    "last_match_date",
-                    "max",
-                ),
-                rows=(
-                    "player_id",
-                    "size",
-                ),
-                players=(
-                    "player_id",
-                    "nunique",
-                ),
+        )
+
+        if suspicious_competitions.empty:
+            print(
+                "No competition-level anomalies "
+                "available for suspicious seasons."
             )
-            .reset_index()
+        else:
+            print(
+                suspicious_competitions.to_string(
+                    index=False
+                )
+            )
+
+        print()
+        print("--- EARLIEST RECORDS ---")
+
+        print(
+            calendar[
+                "earliest_records"
+            ].to_string(index=False)
         )
 
-        competition_details["season"] = season
+        print()
+        print("--- LATEST RECORDS ---")
 
-        competition_details["duration_days"] = (
-            competition_details["last_date"]
-            - competition_details["first_date"]
-        ).dt.days
-
-        competition_details["is_start_extreme"] = (
-            competition_details["first_date"]
-            == row["season_start"]
+        print(
+            calendar[
+                "latest_records"
+            ].to_string(index=False)
         )
 
-        competition_details["is_end_extreme"] = (
-            competition_details["last_date"]
-            == row["season_end"]
+        print()
+        print(
+            "--- EXPECTED CALENDAR ENVELOPE VIOLATIONS ---"
         )
 
-        details.append(
-            competition_details
-        )
-
-    if details:
-        competition_details_df = pd.concat(
-            details,
-            ignore_index=True,
-        )
-    else:
-        competition_details_df = pd.DataFrame()
-
-    # --------------------------------------------------------------
-    # Enregistrements responsables des dates extrêmes
-    # --------------------------------------------------------------
-
-    extreme_records = []
-
-    for _, row in suspicious.iterrows():
-        season = row["season"]
-
-        season_df = df[
-            df["season"] == season
-        ].copy()
-
-        if season_df.empty:
-            continue
-
-        start_records = season_df[
-            season_df["first_match_date"]
-            == row["season_start"]
-        ].copy()
-
-        end_records = season_df[
-            season_df["last_match_date"]
-            == row["season_end"]
-        ].copy()
-
-        start_records["extreme_type"] = "SEASON_START"
-        end_records["extreme_type"] = "SEASON_END"
-
-        extreme_records.append(start_records)
-        extreme_records.append(end_records)
-
-    if extreme_records:
-        extreme_records_df = pd.concat(
-            extreme_records,
-            ignore_index=True,
-        )
-    else:
-        extreme_records_df = pd.DataFrame()
-
-    return {
-        "season_bounds": season_bounds,
-        "suspicious_seasons": suspicious,
-        "competition_details": competition_details_df,
-        "extreme_records": extreme_records_df,
-    }
-
-def print_season_calendar_anomalies(
-    self,
-    report: dict,
-) -> None:
-    """
-    Affiche l'analyse détaillée des anomalies de calendrier.
-    """
-
-    print_section(
-        "SEASON CALENDAR — TARGETED ANOMALY ANALYSIS"
-    )
-
-    suspicious = report[
-        "suspicious_seasons"
-    ]
-
-    if suspicious.empty:
-        print("Aucune saison suspecte détectée.")
-        return
-
-    print(
-        f"Saisons suspectes : "
-        f"{len(suspicious)}"
-    )
-
-    print()
-
-    print(
-        suspicious[
-            [
-                "season",
-                "season_start",
-                "season_end",
-                "duration_days",
-                "rows",
-                "players",
-                "competitions",
-            ]
+        violations = calendar[
+            "expected_envelope_violations"
         ]
-        .to_string(index=False)
-    )
 
-    competition_details = report[
-        "competition_details"
-    ]
-
-    if competition_details.empty:
-        return
-
-    print()
-    print("-" * 80)
-    print("COMPETITIONS RESPONSIBLE FOR EXTREME DATES")
-    print("-" * 80)
-
-    display_columns = [
-        "season",
-        "competition_id",
-        "competition_name",
-        "competition_type",
-        "competition_sub_type",
-        "competition_level",
-        "first_date",
-        "last_date",
-        "duration_days",
-        "rows",
-        "players",
-        "is_start_extreme",
-        "is_end_extreme",
-    ]
-
-    print(
-        competition_details[
-            display_columns
-        ]
-        .sort_values(
-            [
-                "season",
-                "first_date",
-                "last_date",
-            ]
+        print(
+            f"Rows outside expected envelope: "
+            f"{len(violations)}"
         )
-        .to_string(index=False)
-    )
 
-    extreme_records = report[
-        "extreme_records"
-    ]
+        if not violations.empty:
+            print(
+                violations.head(100).to_string(
+                    index=False
+                )
+            )
 
-    if extreme_records.empty:
-        return
+            if len(violations) > 100:
+                print()
+                print(
+                    f"... {len(violations) - 100} "
+                    "additional rows not displayed."
+                )
 
-    print()
-    print("-" * 80)
-    print("EXTREME RECORDS")
-    print("-" * 80)
 
-    extreme_columns = [
-        "season",
-        "extreme_type",
-        "player_id",
-        "player",
-        "competition_id",
-        "competition_name",
-        "competition_type",
-        "competition_sub_type",
-        "competition_level",
-        "first_match_date",
-        "last_match_date",
-    ]
-
-    print(
-        extreme_records[
-            extreme_columns
-        ]
-        .sort_values(
-            [
-                "season",
-                "extreme_type",
-                "first_match_date",
-            ]
-        )
-        .to_string(index=False)
-    )
+# ================================================================
+# MAIN
+# ================================================================
 
 def main() -> None:
-    """Run the real performance dataset audit."""
 
     config = AuditConfig(
         performance_path=Path(
@@ -978,113 +845,131 @@ def main() -> None:
             "player_competition_season_performance.csv"
         ),
         database_path=Path(
-            "data/historical/transfermarkt-datasets.duckdb"
+            "data/historical/"
+            "transfermarkt-datasets.duckdb"
         ),
-    )
-    
-    season_calendar_report = (
-        audit_season_calendar_anomalies()
+        minimum_minutes=900,
+        expected_seasons=14,
+        national_team_competition=(
+            "national_team_competition"
+        ),
+        suspicious_duration_days=450,
+        expected_season_start_month=6,
+        expected_season_start_day=1,
+        expected_season_end_month=7,
+        expected_season_end_day=31,
     )
 
-    print_season_calendar_anomalies(
-        season_calendar_report
-    )
-    
+    audit = RealPerformanceAudit(config)
+
     report = audit.run()
-    report["season_calendar_anomalies"] = (
-        season_calendar_report
-    )
 
     print()
     print("=" * 80)
-    print("REAL PERFORMANCE LOADER — AUDIT")
+    print("REAL PERFORMANCE DATASET AUDIT")
     print("=" * 80)
 
-    print_section("GLOBAL")
-    print_dict(report["global"])
+    # ------------------------------------------------------------
+    # GLOBAL
+    # ------------------------------------------------------------
 
-    print_section("PLAYERS")
-    print_dict(report["players"])
+    print()
+    print("--- GLOBAL ---")
 
-    print_section("MINUTES")
-    print_dict(report["minutes"])
+    for key, value in report["global"].items():
+        print(f"{key}: {value}")
 
-    print_section("DUPLICATES")
-    print_dict(report["duplicates"])
+    # ------------------------------------------------------------
+    # PLAYERS
+    # ------------------------------------------------------------
 
-    print_section("DATES")
-    print_dict(report["dates"])
+    print()
+    print("--- PLAYERS ---")
 
-    print_section(
-        "OUTSIDE SEASON — DETAILED ANALYSIS"
-    )
+    for key, value in report["players"].items():
+        print(f"{key}: {value}")
 
-    outside = report["outside_season"]
+    # ------------------------------------------------------------
+    # MINUTES
+    # ------------------------------------------------------------
+
+    print()
+    print("--- MINUTES ---")
+
+    for key, value in report["minutes"].items():
+        print(f"{key}: {value}")
+
+    # ------------------------------------------------------------
+    # DUPLICATES
+    # ------------------------------------------------------------
+
+    print()
+    print("--- DUPLICATES ---")
+
+    for key, value in report["duplicates"].items():
+        print(f"{key}: {value}")
+
+    # ------------------------------------------------------------
+    # DATES
+    # ------------------------------------------------------------
+
+    print()
+    print("--- DATES ---")
+
+    for key, value in report["dates"].items():
+        print(f"{key}: {value}")
+
+    # ------------------------------------------------------------
+    # COMPETITIONS
+    # ------------------------------------------------------------
+
+    print()
+    print("--- COMPETITIONS ---")
+
+    for key, value in report["competitions"].items():
+        print(f"{key}: {value}")
+
+    # ------------------------------------------------------------
+    # XG / XA
+    # ------------------------------------------------------------
+
+    print()
+    print("--- XG / XA ---")
+
+    for key, value in report["xg_xa"].items():
+        print(f"{key}: {value}")
+
+    # ------------------------------------------------------------
+    # TRANSFER COVERAGE
+    # ------------------------------------------------------------
+
+    print()
+    print("--- TRANSFER COVERAGE ---")
+
+    for key, value in report[
+        "transfer_coverage"
+    ].items():
+        print(f"{key}: {value}")
+
+    # ------------------------------------------------------------
+    # SEASON COVERAGE
+    # ------------------------------------------------------------
+
+    print()
+    print("--- SEASON COVERAGE ---")
 
     print(
-        f"Rows concerned: "
-        f"{outside['rows']:,}"
+        report[
+            "season_coverage"
+        ].to_string(index=False)
     )
 
-    print("\nBy competition:")
-    for item in outside["by_competition"]:
-        print(
-            f"  {item['competition_id']} | "
-            f"{item['competition_name']} | "
-            f"{item['competition_level']} | "
-            f"{item['rows']:,}"
-        )
+    # ------------------------------------------------------------
+    # SEASON CALENDAR ANALYSIS
+    # ------------------------------------------------------------
 
-    print("\nBy season:")
-    for season, rows in (
-        outside["by_season"].items()
-    ):
-        print(
-            f"  {season}: {rows:,}"
-        )
-
-    print("\nBy competition type:")
-    for competition_type, rows in (
-        outside["by_competition_type"].items()
-    ):
-        print(
-            f"  {competition_type}: "
-            f"{rows:,}"
-        )
-
-    print("\nExamples:")
-    for example in outside["examples"]:
-        print(
-            f"  player={example['player_id']} "
-            f"| {example['player']} "
-            f"| season={example['season']} "
-            f"| competition="
-            f"{example['competition_id']} "
-            f"| first="
-            f"{example['first_match_date']} "
-            f"| last="
-            f"{example['last_match_date']} "
-            f"| season_start="
-            f"{example['season_start']} "
-            f"| season_end="
-            f"{example['season_end']}"
-        )
-
-    print_section("COMPETITIONS")
-    print_dict(report["competitions"])
-
-    print_section("xG / xA")
-    print_dict(report["xg_xa"])
-
-    print_section("TRANSFER COVERAGE")
-    print_dict(
-        report["transfer_coverage"]
-    )
-
-    print_section("SEASON COVERAGE")
-    print(
-        report["season_coverage"]
-        .to_string(index=False)
+    audit.print_season_calendar_anomalies(
+        report
     )
 
 
