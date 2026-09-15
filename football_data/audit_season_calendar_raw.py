@@ -1,1368 +1,1810 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Optional
 
 import duckdb
+import pandas as pd
 
-DATABASE_PATH = Path("data/historical/transfermarkt-datasets.duckdb")
+@dataclass(frozen=True)
+class AuditConfig:
+    database_path: Path = Path(
+    "data/historical/transfermarkt-datasets.duckdb"
+    )
 
-# Valeur connue dans le dataset Transfermarkt utilisé par le projet.
 
-NATIONAL_TEAM_COMPETITION = "national_team_competition"
+    output_bounds_path: Path = Path(
+        "data/audits/raw_season_calendar_bounds.csv"
+    )
 
-# Mots-clés utilisés uniquement pour identifier les compétitions
+    output_review_path: Path = Path(
+        "data/audits/raw_season_calendar_review.csv"
+    )
 
-# qui correspondent manifestement à des matchs amicaux/préparation.
+    national_team_competition_type: str = "national_team_competition"
 
-FRIENDLY_KEYWORDS = (
-"friendly",
-"friendlies",
-"amical",
-"pre-season",
-"preseason",
-"pre season",
-"preparation",
-"préparation",
-"test match",
-"test-match",
-)
+    # Une saison officielle de football peut commencer très tôt
+    # avec les qualifications européennes.
+    # Cette limite sert uniquement à détecter des affectations
+    # manifestement anormales du champ games.season.
+    plausible_start_month: int = 5
+
+    # Au-delà de cette durée entre le premier et le dernier match,
+    # la saison doit être examinée.
+    suspicious_duration_days: int = 450
+
+    # Une compétition sans métadonnées peut néanmoins être un
+    # match officiel entre deux clubs.
+    require_two_clubs_for_structural_keep: bool = True
+
 
 class RawSeasonCalendarAudit:
+    """
+    Audit du calendrier réel des saisons à partir de la table RAW games.
 
-# Audit de référence du calendrier des saisons club.
+    Business rules
+    --------------
+    1. Les matchs internationaux / équipes nationales sont exclus.
+    2. Les matchs amicaux / préparation sont exclus.
+    3. Un match officiel de qualification européenne peut être
+    le premier match de la saison, même si le championnat
+    national n'a pas encore commencé.
+    4. Les compétitions officielles entre clubs sont conservées.
+    5. Les compétitions dont les métadonnées sont absentes ne sont
+    pas automatiquement exclues : elles peuvent être KEEP si
+    la structure du match confirme un match entre deux clubs.
+    6. Les affectations manifestement incohérentes de games.season
+    restent REVIEW.
+    7. Les bornes candidates sont calculées uniquement à partir
+    des matchs KEEP.
+    8. Les REVIEW sont ensuite testés pour déterminer s'ils peuvent
+    déplacer la borne de début ou de fin.
+    """
 
-    def __init__(self, database_path: Path):
-        self.database_path = database_path
-        self.con: duckdb.DuckDBPyConnection | None = None
+    FRIENDLY_KEYWORDS = (
+        "friendly",
+        "friendlies",
+        "friendly match",
+        "club friendly",
+        "international friendly",
+        "amical",
+        "match amical",
+        "amicaux",
+        "amicale",
+        "pre-season",
+        "preseason",
+        "pre season",
+        "preparation",
+        "pré-saison",
+        "preparation match",
+        "test match",
+        "training match",
+        "practice match",
+    )
+
+    NATIONAL_KEYWORDS = (
+        "national team",
+        "national teams",
+        "international",
+        "world cup",
+        "euro",
+        "copa america",
+        "africa cup",
+        "afcon",
+        "asian cup",
+        "nations league",
+        "uefa nations",
+        "concacaf",
+        "olympic",
+        "olympics",
+        "world championship",
+        "qualification world cup",
+    )
+
+    def __init__(self, config: AuditConfig):
+        self.config = config
+        self.connection: Optional[duckdb.DuckDBPyConnection] = None
+        self.raw_games: Optional[pd.DataFrame] = None
+        self.classified_games: Optional[pd.DataFrame] = None
 
     # ------------------------------------------------------------------
-    # CONNECTION
+    # Connection
     # ------------------------------------------------------------------
 
     def connect(self) -> None:
-        if not self.database_path.exists():
-            raise FileNotFoundError(
-                f"Base DuckDB introuvable : {self.database_path}"
-            )
+        if self.connection is not None:
+            return
 
-        self.con = duckdb.connect(
-            database=str(self.database_path),
+        self.connection = duckdb.connect(
+            database=str(self.config.database_path),
             read_only=True,
         )
 
     def close(self) -> None:
-        if self.con is not None:
-            self.con.close()
-            self.con = None
-
-    # ------------------------------------------------------------------
-    # HELPERS
-    # ------------------------------------------------------------------
+        if self.connection is not None:
+            self.connection.close()
+            self.connection = None
 
     def _require_connection(self) -> duckdb.DuckDBPyConnection:
-        if self.con is None:
-            raise RuntimeError("La connexion DuckDB n'est pas ouverte.")
-        return self.con
+        if self.connection is None:
+            raise RuntimeError("DuckDB connection is not open.")
+        return self.connection
+
+    # ------------------------------------------------------------------
+    # Display helpers
+    # ------------------------------------------------------------------
 
     @staticmethod
     def _print_title(title: str) -> None:
         print()
-        print("=" * 100)
+        print("=" * 90)
         print(title)
-        print("=" * 100)
+        print("=" * 90)
 
     @staticmethod
-    def _print_dataframe(df, max_rows: int = 100) -> None:
-        if df.empty:
-            print("Aucune ligne.")
+    def _print_dataframe(
+        dataframe: pd.DataFrame,
+        max_rows: int = 50,
+    ) -> None:
+        if dataframe.empty:
+            print("(aucune ligne)")
             return
 
-        if len(df) > max_rows:
+        print(dataframe.head(max_rows).to_string(index=False))
+
+        if len(dataframe) > max_rows:
+            print()
             print(
-                f"Affichage limité à {max_rows} lignes "
-                f"sur {len(df)} lignes."
+                f"... {len(dataframe) - max_rows} lignes supplémentaires "
+                f"non affichées."
             )
-            print(df.head(max_rows).to_string(index=False))
-        else:
-            print(df.to_string(index=False))
 
     # ------------------------------------------------------------------
-    # 1. SCHEMA
+    # Schema
     # ------------------------------------------------------------------
 
     def audit_schema(self) -> None:
-        con = self._require_connection()
+        connection = self._require_connection()
 
-        self._print_title("1. SCHEMA DES TABLES UTILISEES")
+        self._print_title("1. SCHEMA RAW GAMES")
 
-        for table_name in ("games", "competitions"):
-            print(f"\n--- {table_name} ---")
+        tables = connection.execute(
+            """
+            SELECT table_name
+            FROM information_schema.tables
+            WHERE table_schema = 'main'
+            ORDER BY table_name
+            """
+        ).fetchdf()
 
-            df = con.execute(
-                f"""
-                DESCRIBE {table_name}
-                """
-            ).df()
+        print("Tables disponibles :")
+        self._print_dataframe(tables)
 
-            self._print_dataframe(df, max_rows=100)
+        columns = connection.execute(
+            """
+            SELECT
+                column_name,
+                data_type
+            FROM information_schema.columns
+            WHERE table_schema = 'main'
+            AND table_name = 'games'
+            ORDER BY ordinal_position
+            """
+        ).fetchdf()
+
+        print()
+        print("Colonnes de games :")
+        self._print_dataframe(columns)
 
     # ------------------------------------------------------------------
-    # 2. VALEURS DE COMPETITION_TYPE
+    # Competition types
     # ------------------------------------------------------------------
 
-    def audit_competition_types(self) -> None:
-        con = self._require_connection()
+    def audit_competition_types(self) -> pd.DataFrame:
+        connection = self._require_connection()
 
-        self._print_title(
-            "2. REPARTITION DES competition_type DANS games"
-        )
+        self._print_title("2. COMPETITION TYPES")
 
-        df = con.execute(
+        dataframe = connection.execute(
             """
             SELECT
                 competition_type,
-                COUNT(*) AS games_count,
-                MIN(date) AS first_date,
-                MAX(date) AS last_date,
-                COUNT(DISTINCT season) AS seasons_count
+                COUNT(*) AS games
             FROM games
             GROUP BY competition_type
-            ORDER BY games_count DESC
+            ORDER BY games DESC
             """
-        ).df()
+        ).fetchdf()
 
-        self._print_dataframe(df)
+        self._print_dataframe(dataframe)
+
+        return dataframe
 
     # ------------------------------------------------------------------
-    # 3. CONSTRUCTION DU PERIMETRE OFFICIEL CLUB
+    # Raw games
     # ------------------------------------------------------------------
 
-    def build_official_club_games(self):
-        """
-        Construit la relation logique des matchs officiels de clubs.
+    def load_raw_games(self) -> pd.DataFrame:
+        connection = self._require_connection()
 
-        Règles :
-
-        1. date non NULL
-        2. competition_type != national_team_competition
-        3. competition_type = club lorsque cette information est disponible
-        4. exclusion des compétitions dont les métadonnées indiquent
-        manifestement un match amical / préparation.
-
-        Le résultat n'est pas écrit dans la base.
-        """
-
-        con = self._require_connection()
-
-        return con.execute(
-            f"""
-            WITH competition_metadata AS (
-                SELECT
-                    competition_id,
-                    competition_code,
-                    name,
-                    sub_type,
-                    type,
-                    country_name,
-                    confederation
-                FROM competitions
-            )
-
+        query = """
             SELECT
                 g.game_id,
-                g.season,
-                CAST(g.date AS DATE) AS match_date,
                 g.competition_id,
+                g.season,
+                g.round,
+                g.date,
+                g.home_club_id,
+                g.away_club_id,
+                g.home_club_goals,
+                g.away_club_goals,
                 g.competition_type,
 
                 c.competition_code,
                 c.name AS competition_name,
                 c.sub_type AS competition_sub_type,
-                c.type AS competition_type_metadata,
+                c.type AS competition_metadata_type,
                 c.country_name,
-                c.confederation,
+                c.confederation
 
-                CASE
-                    WHEN g.competition_type = ?
-                        THEN 'EXCLUDE_NATIONAL_TEAM'
+            FROM games AS g
 
-                    WHEN LOWER(
-                        COALESCE(c.name, '') || ' ' ||
-                        COALESCE(c.competition_code, '') || ' ' ||
-                        COALESCE(c.sub_type, '') || ' ' ||
-                        COALESCE(c.type, '')
-                    ) LIKE '%friendly%'
-                        THEN 'EXCLUDE_FRIENDLY'
-
-                    WHEN LOWER(
-                        COALESCE(c.name, '') || ' ' ||
-                        COALESCE(c.competition_code, '') || ' ' ||
-                        COALESCE(c.sub_type, '') || ' ' ||
-                        COALESCE(c.type, '')
-                    ) LIKE '%amical%'
-                        THEN 'EXCLUDE_FRIENDLY'
-
-                    WHEN LOWER(
-                        COALESCE(c.name, '') || ' ' ||
-                        COALESCE(c.competition_code, '') || ' ' ||
-                        COALESCE(c.sub_type, '') || ' ' ||
-                        COALESCE(c.type, '')
-                    ) LIKE '%pre-season%'
-                        THEN 'EXCLUDE_FRIENDLY'
-
-                    WHEN LOWER(
-                        COALESCE(c.name, '') || ' ' ||
-                        COALESCE(c.competition_code, '') || ' ' ||
-                        COALESCE(c.sub_type, '') || ' ' ||
-                        COALESCE(c.type, '')
-                    ) LIKE '%preseason%'
-                        THEN 'EXCLUDE_FRIENDLY'
-
-                    WHEN LOWER(
-                        COALESCE(c.name, '') || ' ' ||
-                        COALESCE(c.competition_code, '') || ' ' ||
-                        COALESCE(c.sub_type, '') || ' ' ||
-                        COALESCE(c.type, '')
-                    ) LIKE '%pre season%'
-                        THEN 'EXCLUDE_FRIENDLY'
-
-                    WHEN LOWER(
-                        COALESCE(c.name, '') || ' ' ||
-                        COALESCE(c.competition_code, '') || ' ' ||
-                        COALESCE(c.sub_type, '') || ' ' ||
-                        COALESCE(c.type, '')
-                    ) LIKE '%preparation%'
-                        THEN 'EXCLUDE_FRIENDLY'
-
-                    WHEN LOWER(
-                        COALESCE(c.name, '') || ' ' ||
-                        COALESCE(c.competition_code, '') || ' ' ||
-                        COALESCE(c.sub_type, '') || ' ' ||
-                        COALESCE(c.type, '')
-                    ) LIKE '%préparation%'
-                        THEN 'EXCLUDE_FRIENDLY'
-
-                    WHEN LOWER(
-                        COALESCE(c.name, '') || ' ' ||
-                        COALESCE(c.competition_code, '') || ' ' ||
-                        COALESCE(c.sub_type, '') || ' ' ||
-                        COALESCE(c.type, '')
-                    ) LIKE '%test match%'
-                        THEN 'EXCLUDE_FRIENDLY'
-
-                    WHEN c.competition_id IS NULL
-                        THEN 'REVIEW_MISSING_COMPETITION_METADATA'
-
-                    ELSE 'KEEP'
-                END AS audit_status
-
-            FROM games g
-            LEFT JOIN competition_metadata c
+            LEFT JOIN competitions AS c
                 ON g.competition_id = c.competition_id
 
             WHERE g.date IS NOT NULL
-            """,
-            [NATIONAL_TEAM_COMPETITION],
-        ).df()
 
-    # ------------------------------------------------------------------
-    # 4. STATISTIQUES DU PERIMETRE
-    # ------------------------------------------------------------------
-
-    def audit_official_club_scope(self) -> None:
-        con = self._require_connection()
-
-        self._print_title(
-            "3. CONTROLE DU PERIMETRE MATCHS OFFICIELS CLUB"
-        )
-
-        df = con.execute(
-            f"""
-            WITH base AS (
-                SELECT
-                    g.game_id,
-                    g.season,
-                    g.date,
-                    g.competition_id,
-                    g.competition_type,
-                    c.competition_code,
-                    c.name,
-                    c.sub_type,
-                    c.type,
-                    CASE
-                        WHEN g.competition_type = '{NATIONAL_TEAM_COMPETITION}'
-                            THEN 'EXCLUDE_NATIONAL_TEAM'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%friendly%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%amical%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%pre-season%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preseason%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%préparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN c.competition_id IS NULL
-                            THEN 'REVIEW_MISSING_COMPETITION_METADATA'
-
-                        ELSE 'KEEP'
-                    END AS audit_status
-
-                FROM games g
-                LEFT JOIN competitions c
-                    ON g.competition_id = c.competition_id
-
-                WHERE g.date IS NOT NULL
-            )
-
-            SELECT
-                audit_status,
-                COUNT(*) AS games_count,
-                COUNT(DISTINCT game_id) AS distinct_games,
-                COUNT(DISTINCT season) AS seasons_count,
-                MIN(date) AS first_date,
-                MAX(date) AS last_date
-            FROM base
-            GROUP BY audit_status
-            ORDER BY games_count DESC
-            """
-        ).df()
-
-        self._print_dataframe(df)
-
-    # ------------------------------------------------------------------
-    # 5. BORNES DE SAISON
-    # ------------------------------------------------------------------
-
-    def calculate_season_bounds(self):
-        """
-        Calcule les bornes métier :
-
-            season_start = premier match officiel club
-            season_end   = dernier match officiel club
-
-        Les dates sont inclusives.
-
-        IMPORTANT :
-            les bornes sont calculées uniquement sur les matchs
-            dont audit_status = KEEP.
-
-        Les compétitions sans métadonnées ne sont PAS intégrées
-        automatiquement aux bornes : elles sont remontées séparément
-        pour revue.
-        """
-
-        con = self._require_connection()
-
-        df = con.execute(
-            f"""
-            WITH official_club_games AS (
-                SELECT
-                    g.game_id,
-                    g.season,
-                    CAST(g.date AS DATE) AS match_date,
-                    g.competition_id,
-                    g.competition_type,
-
-                    c.competition_code,
-                    c.name AS competition_name,
-                    c.sub_type,
-                    c.type,
-
-                    CASE
-                        WHEN g.competition_type = '{NATIONAL_TEAM_COMPETITION}'
-                            THEN 'EXCLUDE_NATIONAL_TEAM'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%friendly%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%amical%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%pre-season%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preseason%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%préparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN c.competition_id IS NULL
-                            THEN 'REVIEW_MISSING_COMPETITION_METADATA'
-
-                        ELSE 'KEEP'
-                    END AS audit_status
-
-                FROM games g
-                LEFT JOIN competitions c
-                    ON g.competition_id = c.competition_id
-
-                WHERE g.date IS NOT NULL
-            )
-
-            SELECT
-                season,
-
-                MIN(match_date) AS season_start,
-                MAX(match_date) AS season_end,
-
-                DATE_DIFF(
-                    'day',
-                    MIN(match_date),
-                    MAX(match_date)
-                ) + 1 AS season_duration_days,
-
-                COUNT(DISTINCT game_id) AS official_club_games,
-
-                COUNT(DISTINCT competition_id)
-                    AS official_club_competitions
-
-            FROM official_club_games
-
-            WHERE audit_status = 'KEEP'
-
-            GROUP BY season
-            ORDER BY season
-            """
-        ).df()
-
-        return df
-
-    def print_season_bounds(self) -> None:
-        self._print_title(
-            "4. BORNES OFFICIELLES DES SAISONS CLUB"
-        )
-
-        df = self.calculate_season_bounds()
-
-        print(
-            "\nDEFINITION :\n"
-            "  season_start = premier match officiel de club\n"
-            "  season_end   = dernier match officiel de club\n"
-            "  bornes inclusives = [season_start, season_end]\n"
-        )
-
-        self._print_dataframe(df, max_rows=200)
-
-    # ------------------------------------------------------------------
-    # 6. MATCH QUI DETERMINE CHAQUE BORNE
-    # ------------------------------------------------------------------
-
-    def audit_boundary_matches(self) -> None:
-        con = self._require_connection()
-
-        self._print_title(
-            "5. MATCHS DETERMINANT LES BORNES DE CHAQUE SAISON"
-        )
-
-        df = con.execute(
-            f"""
-            WITH official_club_games AS (
-                SELECT
-                    g.game_id,
-                    g.season,
-                    CAST(g.date AS DATE) AS match_date,
-                    g.competition_id,
-                    g.competition_type,
-                    c.competition_code,
-                    c.name AS competition_name,
-                    c.sub_type,
-                    c.type,
-
-                    CASE
-                        WHEN g.competition_type = '{NATIONAL_TEAM_COMPETITION}'
-                            THEN 'EXCLUDE_NATIONAL_TEAM'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%friendly%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%amical%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%pre-season%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preseason%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%préparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN c.competition_id IS NULL
-                            THEN 'REVIEW_MISSING_COMPETITION_METADATA'
-
-                        ELSE 'KEEP'
-                    END AS audit_status
-
-                FROM games g
-                LEFT JOIN competitions c
-                    ON g.competition_id = c.competition_id
-
-                WHERE g.date IS NOT NULL
-            ),
-
-            bounds AS (
-                SELECT
-                    season,
-                    MIN(match_date) AS season_start,
-                    MAX(match_date) AS season_end
-                FROM official_club_games
-                WHERE audit_status = 'KEEP'
-                GROUP BY season
-            )
-
-            SELECT
+            ORDER BY
                 g.season,
-                g.match_date,
-                CASE
-                    WHEN g.match_date = b.season_start
-                        THEN 'SEASON_START'
-                    WHEN g.match_date = b.season_end
-                        THEN 'SEASON_END'
-                END AS boundary_type,
+                g.date,
+                g.game_id
+        """
 
-                g.game_id,
-                g.competition_id,
-                g.competition_code,
-                g.competition_name,
-                g.competition_type,
+        dataframe = connection.execute(query).fetchdf()
 
-                g.season AS raw_game_season
+        dataframe["date"] = pd.to_datetime(
+            dataframe["date"],
+            errors="coerce",
+        )
 
-            FROM official_club_games g
+        self.raw_games = dataframe
 
-            INNER JOIN bounds b
-                ON g.season = b.season
-                AND (
-                    g.match_date = b.season_start
-                    OR g.match_date = b.season_end
+        return dataframe
+
+    # ------------------------------------------------------------------
+    # Text normalization
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _normalize_text(value) -> str:
+        if value is None:
+            return ""
+
+        if pd.isna(value):
+            return ""
+
+        return (
+            str(value)
+            .strip()
+            .lower()
+            .replace("_", " ")
+            .replace("-", " ")
+        )
+
+    def _competition_metadata_text(
+        self,
+        row: pd.Series,
+    ) -> str:
+        fields = [
+            row.get("competition_code"),
+            row.get("competition_name"),
+            row.get("competition_sub_type"),
+            row.get("competition_metadata_type"),
+            row.get("round"),
+        ]
+
+        return " ".join(
+            self._normalize_text(value)
+            for value in fields
+            if self._normalize_text(value)
+        )
+
+    def _is_friendly(self, row: pd.Series) -> bool:
+        text = self._competition_metadata_text(row)
+
+        return any(
+            keyword in text
+            for keyword in self.FRIENDLY_KEYWORDS
+        )
+
+    def _is_national_team(self, row: pd.Series) -> bool:
+        competition_type = self._normalize_text(
+            row.get("competition_type")
+        )
+
+        if competition_type == self._normalize_text(
+            self.config.national_team_competition_type
+        ):
+            return True
+
+        text = self._competition_metadata_text(row)
+
+        return any(
+            keyword in text
+            for keyword in self.NATIONAL_KEYWORDS
+        )
+
+    # ------------------------------------------------------------------
+    # Structural classification
+    # ------------------------------------------------------------------
+
+    def _has_two_clubs(self, row: pd.Series) -> bool:
+        home_club_id = row.get("home_club_id")
+        away_club_id = row.get("away_club_id")
+
+        if pd.isna(home_club_id) or pd.isna(away_club_id):
+            return False
+
+        return True
+
+    def _has_competition_metadata(self, row: pd.Series) -> bool:
+        fields = [
+            row.get("competition_id"),
+            row.get("competition_code"),
+            row.get("competition_name"),
+            row.get("competition_metadata_type"),
+        ]
+
+        return any(
+            not pd.isna(value) and str(value).strip() != ""
+            for value in fields
+        )
+
+    def _looks_like_european_qualification(
+        self,
+        row: pd.Series,
+    ) -> bool:
+        text = self._competition_metadata_text(row)
+
+        qualification_keywords = (
+            "qualifying",
+            "qualification",
+            "qualifier",
+            "qualification round",
+            "qualifying round",
+            "champions league qualifying",
+            "europa league qualifying",
+            "conference league qualifying",
+            "uefa qualifying",
+        )
+
+        european_keywords = (
+            "uefa",
+            "champions league",
+            "europa league",
+            "conference league",
+            "ucl",
+            "uel",
+            "uecl",
+        )
+
+        return (
+            any(keyword in text for keyword in qualification_keywords)
+            and any(keyword in text for keyword in european_keywords)
+        )
+
+    def _season_start_is_structurally_plausible(
+        self,
+        row: pd.Series,
+    ) -> bool:
+        """
+        Ne considère pas qu'un match européen de qualification avant
+        le championnat national est anormal.
+
+        La vérification cherche uniquement les affectations clairement
+        aberrantes, par exemple un match très ancien placé dans une
+        saison récente.
+        """
+
+        season = row.get("season")
+        date = row.get("date")
+
+        if pd.isna(season) or pd.isna(date):
+            return False
+
+        try:
+            season_int = int(season)
+        except (TypeError, ValueError):
+            return False
+
+        date = pd.Timestamp(date)
+
+        # Cas standard : saison située autour de l'année de début.
+        #
+        # Une qualification européenne peut commencer en juin/juillet.
+        # On ne rejette donc PAS les qualifications européennes
+        # simplement parce qu'elles précèdent le championnat.
+        if date.year in {season_int, season_int + 1}:
+            return True
+
+        # Cas particulier : les compétitions exceptionnellement
+        # décalées peuvent se prolonger dans l'année suivante.
+        #
+        # On conserve ici une tolérance jusqu'à environ 15 mois.
+        if date.year == season_int + 2:
+            return True
+
+        return False
+
+    def classify_row(self, row: pd.Series) -> tuple[str, str]:
+        """
+        Retourne :
+            STATUS
+            REASON
+        """
+
+        # --------------------------------------------------------------
+        # 1. NATIONAL TEAM
+        # --------------------------------------------------------------
+
+        if self._is_national_team(row):
+            return (
+                "EXCLUDE_NATIONAL",
+                "NATIONAL_TEAM_MATCH",
+            )
+
+        # --------------------------------------------------------------
+        # 2. FRIENDLY
+        # --------------------------------------------------------------
+
+        if self._is_friendly(row):
+            return (
+                "EXCLUDE_FRIENDLY",
+                "FRIENDLY_OR_PREPARATION_MATCH",
+            )
+
+        # --------------------------------------------------------------
+        # 3. MISSING METADATA
+        # --------------------------------------------------------------
+
+        has_two_clubs = self._has_two_clubs(row)
+        has_metadata = self._has_competition_metadata(row)
+
+        if not has_metadata:
+
+            if (
+                self.config.require_two_clubs_for_structural_keep
+                and not has_two_clubs
+            ):
+                return (
+                    "REVIEW",
+                    "UNKNOWN_COMPETITION_NO_TWO_CLUB_STRUCTURE",
                 )
 
-            WHERE g.audit_status = 'KEEP'
+            # Deux clubs sont présents.
+            #
+            # On ne rejette pas automatiquement :
+            # il peut s'agir d'une compétition officielle dont les
+            # métadonnées ne sont pas disponibles dans Transfermarkt.
+            #
+            # On vérifie cependant que l'affectation à la saison n'est
+            # pas manifestement aberrante.
+            if not self._season_start_is_structurally_plausible(row):
+                return (
+                    "REVIEW",
+                    "UNKNOWN_COMPETITION_SUSPICIOUS_SEASON_ASSIGNMENT",
+                )
 
-            ORDER BY
-                g.season,
-                g.match_date,
-                boundary_type
-            """
-        ).df()
-
-        self._print_dataframe(df, max_rows=500)
-
-    # ------------------------------------------------------------------
-    # 7. COMPETITIONS QUI DETERMINENT LES BORNES
-    # ------------------------------------------------------------------
-
-    def audit_boundary_competitions(self) -> None:
-        con = self._require_connection()
-
-        self._print_title(
-            "6. COMPETITIONS QUI DETERMINENT LES BORNES"
-        )
-
-        df = con.execute(
-            f"""
-            WITH official_club_games AS (
-                SELECT
-                    g.game_id,
-                    g.season,
-                    CAST(g.date AS DATE) AS match_date,
-                    g.competition_id,
-                    c.competition_code,
-                    c.name AS competition_name,
-                    g.competition_type,
-
-                    CASE
-                        WHEN g.competition_type = '{NATIONAL_TEAM_COMPETITION}'
-                            THEN 'EXCLUDE_NATIONAL_TEAM'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%friendly%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%amical%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%pre-season%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preseason%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%préparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN c.competition_id IS NULL
-                            THEN 'REVIEW_MISSING_COMPETITION_METADATA'
-
-                        ELSE 'KEEP'
-                    END AS audit_status
-
-                FROM games g
-                LEFT JOIN competitions c
-                    ON g.competition_id = c.competition_id
-
-                WHERE g.date IS NOT NULL
-            ),
-
-            bounds AS (
-                SELECT
-                    season,
-                    MIN(match_date) AS season_start,
-                    MAX(match_date) AS season_end
-                FROM official_club_games
-                WHERE audit_status = 'KEEP'
-                GROUP BY season
-            ),
-
-            boundary_games AS (
-                SELECT
-                    g.*,
-                    CASE
-                        WHEN g.match_date = b.season_start
-                            THEN 'SEASON_START'
-                        WHEN g.match_date = b.season_end
-                            THEN 'SEASON_END'
-                    END AS boundary_type
-                FROM official_club_games g
-                INNER JOIN bounds b
-                    ON g.season = b.season
-                    AND (
-                        g.match_date = b.season_start
-                        OR g.match_date = b.season_end
-                    )
-                WHERE g.audit_status = 'KEEP'
+            return (
+                "KEEP",
+                "OFFICIAL_CLUB_STRUCTURAL",
             )
 
-            SELECT
-                season,
-                boundary_type,
-                competition_id,
-                competition_code,
-                competition_name,
-                MIN(match_date) AS boundary_date,
-                COUNT(*) AS games_on_boundary
+        # --------------------------------------------------------------
+        # 4. KNOWN OFFICIAL CLUB MATCH
+        # --------------------------------------------------------------
 
-            FROM boundary_games
+        if not has_two_clubs:
+            return (
+                "REVIEW",
+                "OFFICIAL_COMPETITION_WITHOUT_TWO_CLUB_STRUCTURE",
+            )
 
-            GROUP BY
-                season,
-                boundary_type,
-                competition_id,
-                competition_code,
-                competition_name
+        if not self._season_start_is_structurally_plausible(row):
+            return (
+                "REVIEW",
+                "SUSPICIOUS_SEASON_ASSIGNMENT",
+            )
 
-            ORDER BY
-                season,
-                boundary_type,
-                boundary_date
-            """
-        ).df()
+        # Les qualifications européennes sont explicitement KEEP.
+        if self._looks_like_european_qualification(row):
+            return (
+                "KEEP",
+                "OFFICIAL_EUROPEAN_QUALIFICATION",
+            )
 
-        self._print_dataframe(df, max_rows=500)
-
-    # ------------------------------------------------------------------
-    # 8. COMPETITIONS SANS METADONNEES
-    # ------------------------------------------------------------------
-
-    def audit_missing_competition_metadata(self) -> None:
-        con = self._require_connection()
-
-        self._print_title(
-            "7. COMPETITIONS PRESENTES DANS games MAIS ABSENTES DE competitions"
+        return (
+            "KEEP",
+            "OFFICIAL_CLUB_COMPETITION",
         )
 
-        df = con.execute(
-            """
-            SELECT
-                g.competition_id,
-                g.competition_type,
-                COUNT(*) AS games_count,
-                COUNT(DISTINCT g.season) AS seasons_count,
-                MIN(g.date) AS first_date,
-                MAX(g.date) AS last_date,
-                MIN(g.season) AS first_season,
-                MAX(g.season) AS last_season
-            FROM games g
-            LEFT JOIN competitions c
-                ON g.competition_id = c.competition_id
-            WHERE c.competition_id IS NULL
-            GROUP BY
-                g.competition_id,
-                g.competition_type
-            ORDER BY games_count DESC
-            """
-        ).df()
-
-        self._print_dataframe(df, max_rows=500)
-
     # ------------------------------------------------------------------
-    # 9. NATIONAL TEAM EXCLUSION
+    # Classification
     # ------------------------------------------------------------------
 
-    def audit_national_team_games(self) -> None:
-        con = self._require_connection()
+    def classify_games(
+        self,
+        dataframe: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
 
-        self._print_title(
-            "8. MATCHS DE SELECTION NATIONALE EXCLUS DU PERIMETRE"
+        if dataframe is None:
+            if self.raw_games is None:
+                dataframe = self.load_raw_games()
+            else:
+                dataframe = self.raw_games
+
+        classified = dataframe.copy()
+
+        classifications = classified.apply(
+            self.classify_row,
+            axis=1,
+            result_type="expand",
         )
 
-        df = con.execute(
-            f"""
-            SELECT
-                season,
-                competition_id,
-                competition_type,
-                COUNT(*) AS games_count,
-                MIN(date) AS first_date,
-                MAX(date) AS last_date
-            FROM games
-            WHERE competition_type = '{NATIONAL_TEAM_COMPETITION}'
-            GROUP BY
-                season,
-                competition_id,
-                competition_type
-            ORDER BY
-                season,
-                first_date
-            """
-        ).df()
+        classifications.columns = [
+            "status",
+            "classification_reason",
+        ]
 
-        self._print_dataframe(df, max_rows=500)
-
-    # ------------------------------------------------------------------
-    # 10. COMPETITIONS AMICALES / PREPARATION DETECTEES
-    # ------------------------------------------------------------------
-
-    def audit_friendly_competitions(self) -> None:
-        con = self._require_connection()
-
-        self._print_title(
-            "9. COMPETITIONS IDENTIFIEES COMME AMICALES / PREPARATION"
+        classified = pd.concat(
+            [
+                classified,
+                classifications,
+            ],
+            axis=1,
         )
 
-        df = con.execute(
-            """
-            SELECT
-                g.competition_id,
-                g.competition_type,
-                c.competition_code,
-                c.name AS competition_name,
-                c.sub_type,
-                c.type,
-                COUNT(*) AS games_count,
-                COUNT(DISTINCT g.season) AS seasons_count,
-                MIN(g.date) AS first_date,
-                MAX(g.date) AS last_date
-            FROM games g
-            LEFT JOIN competitions c
-                ON g.competition_id = c.competition_id
-
-            WHERE
-                LOWER(
-                    COALESCE(c.name, '') || ' ' ||
-                    COALESCE(c.competition_code, '') || ' ' ||
-                    COALESCE(c.sub_type, '') || ' ' ||
-                    COALESCE(c.type, '')
-                ) LIKE '%friendly%'
-
-                OR LOWER(
-                    COALESCE(c.name, '') || ' ' ||
-                    COALESCE(c.competition_code, '') || ' ' ||
-                    COALESCE(c.sub_type, '') || ' ' ||
-                    COALESCE(c.type, '')
-                ) LIKE '%amical%'
-
-                OR LOWER(
-                    COALESCE(c.name, '') || ' ' ||
-                    COALESCE(c.competition_code, '') || ' ' ||
-                    COALESCE(c.sub_type, '') || ' ' ||
-                    COALESCE(c.type, '')
-                ) LIKE '%pre-season%'
-
-                OR LOWER(
-                    COALESCE(c.name, '') || ' ' ||
-                    COALESCE(c.competition_code, '') || ' ' ||
-                    COALESCE(c.sub_type, '') || ' ' ||
-                    COALESCE(c.type, '')
-                ) LIKE '%preseason%'
-
-                OR LOWER(
-                    COALESCE(c.name, '') || ' ' ||
-                    COALESCE(c.competition_code, '') || ' ' ||
-                    COALESCE(c.sub_type, '') || ' ' ||
-                    COALESCE(c.type, '')
-                ) LIKE '%preparation%'
-
-                OR LOWER(
-                    COALESCE(c.name, '') || ' ' ||
-                    COALESCE(c.competition_code, '') || ' ' ||
-                    COALESCE(c.sub_type, '') || ' ' ||
-                    COALESCE(c.type, '')
-                ) LIKE '%préparation%'
-
-            GROUP BY
-                g.competition_id,
-                g.competition_type,
-                c.competition_code,
-                c.name,
-                c.sub_type,
-                c.type
-
-            ORDER BY games_count DESC
-            """
-        ).df()
-
-        self._print_dataframe(df, max_rows=500)
-
-    # ------------------------------------------------------------------
-    # 11. CONTROLE DES SAISONS SUSPECTES
-    # ------------------------------------------------------------------
-
-    def audit_suspicious_seasons(self) -> None:
-        self._print_title(
-            "10. CONTROLE DES SAISONS AUX BORNES POTENTIELLEMENT ANORMALES"
+        classified["season"] = pd.to_numeric(
+            classified["season"],
+            errors="coerce",
         )
 
-        bounds = self.calculate_season_bounds()
+        self.classified_games = classified
 
-        if bounds.empty:
-            print("Aucune saison détectée.")
+        return classified
+
+    # ------------------------------------------------------------------
+    # Classification audit
+    # ------------------------------------------------------------------
+
+    def audit_classification(
+        self,
+        dataframe: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+
+        if dataframe is None:
+            dataframe = self.classified_games
+
+        if dataframe is None:
+            raise RuntimeError(
+                "Games have not been loaded/classified."
+            )
+
+        self._print_title("3. CLASSIFICATION DES MATCHS")
+
+        summary = (
+            dataframe
+            .groupby(
+                ["status", "classification_reason"],
+                dropna=False,
+            )
+            .agg(
+                games=("game_id", "count"),
+                seasons=("season", "nunique"),
+                first_date=("date", "min"),
+                last_date=("date", "max"),
+            )
+            .reset_index()
+            .sort_values(
+                ["status", "games"],
+                ascending=[True, False],
+            )
+        )
+
+        self._print_dataframe(summary, max_rows=100)
+
+        return summary
+
+    # ------------------------------------------------------------------
+    # Review extraction
+    # ------------------------------------------------------------------
+
+    def extract_review_games(
+        self,
+        dataframe: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+
+        if dataframe is None:
+            dataframe = self.classified_games
+
+        if dataframe is None:
+            raise RuntimeError(
+                "Games have not been loaded/classified."
+            )
+
+        review = dataframe.loc[
+            dataframe["status"] == "REVIEW"
+        ].copy()
+
+        review = review.sort_values(
+            ["season", "date", "game_id"]
+        )
+
+        return review
+
+    def print_review_summary(
+        self,
+        review: pd.DataFrame,
+    ) -> None:
+
+        self._print_title("4. REVIEW À VALIDER AVANT INTÉGRATION")
+
+        if review.empty:
+            print("Aucun match REVIEW.")
             return
 
-        suspicious = bounds[
-            (bounds["season_duration_days"] > 400)
-            | (bounds["season_duration_days"] < 200)
+        summary = (
+            review
+            .groupby(
+                ["season", "classification_reason"],
+                dropna=False,
+            )
+            .agg(
+                games=("game_id", "count"),
+                first_date=("date", "min"),
+                last_date=("date", "max"),
+                competitions=("competition_id", "nunique"),
+            )
+            .reset_index()
+            .sort_values(
+                ["season", "games"],
+                ascending=[True, False],
+            )
+        )
+
+        self._print_dataframe(summary, max_rows=200)
+
+        print()
+        print("Détail des REVIEW :")
+
+        columns = [
+            "game_id",
+            "season",
+            "date",
+            "round",
+            "competition_id",
+            "competition_code",
+            "competition_name",
+            "competition_sub_type",
+            "competition_metadata_type",
+            "competition_type",
+            "home_club_id",
+            "away_club_id",
+            "status",
+            "classification_reason",
+        ]
+
+        available_columns = [
+            column
+            for column in columns
+            if column in review.columns
+        ]
+
+        self._print_dataframe(
+            review[available_columns],
+            max_rows=200,
+        )
+
+    # ------------------------------------------------------------------
+    # Candidate bounds
+    # ------------------------------------------------------------------
+
+    def calculate_candidate_bounds(
+        self,
+        dataframe: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+
+        if dataframe is None:
+            dataframe = self.classified_games
+
+        if dataframe is None:
+            raise RuntimeError(
+                "Games have not been loaded/classified."
+            )
+
+        keep = dataframe.loc[
+            dataframe["status"] == "KEEP"
+        ].copy()
+
+        if keep.empty:
+            return pd.DataFrame(
+                columns=[
+                    "season",
+                    "season_start",
+                    "season_end",
+                    "duration_days",
+                    "games",
+                    "competitions",
+                    "first_competition",
+                    "last_competition",
+                ]
+            )
+
+        bounds = (
+            keep
+            .groupby("season")
+            .agg(
+                season_start=("date", "min"),
+                season_end=("date", "max"),
+                games=("game_id", "count"),
+                competitions=("competition_id", "nunique"),
+            )
+            .reset_index()
+        )
+
+        bounds["duration_days"] = (
+            bounds["season_end"] - bounds["season_start"]
+        ).dt.days
+
+        first_rows = (
+            keep
+            .sort_values(
+                ["season", "date", "game_id"]
+            )
+            .groupby("season", as_index=False)
+            .first()
+        )
+
+        last_rows = (
+            keep
+            .sort_values(
+                ["season", "date", "game_id"]
+            )
+            .groupby("season", as_index=False)
+            .last()
+        )
+
+        first_competitions = first_rows[
+            [
+                "season",
+                "competition_code",
+                "competition_name",
+                "competition_type",
+                "classification_reason",
+            ]
+        ].rename(
+            columns={
+                "competition_code": "first_competition_code",
+                "competition_name": "first_competition_name",
+                "competition_type": "first_competition_type",
+                "classification_reason": "first_classification_reason",
+            }
+        )
+
+        last_competitions = last_rows[
+            [
+                "season",
+                "competition_code",
+                "competition_name",
+                "competition_type",
+                "classification_reason",
+            ]
+        ].rename(
+            columns={
+                "competition_code": "last_competition_code",
+                "competition_name": "last_competition_name",
+                "competition_type": "last_competition_type",
+                "classification_reason": "last_classification_reason",
+            }
+        )
+
+        bounds = bounds.merge(
+            first_competitions,
+            on="season",
+            how="left",
+        )
+
+        bounds = bounds.merge(
+            last_competitions,
+            on="season",
+            how="left",
+        )
+
+        return bounds.sort_values("season").reset_index(drop=True)
+
+    def print_candidate_bounds(
+        self,
+        bounds: pd.DataFrame,
+    ) -> None:
+
+        self._print_title("5. BORNES CANDIDATES — MATCHS KEEP UNIQUEMENT")
+
+        if bounds.empty:
+            print("Aucune borne calculée.")
+            return
+
+        columns = [
+            "season",
+            "season_start",
+            "season_end",
+            "duration_days",
+            "games",
+            "competitions",
+            "first_competition_code",
+            "first_competition_name",
+            "first_classification_reason",
+            "last_competition_code",
+            "last_competition_name",
+            "last_classification_reason",
+        ]
+
+        available_columns = [
+            column
+            for column in columns
+            if column in bounds.columns
+        ]
+
+        self._print_dataframe(
+            bounds[available_columns],
+            max_rows=100,
+        )
+
+    # ------------------------------------------------------------------
+    # Review impact on bounds
+    # ------------------------------------------------------------------
+
+    def calculate_review_impact(
+        self,
+        classified: Optional[pd.DataFrame] = None,
+        bounds: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+
+        if classified is None:
+            classified = self.classified_games
+
+        if classified is None:
+            raise RuntimeError(
+                "Games have not been loaded/classified."
+            )
+
+        if bounds is None:
+            bounds = self.calculate_candidate_bounds(classified)
+
+        review = self.extract_review_games(classified)
+
+        if review.empty:
+            return pd.DataFrame(
+                columns=[
+                    "season",
+                    "review_status",
+                    "review_reason",
+                    "review_games",
+                    "first_review_date",
+                    "last_review_date",
+                    "candidate_start",
+                    "candidate_end",
+                    "impact",
+                ]
+            )
+
+        rows = []
+
+        bounds_by_season = {
+            row["season"]: row
+            for _, row in bounds.iterrows()
+        }
+
+        for (
+            season,
+            reason,
+        ), group in review.groupby(
+            ["season", "classification_reason"],
+            dropna=False,
+        ):
+
+            first_review_date = group["date"].min()
+            last_review_date = group["date"].max()
+
+            candidate = bounds_by_season.get(season)
+
+            if candidate is None:
+                impact = "NO_KEEP_FOR_SEASON"
+                candidate_start = pd.NaT
+                candidate_end = pd.NaT
+
+            else:
+                candidate_start = candidate["season_start"]
+                candidate_end = candidate["season_end"]
+
+                moves_start = (
+                    pd.notna(first_review_date)
+                    and first_review_date < candidate_start
+                )
+
+                moves_end = (
+                    pd.notna(last_review_date)
+                    and last_review_date > candidate_end
+                )
+
+                if moves_start and moves_end:
+                    impact = "COULD_MOVE_START_AND_END"
+
+                elif moves_start:
+                    impact = "COULD_MOVE_START_EARLIER"
+
+                elif moves_end:
+                    impact = "COULD_MOVE_END_LATER"
+
+                else:
+                    impact = "INSIDE_CURRENT_BOUNDS"
+
+            rows.append(
+                {
+                    "season": season,
+                    "review_status": "REVIEW",
+                    "review_reason": reason,
+                    "review_games": len(group),
+                    "first_review_date": first_review_date,
+                    "last_review_date": last_review_date,
+                    "candidate_start": candidate_start,
+                    "candidate_end": candidate_end,
+                    "impact": impact,
+                }
+            )
+
+        return (
+            pd.DataFrame(rows)
+            .sort_values(
+                ["season", "impact", "review_games"],
+                ascending=[True, True, False],
+            )
+            .reset_index(drop=True)
+        )
+
+    def print_review_impact(
+        self,
+        impact: pd.DataFrame,
+    ) -> None:
+
+        self._print_title("6. IMPACT DES REVIEW SUR LES BORNES")
+
+        if impact.empty:
+            print("Aucun REVIEW.")
+            return
+
+        self._print_dataframe(
+            impact,
+            max_rows=200,
+        )
+
+    # ------------------------------------------------------------------
+    # Exclusions
+    # ------------------------------------------------------------------
+
+    def audit_exclusions(
+        self,
+        classified: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+
+        if classified is None:
+            classified = self.classified_games
+
+        if classified is None:
+            raise RuntimeError(
+                "Games have not been loaded/classified."
+            )
+
+        self._print_title("7. MATCHS EXCLUS")
+
+        exclusions = (
+            classified
+            .loc[
+                classified["status"].isin(
+                    [
+                        "EXCLUDE_NATIONAL",
+                        "EXCLUDE_FRIENDLY",
+                    ]
+                )
+            ]
+            .groupby(
+                [
+                    "status",
+                    "classification_reason",
+                    "competition_type",
+                    "competition_code",
+                    "competition_name",
+                ],
+                dropna=False,
+            )
+            .agg(
+                games=("game_id", "count"),
+                first_date=("date", "min"),
+                last_date=("date", "max"),
+            )
+            .reset_index()
+            .sort_values(
+                "games",
+                ascending=False,
+            )
+        )
+
+        self._print_dataframe(
+            exclusions,
+            max_rows=200,
+        )
+
+        return exclusions
+
+    # ------------------------------------------------------------------
+    # Temporal outliers
+    # ------------------------------------------------------------------
+
+    def audit_temporal_outliers(
+        self,
+        bounds: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+
+        if bounds is None:
+            bounds = self.calculate_candidate_bounds()
+
+        self._print_title("8. DURÉE DES SAISONS — AUDIT")
+
+        if bounds.empty:
+            print("Aucune saison.")
+            return bounds
+
+        outliers = bounds.loc[
+            bounds["duration_days"]
+            > self.config.suspicious_duration_days
+        ].copy()
+
+        if outliers.empty:
+            print(
+                "Aucune saison ne dépasse "
+                f"{self.config.suspicious_duration_days} jours."
+            )
+        else:
+            print(
+                f"Saisons dépassant "
+                f"{self.config.suspicious_duration_days} jours :"
+            )
+            self._print_dataframe(
+                outliers,
+                max_rows=100,
+            )
+
+        return outliers
+
+    # ------------------------------------------------------------------
+    # Boundary games
+    # ------------------------------------------------------------------
+
+    def audit_boundary_games(
+        self,
+        classified: Optional[pd.DataFrame] = None,
+        bounds: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+
+        if classified is None:
+            classified = self.classified_games
+
+        if classified is None:
+            raise RuntimeError(
+                "Games have not been loaded/classified."
+            )
+
+        if bounds is None:
+            bounds = self.calculate_candidate_bounds(classified)
+
+        self._print_title("9. MATCHS AUX BORNES")
+
+        keep = classified.loc[
+            classified["status"] == "KEEP"
+        ].copy()
+
+        if keep.empty:
+            print("Aucun match KEEP.")
+            return pd.DataFrame()
+
+        rows = []
+
+        for _, bound in bounds.iterrows():
+
+            season = bound["season"]
+
+            season_games = keep.loc[
+                keep["season"] == season
+            ].copy()
+
+            if season_games.empty:
+                continue
+
+            first = (
+                season_games
+                .sort_values(
+                    ["date", "game_id"]
+                )
+                .iloc[0]
+            )
+
+            last = (
+                season_games
+                .sort_values(
+                    ["date", "game_id"]
+                )
+                .iloc[-1]
+            )
+
+            rows.append(
+                {
+                    "season": season,
+                    "first_game_id": first["game_id"],
+                    "first_date": first["date"],
+                    "first_competition_code": first[
+                        "competition_code"
+                    ],
+                    "first_competition_name": first[
+                        "competition_name"
+                    ],
+                    "first_round": first["round"],
+                    "first_reason": first[
+                        "classification_reason"
+                    ],
+                    "last_game_id": last["game_id"],
+                    "last_date": last["date"],
+                    "last_competition_code": last[
+                        "competition_code"
+                    ],
+                    "last_competition_name": last[
+                        "competition_name"
+                    ],
+                    "last_round": last["round"],
+                    "last_reason": last[
+                        "classification_reason"
+                    ],
+                }
+            )
+
+        result = pd.DataFrame(rows)
+
+        self._print_dataframe(
+            result,
+            max_rows=100,
+        )
+
+        return result
+
+    # ------------------------------------------------------------------
+    # Boundary competition audit
+    # ------------------------------------------------------------------
+
+    def audit_boundary_competitions(
+        self,
+        classified: Optional[pd.DataFrame] = None,
+        bounds: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+
+        if classified is None:
+            classified = self.classified_games
+
+        if classified is None:
+            raise RuntimeError(
+                "Games have not been loaded/classified."
+            )
+
+        if bounds is None:
+            bounds = self.calculate_candidate_bounds(classified)
+
+        self._print_title("10. COMPÉTITIONS AUTOUR DES BORNES")
+
+        keep = classified.loc[
+            classified["status"] == "KEEP"
+        ].copy()
+
+        rows = []
+
+        for _, bound in bounds.iterrows():
+
+            season = bound["season"]
+            start = bound["season_start"]
+            end = bound["season_end"]
+
+            season_games = keep.loc[
+                keep["season"] == season
+            ].copy()
+
+            if season_games.empty:
+                continue
+
+            first_window = season_games.loc[
+                season_games["date"]
+                <= start + pd.Timedelta(days=14)
+            ]
+
+            last_window = season_games.loc[
+                season_games["date"]
+                >= end - pd.Timedelta(days=14)
+            ]
+
+            for side, window in [
+                ("START", first_window),
+                ("END", last_window),
+            ]:
+
+                if window.empty:
+                    continue
+
+                competition_summary = (
+                    window
+                    .groupby(
+                        [
+                            "competition_code",
+                            "competition_name",
+                            "classification_reason",
+                        ],
+                        dropna=False,
+                    )
+                    .agg(
+                        games=("game_id", "count"),
+                        first_date=("date", "min"),
+                        last_date=("date", "max"),
+                    )
+                    .reset_index()
+                )
+
+                competition_summary.insert(
+                    0,
+                    "season",
+                    season,
+                )
+
+                competition_summary.insert(
+                    1,
+                    "boundary",
+                    side,
+                )
+
+                rows.append(
+                    competition_summary
+                )
+
+        if not rows:
+            print("Aucune donnée.")
+            return pd.DataFrame()
+
+        result = pd.concat(
+            rows,
+            ignore_index=True,
+        )
+
+        self._print_dataframe(
+            result,
+            max_rows=200,
+        )
+
+        return result
+
+    # ------------------------------------------------------------------
+    # Suspicious season assignment details
+    # ------------------------------------------------------------------
+
+    def audit_suspicious_seasons(
+        self,
+        classified: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+
+        if classified is None:
+            classified = self.classified_games
+
+        if classified is None:
+            raise RuntimeError(
+                "Games have not been loaded/classified."
+            )
+
+        self._print_title(
+            "11. AFFECTATIONS DE SAISON SUSPECTES"
+        )
+
+        suspicious = classified.loc[
+            classified["classification_reason"].isin(
+                [
+                    "SUSPICIOUS_SEASON_ASSIGNMENT",
+                    "UNKNOWN_COMPETITION_SUSPICIOUS_SEASON_ASSIGNMENT",
+                ]
+            )
         ].copy()
 
         if suspicious.empty:
             print(
-                "Aucune saison ne dépasse les seuils d'alerte "
-                "(< 200 jours ou > 400 jours)."
+                "Aucune affectation de saison suspecte "
+                "selon les règles actuelles."
             )
-            return
+            return suspicious
 
-        print(
-            "ATTENTION : ces saisons sont signalées pour REVUE.\n"
-            "Une durée > 400 jours n'implique pas automatiquement que "
-            "la borne est fausse : elle peut révéler une compétition "
-            "officielle prolongée, un rattachement de saison inhabituel "
-            "ou une anomalie du dataset."
+        columns = [
+            "game_id",
+            "season",
+            "date",
+            "round",
+            "competition_id",
+            "competition_code",
+            "competition_name",
+            "competition_type",
+            "home_club_id",
+            "away_club_id",
+            "status",
+            "classification_reason",
+        ]
+
+        available_columns = [
+            column
+            for column in columns
+            if column in suspicious.columns
+        ]
+
+        self._print_dataframe(
+            suspicious[available_columns],
+            max_rows=300,
         )
 
-        self._print_dataframe(suspicious)
+        return suspicious
 
     # ------------------------------------------------------------------
-    # 12. AUDIT DETAILLE DES LONGUES EXTENSIONS
+    # Games around suspicious boundaries
     # ------------------------------------------------------------------
 
-    def audit_season_long_tails(self) -> None:
-        con = self._require_connection()
+    def audit_games_around_boundaries(
+        self,
+        classified: Optional[pd.DataFrame] = None,
+        bounds: Optional[pd.DataFrame] = None,
+        days: int = 30,
+    ) -> pd.DataFrame:
+
+        if classified is None:
+            classified = self.classified_games
+
+        if classified is None:
+            raise RuntimeError(
+                "Games have not been loaded/classified."
+            )
+
+        if bounds is None:
+            bounds = self.calculate_candidate_bounds(classified)
 
         self._print_title(
-            "11. COMPETITIONS QUI PROLONGENT FORTEMENT UNE SAISON"
+            f"12. MATCHS AUTOUR DES BORNES ±{days} JOURS"
         )
 
-        df = con.execute(
-            f"""
-            WITH official_club_games AS (
-                SELECT
-                    g.game_id,
-                    g.season,
-                    CAST(g.date AS DATE) AS match_date,
-                    g.competition_id,
-                    g.competition_type,
-                    c.competition_code,
-                    c.name AS competition_name,
-                    c.sub_type,
-                    c.type,
+        rows = []
 
-                    CASE
-                        WHEN g.competition_type = '{NATIONAL_TEAM_COMPETITION}'
-                            THEN 'EXCLUDE_NATIONAL_TEAM'
+        for _, bound in bounds.iterrows():
 
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%friendly%'
-                            THEN 'EXCLUDE_FRIENDLY'
+            season = bound["season"]
+            start = bound["season_start"]
+            end = bound["season_end"]
 
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%amical%'
-                            THEN 'EXCLUDE_FRIENDLY'
+            nearby = classified.loc[
+                (
+                    classified["season"] == season
+                )
+                & (
+                    (
+                        (
+                            classified["date"]
+                            >= start - pd.Timedelta(days=days)
+                        )
+                        & (
+                            classified["date"]
+                            <= start + pd.Timedelta(days=days)
+                        )
+                    )
+                    |
+                    (
+                        (
+                            classified["date"]
+                            >= end - pd.Timedelta(days=days)
+                        )
+                        & (
+                            classified["date"]
+                            <= end + pd.Timedelta(days=days)
+                        )
+                    )
+                )
+            ].copy()
 
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%pre-season%'
-                            THEN 'EXCLUDE_FRIENDLY'
+            if nearby.empty:
+                continue
 
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preseason%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%préparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN c.competition_id IS NULL
-                            THEN 'REVIEW_MISSING_COMPETITION_METADATA'
-
-                        ELSE 'KEEP'
-                    END AS audit_status
-
-                FROM games g
-                LEFT JOIN competitions c
-                    ON g.competition_id = c.competition_id
-
-                WHERE g.date IS NOT NULL
-            ),
-
-            bounds AS (
-                SELECT
-                    season,
-                    MIN(match_date) AS season_start,
-                    MAX(match_date) AS season_end
-                FROM official_club_games
-                WHERE audit_status = 'KEEP'
-                GROUP BY season
-            ),
-
-            competition_bounds AS (
-                SELECT
-                    season,
-                    competition_id,
-                    competition_code,
-                    competition_name,
-                    MIN(match_date) AS competition_start,
-                    MAX(match_date) AS competition_end,
-                    COUNT(DISTINCT game_id) AS games_count
-
-                FROM official_club_games
-                WHERE audit_status = 'KEEP'
-
-                GROUP BY
-                    season,
-                    competition_id,
-                    competition_code,
-                    competition_name
+            nearby.insert(
+                0,
+                "audited_season",
+                season,
             )
 
-            SELECT
-                cb.season,
-                cb.competition_id,
-                cb.competition_code,
-                cb.competition_name,
-                cb.competition_start,
-                cb.competition_end,
-                cb.games_count,
+            rows.append(nearby)
 
-                b.season_start,
-                b.season_end,
+        if not rows:
+            print("Aucun match trouvé.")
+            return pd.DataFrame()
 
-                DATE_DIFF(
-                    'day',
-                    b.season_start,
-                    cb.competition_start
-                ) AS days_after_season_start,
-
-                DATE_DIFF(
-                    'day',
-                    cb.competition_end,
-                    b.season_end
-                ) AS days_before_season_end
-
-            FROM competition_bounds cb
-
-            INNER JOIN bounds b
-                ON cb.season = b.season
-
-            WHERE
-                DATE_DIFF(
-                    'day',
-                    b.season_start,
-                    cb.competition_start
-                ) > 300
-
-                OR DATE_DIFF(
-                    'day',
-                    cb.competition_end,
-                    b.season_end
-                ) > 300
-
-            ORDER BY
-                cb.season,
-                cb.competition_start
-            """
-        ).df()
-
-        self._print_dataframe(df, max_rows=1000)
-
-    # ------------------------------------------------------------------
-    # 13. CONTROLE DES MATCHS AUTOUR DES BORNES
-    # ------------------------------------------------------------------
-
-    def audit_games_around_boundaries(self) -> None:
-        con = self._require_connection()
-
-        self._print_title(
-            "12. MATCHS AUTOUR DES BORNES DES SAISONS"
+        result = pd.concat(
+            rows,
+            ignore_index=True,
         )
 
-        df = con.execute(
-            f"""
-            WITH official_club_games AS (
-                SELECT
-                    g.game_id,
-                    g.season,
-                    CAST(g.date AS DATE) AS match_date,
-                    g.competition_id,
-                    g.competition_type,
-                    c.competition_code,
-                    c.name AS competition_name,
+        columns = [
+            "audited_season",
+            "game_id",
+            "season",
+            "date",
+            "round",
+            "competition_id",
+            "competition_code",
+            "competition_name",
+            "competition_type",
+            "home_club_id",
+            "away_club_id",
+            "status",
+            "classification_reason",
+        ]
 
-                    CASE
-                        WHEN g.competition_type = '{NATIONAL_TEAM_COMPETITION}'
-                            THEN 'EXCLUDE_NATIONAL_TEAM'
+        available_columns = [
+            column
+            for column in columns
+            if column in result.columns
+        ]
 
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%friendly%'
-                            THEN 'EXCLUDE_FRIENDLY'
+        result = result[
+            available_columns
+        ].sort_values(
+            [
+                "audited_season",
+                "date",
+                "game_id",
+            ]
+        )
 
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%amical%'
-                            THEN 'EXCLUDE_FRIENDLY'
+        self._print_dataframe(
+            result,
+            max_rows=300,
+        )
 
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%pre-season%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preseason%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%preparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN LOWER(
-                            COALESCE(c.name, '') || ' ' ||
-                            COALESCE(c.competition_code, '') || ' ' ||
-                            COALESCE(c.sub_type, '') || ' ' ||
-                            COALESCE(c.type, '')
-                        ) LIKE '%préparation%'
-                            THEN 'EXCLUDE_FRIENDLY'
-
-                        WHEN c.competition_id IS NULL
-                            THEN 'REVIEW_MISSING_COMPETITION_METADATA'
-
-                        ELSE 'KEEP'
-                    END AS audit_status
-
-                FROM games g
-                LEFT JOIN competitions c
-                    ON g.competition_id = c.competition_id
-
-                WHERE g.date IS NOT NULL
-            ),
-
-            bounds AS (
-                SELECT
-                    season,
-                    MIN(match_date) AS season_start,
-                    MAX(match_date) AS season_end
-                FROM official_club_games
-                WHERE audit_status = 'KEEP'
-                GROUP BY season
-            )
-
-            SELECT
-                g.season,
-                g.match_date,
-                g.game_id,
-                g.competition_id,
-                g.competition_code,
-                g.competition_name,
-                g.competition_type,
-                g.audit_status,
-
-                b.season_start,
-                b.season_end,
-
-                CASE
-                    WHEN g.match_date < b.season_start
-                        THEN 'BEFORE_SEASON_START'
-
-                    WHEN g.match_date > b.season_end
-                        THEN 'AFTER_SEASON_END'
-
-                    WHEN g.match_date = b.season_start
-                        THEN 'SEASON_START'
-
-                    WHEN g.match_date = b.season_end
-                        THEN 'SEASON_END'
-
-                    ELSE 'INSIDE'
-                END AS position_relative_to_bounds
-
-            FROM official_club_games g
-
-            INNER JOIN bounds b
-                ON g.season = b.season
-
-            WHERE
-                g.match_date BETWEEN
-                    b.season_start - INTERVAL 15 DAY
-                    AND
-                    b.season_end + INTERVAL 15 DAY
-
-            ORDER BY
-                g.season,
-                g.match_date
-            """
-        ).df()
-
-        self._print_dataframe(df, max_rows=2000)
+        return result
 
     # ------------------------------------------------------------------
-    # 14. EXPORT DES BORNES
+    # Export
     # ------------------------------------------------------------------
 
-    def export_season_bounds(self, output_path: Path) -> None:
-        """
-        Exporte uniquement les bornes calculées.
+    def export_season_bounds(
+        self,
+        bounds: pd.DataFrame,
+    ) -> None:
 
-        Ce fichier pourra ensuite devenir la source de vérité
-        consommée par RealPerformanceLoader.
-
-        Aucune modification de la base DuckDB.
-        """
-
-        bounds = self.calculate_season_bounds()
+        output_path = self.config.output_bounds_path
 
         output_path.parent.mkdir(
             parents=True,
             exist_ok=True,
         )
 
-        bounds.to_csv(
+        export_columns = [
+            "season",
+            "season_start",
+            "season_end",
+            "duration_days",
+            "games",
+            "competitions",
+            "first_competition_code",
+            "first_competition_name",
+            "first_classification_reason",
+            "last_competition_code",
+            "last_competition_name",
+            "last_classification_reason",
+        ]
+
+        available_columns = [
+            column
+            for column in export_columns
+            if column in bounds.columns
+        ]
+
+        bounds[
+            available_columns
+        ].to_csv(
             output_path,
             index=False,
         )
 
         print()
-        print(f"Bornes exportées vers : {output_path}")
+        print(
+            f"Bornes candidates exportées vers : "
+            f"{output_path}"
+        )
+
+    def export_review(
+        self,
+        review: pd.DataFrame,
+        impact: Optional[pd.DataFrame] = None,
+    ) -> None:
+
+        output_path = self.config.output_review_path
+
+        output_path.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        export = review.copy()
+
+        if impact is not None and not impact.empty:
+
+            impact_columns = [
+                "season",
+                "review_reason",
+                "review_games",
+                "first_review_date",
+                "last_review_date",
+                "candidate_start",
+                "candidate_end",
+                "impact",
+            ]
+
+            available_columns = [
+                column
+                for column in impact_columns
+                if column in impact.columns
+            ]
+
+            export = export.merge(
+                impact[
+                    available_columns
+                ],
+                left_on=[
+                    "season",
+                    "classification_reason",
+                ],
+                right_on=[
+                    "season",
+                    "review_reason",
+                ],
+                how="left",
+            )
+
+            if "review_reason" in export.columns:
+                export = export.drop(
+                    columns=["review_reason"]
+                )
+
+        export.to_csv(
+            output_path,
+            index=False,
+        )
+
+        print(
+            f"REVIEW exportés vers : "
+            f"{output_path}"
+        )
 
     # ------------------------------------------------------------------
-    # RUN
+    # Main audit
     # ------------------------------------------------------------------
 
-    def run(self) -> None:
-        self.connect()
+    def run(self) -> dict:
 
         try:
+            self.connect()
+
+            # 1
             self.audit_schema()
+
+            # 2
             self.audit_competition_types()
-            self.audit_official_club_scope()
-            self.print_season_bounds()
-            self.audit_boundary_matches()
-            self.audit_boundary_competitions()
-            self.audit_missing_competition_metadata()
-            self.audit_national_team_games()
-            self.audit_friendly_competitions()
-            self.audit_suspicious_seasons()
-            self.audit_season_long_tails()
-            self.audit_games_around_boundaries()
+
+            # 3
+            raw_games = self.load_raw_games()
+
+            print()
+            print(
+                f"RAW games chargés : {len(raw_games):,}"
+            )
+
+            # 4
+            classified = self.classify_games(raw_games)
+
+            self.audit_classification(classified)
+
+            # 5
+            review = self.extract_review_games(
+                classified
+            )
+
+            self.print_review_summary(review)
+
+            # 6
+            bounds = self.calculate_candidate_bounds(
+                classified
+            )
+
+            self.print_candidate_bounds(bounds)
+
+            # 7
+            review_impact = self.calculate_review_impact(
+                classified,
+                bounds,
+            )
+
+            self.print_review_impact(
+                review_impact
+            )
+
+            # 8
+            self.audit_exclusions(
+                classified
+            )
+
+            # 9
+            self.audit_temporal_outliers(
+                bounds
+            )
+
+            # 10
+            boundary_games = self.audit_boundary_games(
+                classified,
+                bounds,
+            )
+
+            # 11
+            boundary_competitions = (
+                self.audit_boundary_competitions(
+                    classified,
+                    bounds,
+                )
+            )
+
+            # 12
+            suspicious = self.audit_suspicious_seasons(
+                classified
+            )
+
+            # 13
+            around_boundaries = (
+                self.audit_games_around_boundaries(
+                    classified,
+                    bounds,
+                    days=30,
+                )
+            )
+
+            # Exports
+            self.export_season_bounds(
+                bounds
+            )
+
+            self.export_review(
+                review,
+                review_impact,
+            )
+
+            # Final summary
+            self._print_title(
+                "13. SYNTHÈSE FINALE"
+            )
+
+            print(
+                f"RAW games              : {len(raw_games):,}"
+            )
+
+            print(
+                f"KEEP                   : "
+                f"{(classified['status'] == 'KEEP').sum():,}"
+            )
+
+            print(
+                f"EXCLUDE_NATIONAL       : "
+                f"{(
+                    classified['status']
+                    == 'EXCLUDE_NATIONAL'
+                ).sum():,}"
+            )
+
+            print(
+                f"EXCLUDE_FRIENDLY       : "
+                f"{(
+                    classified['status']
+                    == 'EXCLUDE_FRIENDLY'
+                ).sum():,}"
+            )
+
+            print(
+                f"REVIEW                 : "
+                f"{(
+                    classified['status']
+                    == 'REVIEW'
+                ).sum():,}"
+            )
+
+            print(
+                f"Saisons avec bornes    : "
+                f"{bounds['season'].nunique():,}"
+            )
+
+            print()
+
+            if not review_impact.empty:
+
+                impact_counts = (
+                    review_impact["impact"]
+                    .value_counts()
+                )
+
+                print(
+                    "Impact des REVIEW :"
+                )
+
+                for impact, count in (
+                    impact_counts.items()
+                ):
+                    print(
+                        f"  {impact:<35} "
+                        f"{count:,}"
+                    )
+
+            print()
+            print(
+                "IMPORTANT : les bornes ci-dessus sont "
+                "des bornes CANDIDATES."
+            )
+            print(
+                "Les REVIEW susceptibles de déplacer "
+                "une borne doivent être validés avant "
+                "intégration dans PerformanceLoader."
+            )
+
+            return {
+                "raw_games": raw_games,
+                "classified_games": classified,
+                "review": review,
+                "bounds": bounds,
+                "review_impact": review_impact,
+                "boundary_games": boundary_games,
+                "boundary_competitions": boundary_competitions,
+                "suspicious": suspicious,
+                "around_boundaries": around_boundaries,
+            }
 
         finally:
             self.close()
 
 
 def main() -> None:
+
+    config = AuditConfig(
+        database_path=Path(
+            "data/historical/transfermarkt-datasets.duckdb"
+        ),
+        output_bounds_path=Path(
+            "data/audits/raw_season_calendar_bounds.csv"
+        ),
+        output_review_path=Path(
+            "data/audits/raw_season_calendar_review.csv"
+        ),
+        national_team_competition_type=(
+            "national_team_competition"
+        ),
+    )
     audit = RawSeasonCalendarAudit(
-    database_path=DATABASE_PATH,
+        config
     )
     audit.run()
 

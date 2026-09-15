@@ -1,0 +1,2 @@
+game_id,competition_id,season,round,date,home_club_id,away_club_id,home_club_goals,away_club_goals,competition_type,competition_code,competition_name,competition_sub_type,competition_metadata_type,country_name,confederation,status,classification_reason,review_games,first_review_date,last_review_date,candidate_start,candidate_end,impact
+3606208,UKRS,2025,Final,2021-09-22,660,338,3,0,,,,,,,,REVIEW,SUSPICIOUS_SEASON_ASSIGNMENT,1,2021-09-22,2021-09-22,2025-06-15,2026-07-06,COULD_MOVE_START_EARLIER
