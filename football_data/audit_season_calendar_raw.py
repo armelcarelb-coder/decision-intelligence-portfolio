@@ -30,8 +30,19 @@ class AuditConfig:
     # manifestement anormales du champ games.season.
     plausible_start_month: int = 5
 
-    # Au-delà de cette durée entre le premier et le dernier match,
-    # la saison doit être examinée.
+   # Seuil utilisé uniquement comme indicateur d'audit temporel.
+    #
+    # IMPORTANT :
+    # Une durée supérieure à ce seuil ne transforme PAS automatiquement
+    # une saison en REVIEW.
+    #
+    # Certaines saisons peuvent être exceptionnellement longues en raison
+    # de perturbations historiques du calendrier : pandémie, interruption
+    # puis reprise des compétitions, décalage des compétitions européennes
+    # ou contexte géopolitique.
+    #
+    # Le seuil sert uniquement à identifier les saisons qui méritent une
+    # lecture contextuelle dans la section d'audit temporel.
     suspicious_duration_days: int = 450
 
     # Une compétition sans métadonnées peut néanmoins être un
@@ -1085,7 +1096,9 @@ class RawSeasonCalendarAudit:
         if bounds is None:
             bounds = self.calculate_candidate_bounds()
 
-        self._print_title("8. DURÉE DES SAISONS — AUDIT")
+        self._print_title(
+            "8. DURÉE DES SAISONS — INDICATEUR D'AUDIT"
+        )
 
         if bounds.empty:
             print("Aucune saison.")
@@ -1104,7 +1117,8 @@ class RawSeasonCalendarAudit:
         else:
             print(
                 f"Saisons dépassant "
-                f"{self.config.suspicious_duration_days} jours :"
+                f"{self.config.suspicious_duration_days} jours "
+                f"(indicateur d'audit, sans changement automatique de statut) :"
             )
             self._print_dataframe(
                 outliers,
@@ -1112,7 +1126,18 @@ class RawSeasonCalendarAudit:
             )
 
         return outliers
-
+    print()
+    print(
+        "IMPORTANT : une durée supérieure au seuil ne constitue "
+        "pas à elle seule une anomalie."
+    )
+    print(
+        "Elle ne modifie pas le statut KEEP/REVIEW d'une saison."
+    )
+    print(
+        "L'interprétation doit tenir compte du contexte historique "
+        "et de la cohérence de l'affectation des matchs à la saison."
+    )
     # ------------------------------------------------------------------
     # Boundary games
     # ------------------------------------------------------------------
