@@ -83,23 +83,21 @@ class RawSeasonCalendarAudit:
         "practice match",
     )
 
-    NATIONAL_KEYWORDS = (
-        "national team",
-        "national teams",
-        "international",
-        "world cup",
+    NATIONAL_COMPETITION_CODES = (
+        "world-cup",
+        "uefa-euro",
         "euro",
-        "copa america",
-        "africa cup",
+        "africa-cup-of-nations",
         "afcon",
-        "asian cup",
-        "nations league",
-        "uefa nations",
-        "concacaf",
-        "olympic",
+        "afc-asian-cup",
+        "asian-cup",
+        "copa-america",
+        "concacaf-gold-cup",
+        "concacaf-nations-league",
+        "uefa-nations-league",
+        "fifa-confederations-cup",
+        "olympic-football",
         "olympics",
-        "world championship",
-        "qualification world cup",
     )
 
     def __init__(self, config: AuditConfig):
@@ -319,22 +317,51 @@ class RawSeasonCalendarAudit:
         )
 
     def _is_national_team(self, row: pd.Series) -> bool:
+        """
+        Détermine si le match appartient à une compétition
+        de sélection nationale.
+
+        Règles :
+        - national_team_competition => sélection nationale
+        - certains codes/noms explicitement nationaux => sélection nationale
+        - international_cup seul ne signifie PAS sélection nationale :
+        les compétitions européennes de clubs restent des compétitions de clubs.
+        """
+
         competition_type = self._normalize_text(
             row.get("competition_type")
         )
 
+        competition_code = self._normalize_text(
+            row.get("competition_code")
+        )
+
+        competition_name = self._normalize_text(
+            row.get("competition_name")
+        )
+
+        # 1. Type Transfermarkt explicite
         if competition_type == self._normalize_text(
             self.config.national_team_competition_type
         ):
             return True
 
-        text = self._competition_metadata_text(row)
+        # 2. Codes/noms explicitement nationaux.
+        # NATIONAL_COMPETITION_CODES est normalisé au moment
+        # de la comparaison car _normalize_text() transforme
+        # les "-" et "_" en espaces.
+        national_competition_codes = {
+            self._normalize_text(code)
+            for code in self.NATIONAL_COMPETITION_CODES
+        }
 
-        return any(
-            keyword in text
-            for keyword in self.NATIONAL_KEYWORDS
-        )
+        if competition_code in national_competition_codes:
+            return True
 
+        if competition_name in national_competition_codes:
+            return True
+
+        return False
     # ------------------------------------------------------------------
     # Structural classification
     # ------------------------------------------------------------------
