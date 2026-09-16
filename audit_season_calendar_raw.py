@@ -13,7 +13,6 @@ class AuditConfig:
     "data/historical/transfermarkt-datasets.duckdb"
     )
 
-
     output_bounds_path: Path = Path(
         "data/audits/raw_season_calendar_bounds.csv"
     )
@@ -22,15 +21,18 @@ class AuditConfig:
         "data/audits/raw_season_calendar_review.csv"
     )
 
-    national_team_competition_type: str = "national_team_competition"
+    national_team_competition_type: str = (
+        "national_team_competition"
+    )
 
     # Une saison officielle de football peut commencer très tôt
     # avec les qualifications européennes.
+    #
     # Cette limite sert uniquement à détecter des affectations
     # manifestement anormales du champ games.season.
     plausible_start_month: int = 5
 
-   # Seuil utilisé uniquement comme indicateur d'audit temporel.
+    # Seuil utilisé uniquement comme indicateur d'audit temporel.
     #
     # IMPORTANT :
     # Une durée supérieure à ce seuil ne transforme PAS automatiquement
@@ -53,7 +55,6 @@ class AuditConfig:
 class RawSeasonCalendarAudit:
     """
     Audit du calendrier réel des saisons à partir de la table RAW games.
-
     Business rules
     --------------
     1. Les matchs internationaux / équipes nationales sont exclus.
@@ -66,12 +67,76 @@ class RawSeasonCalendarAudit:
     pas automatiquement exclues : elles peuvent être KEEP si
     la structure du match confirme un match entre deux clubs.
     6. Les affectations manifestement incohérentes de games.season
-    restent REVIEW.
-    7. Les bornes candidates sont calculées uniquement à partir
+    sont REVIEW_PENDING tant qu'elles n'ont pas été validées.
+    7. Une anomalie validée comme problème de qualité de données est
+    REVIEW_CONFIRMED_DATA_QUALITY.
+    8. Les bornes candidates sont calculées uniquement à partir
     des matchs KEEP.
-    8. Les REVIEW sont ensuite testés pour déterminer s'ils peuvent
-    déplacer la borne de début ou de fin.
+    9. Les REVIEW_PENDING et REVIEW_CONFIRMED_DATA_QUALITY ne sont
+    jamais intégrés automatiquement aux bornes.
+    10. Les validations manuelles importantes sont tracées explicitement
+        dans les données d'audit.
     """
+
+    # ------------------------------------------------------------------
+    # Statuts officiels de l'audit
+    # ------------------------------------------------------------------
+
+    STATUS_KEEP = "KEEP"
+    STATUS_EXCLUDE_NATIONAL = "EXCLUDE_NATIONAL"
+    STATUS_EXCLUDE_FRIENDLY = "EXCLUDE_FRIENDLY"
+    STATUS_REVIEW_PENDING = "REVIEW_PENDING"
+    STATUS_REVIEW_CONFIRMED_DATA_QUALITY = (
+        "REVIEW_CONFIRMED_DATA_QUALITY"
+    )
+
+    REVIEW_STATUSES = (
+        STATUS_REVIEW_PENDING,
+        STATUS_REVIEW_CONFIRMED_DATA_QUALITY,
+    )
+
+    # ------------------------------------------------------------------
+    # Validations manuelles figées
+    # ------------------------------------------------------------------
+    #
+    # Ce dictionnaire constitue la trace explicite de la décision
+    # d'audit prise pour les cas examinés manuellement.
+    #
+    # game_id 3606208 :
+    # - date RAW : 2021-09-22
+    # - season RAW : 2025
+    # - métadonnées de compétition absentes
+    # - affectation manifestement incohérente avec la saison 2025
+    #
+    # La décision est de NE PAS utiliser ce match pour déplacer les
+    # bornes de la saison 2025.
+    #
+    # IMPORTANT :
+    # Cette validation concerne uniquement la qualité de l'affectation
+    # du match dans games.season. Elle ne modifie pas la table RAW.
+    #
+    VALIDATED_REVIEWS = {
+        3606208: {
+            "validation_status": (
+                "REVIEW_CONFIRMED_DATA_QUALITY"
+            ),
+            "validation_reason": (
+                "CONFIRMED_INCOHERENT_SEASON_ASSIGNMENT"
+            ),
+            "validation_decision": (
+                "EXCLUDE_FROM_SEASON_BOUNDS"
+            ),
+            "validation_note": (
+                "Match du 2021-09-22 affecté à la saison RAW 2025 "
+                "avec métadonnées de compétition absentes. "
+                "L'affectation est considérée comme incohérente "
+                "pour la saison 2025. Le match reste exclu des "
+                "bornes candidates de la saison 2025 et aucune "
+                "borne de saison n'est déplacée sur la base de "
+                "ce match."
+            ),
+        }
+    }
 
     FRIENDLY_KEYWORDS = (
         "friendly",
@@ -113,7 +178,9 @@ class RawSeasonCalendarAudit:
 
     def __init__(self, config: AuditConfig):
         self.config = config
-        self.connection: Optional[duckdb.DuckDBPyConnection] = None
+        self.connection: Optional[
+            duckdb.DuckDBPyConnection
+        ] = None
         self.raw_games: Optional[pd.DataFrame] = None
         self.classified_games: Optional[pd.DataFrame] = None
 
@@ -135,9 +202,14 @@ class RawSeasonCalendarAudit:
             self.connection.close()
             self.connection = None
 
-    def _require_connection(self) -> duckdb.DuckDBPyConnection:
+    def _require_connection(
+        self,
+    ) -> duckdb.DuckDBPyConnection:
         if self.connection is None:
-            raise RuntimeError("DuckDB connection is not open.")
+            raise RuntimeError(
+                "DuckDB connection is not open."
+            )
+
         return self.connection
 
     # ------------------------------------------------------------------
@@ -160,7 +232,11 @@ class RawSeasonCalendarAudit:
             print("(aucune ligne)")
             return
 
-        print(dataframe.head(max_rows).to_string(index=False))
+        print(
+            dataframe
+            .head(max_rows)
+            .to_string(index=False)
+        )
 
         if len(dataframe) > max_rows:
             print()
@@ -305,6 +381,7 @@ class RawSeasonCalendarAudit:
         self,
         row: pd.Series,
     ) -> str:
+
         fields = [
             row.get("competition_code"),
             row.get("competition_name"),
@@ -319,7 +396,11 @@ class RawSeasonCalendarAudit:
             if self._normalize_text(value)
         )
 
-    def _is_friendly(self, row: pd.Series) -> bool:
+    def _is_friendly(
+        self,
+        row: pd.Series,
+    ) -> bool:
+
         text = self._competition_metadata_text(row)
 
         return any(
@@ -327,7 +408,10 @@ class RawSeasonCalendarAudit:
             for keyword in self.FRIENDLY_KEYWORDS
         )
 
-    def _is_national_team(self, row: pd.Series) -> bool:
+    def _is_national_team(
+        self,
+        row: pd.Series,
+    ) -> bool:
         """
         Détermine si le match appartient à une compétition
         de sélection nationale.
@@ -336,7 +420,8 @@ class RawSeasonCalendarAudit:
         - national_team_competition => sélection nationale
         - certains codes/noms explicitement nationaux => sélection nationale
         - international_cup seul ne signifie PAS sélection nationale :
-        les compétitions européennes de clubs restent des compétitions de clubs.
+        les compétitions européennes de clubs restent des compétitions
+        de clubs.
         """
 
         competition_type = self._normalize_text(
@@ -351,16 +436,11 @@ class RawSeasonCalendarAudit:
             row.get("competition_name")
         )
 
-        # 1. Type Transfermarkt explicite
         if competition_type == self._normalize_text(
             self.config.national_team_competition_type
         ):
             return True
 
-        # 2. Codes/noms explicitement nationaux.
-        # NATIONAL_COMPETITION_CODES est normalisé au moment
-        # de la comparaison car _normalize_text() transforme
-        # les "-" et "_" en espaces.
         national_competition_codes = {
             self._normalize_text(code)
             for code in self.NATIONAL_COMPETITION_CODES
@@ -373,11 +453,16 @@ class RawSeasonCalendarAudit:
             return True
 
         return False
+
     # ------------------------------------------------------------------
     # Structural classification
     # ------------------------------------------------------------------
 
-    def _has_two_clubs(self, row: pd.Series) -> bool:
+    def _has_two_clubs(
+        self,
+        row: pd.Series,
+    ) -> bool:
+
         home_club_id = row.get("home_club_id")
         away_club_id = row.get("away_club_id")
 
@@ -386,7 +471,11 @@ class RawSeasonCalendarAudit:
 
         return True
 
-    def _has_competition_metadata(self, row: pd.Series) -> bool:
+    def _has_competition_metadata(
+        self,
+        row: pd.Series,
+    ) -> bool:
+
         fields = [
             row.get("competition_id"),
             row.get("competition_code"),
@@ -395,7 +484,8 @@ class RawSeasonCalendarAudit:
         ]
 
         return any(
-            not pd.isna(value) and str(value).strip() != ""
+            not pd.isna(value)
+            and str(value).strip() != ""
             for value in fields
         )
 
@@ -403,6 +493,7 @@ class RawSeasonCalendarAudit:
         self,
         row: pd.Series,
     ) -> bool:
+
         text = self._competition_metadata_text(row)
 
         qualification_keywords = (
@@ -428,21 +519,36 @@ class RawSeasonCalendarAudit:
         )
 
         return (
-            any(keyword in text for keyword in qualification_keywords)
-            and any(keyword in text for keyword in european_keywords)
+            any(
+                keyword in text
+                for keyword in qualification_keywords
+            )
+            and any(
+                keyword in text
+                for keyword in european_keywords
+            )
         )
 
-    def _season_start_is_structurally_plausible(
+    def _season_assignment_is_plausible(
         self,
         row: pd.Series,
     ) -> bool:
         """
-        Ne considère pas qu'un match européen de qualification avant
-        le championnat national est anormal.
+        Vérifie uniquement si l'année du match est compatible
+        avec l'année de début de saison.
 
-        La vérification cherche uniquement les affectations clairement
-        aberrantes, par exemple un match très ancien placé dans une
-        saison récente.
+        IMPORTANT :
+        Cette fonction ne constitue PAS une règle de durée de saison.
+
+        Une saison peut être exceptionnellement longue en raison de :
+        - pandémie,
+        - interruption/reprise de compétition,
+        - calendrier européen décalé,
+        - contexte géopolitique,
+        - adaptation des calendriers nationaux.
+
+        L'objectif est uniquement de détecter les affectations
+        manifestement incohérentes de games.season.
         """
 
         season = row.get("season")
@@ -458,28 +564,115 @@ class RawSeasonCalendarAudit:
 
         date = pd.Timestamp(date)
 
-        # Cas standard : saison située autour de l'année de début.
-        #
-        # Une qualification européenne peut commencer en juin/juillet.
-        # On ne rejette donc PAS les qualifications européennes
-        # simplement parce qu'elles précèdent le championnat.
-        if date.year in {season_int, season_int + 1}:
+        # Cas standard :
+        # le match se situe dans l'année de début de saison
+        # ou dans l'année civile suivante.
+        if date.year in {
+            season_int,
+            season_int + 1,
+        }:
             return True
 
-        # Cas particulier : les compétitions exceptionnellement
-        # décalées peuvent se prolonger dans l'année suivante.
-        #
-        # On conserve ici une tolérance jusqu'à environ 15 mois.
+        # Tolérance pour les compétitions exceptionnellement
+        # décalées pouvant se prolonger dans l'année suivante.
         if date.year == season_int + 2:
             return True
 
         return False
 
-    def classify_row(self, row: pd.Series) -> tuple[str, str]:
+    # ------------------------------------------------------------------
+    # Manual validation
+    # ------------------------------------------------------------------
+
+    def _get_manual_validation(
+        self,
+        row: pd.Series,
+    ) -> Optional[dict]:
+
+        game_id = row.get("game_id")
+
+        if pd.isna(game_id):
+            return None
+
+        try:
+            game_id_int = int(game_id)
+        except (TypeError, ValueError):
+            return None
+
+        return self.VALIDATED_REVIEWS.get(game_id_int)
+
+    def apply_manual_validation(
+        self,
+        dataframe: pd.DataFrame,
+    ) -> pd.DataFrame:
+        """
+        Applique les validations manuelles explicitement figées
+        dans VALIDATED_REVIEWS.
+
+        Les colonnes de traçabilité sont toujours présentes.
+        """
+
+        result = dataframe.copy()
+
+        result["validation_status"] = ""
+        result["validation_reason"] = ""
+        result["validation_decision"] = ""
+        result["validation_note"] = ""
+
+        for index, row in result.iterrows():
+
+            validation = self._get_manual_validation(row)
+
+            if validation is None:
+                continue
+
+            result.at[
+                index,
+                "status",
+            ] = validation["validation_status"]
+
+            result.at[
+                index,
+                "classification_reason",
+            ] = validation["validation_reason"]
+
+            result.at[
+                index,
+                "validation_status",
+            ] = validation["validation_status"]
+
+            result.at[
+                index,
+                "validation_reason",
+            ] = validation["validation_reason"]
+
+            result.at[
+                index,
+                "validation_decision",
+            ] = validation["validation_decision"]
+
+            result.at[
+                index,
+                "validation_note",
+            ] = validation["validation_note"]
+
+        return result
+
+    # ------------------------------------------------------------------
+    # Structural classification
+    # ------------------------------------------------------------------
+
+    def classify_row(
+        self,
+        row: pd.Series,
+    ) -> tuple[str, str]:
         """
         Retourne :
             STATUS
             REASON
+
+        Les validations manuelles sont appliquées ensuite par
+        apply_manual_validation().
         """
 
         # --------------------------------------------------------------
@@ -488,7 +681,7 @@ class RawSeasonCalendarAudit:
 
         if self._is_national_team(row):
             return (
-                "EXCLUDE_NATIONAL",
+                self.STATUS_EXCLUDE_NATIONAL,
                 "NATIONAL_TEAM_MATCH",
             )
 
@@ -498,7 +691,7 @@ class RawSeasonCalendarAudit:
 
         if self._is_friendly(row):
             return (
-                "EXCLUDE_FRIENDLY",
+                self.STATUS_EXCLUDE_FRIENDLY,
                 "FRIENDLY_OR_PREPARATION_MATCH",
             )
 
@@ -516,26 +709,18 @@ class RawSeasonCalendarAudit:
                 and not has_two_clubs
             ):
                 return (
-                    "REVIEW",
+                    self.STATUS_REVIEW_PENDING,
                     "UNKNOWN_COMPETITION_NO_TWO_CLUB_STRUCTURE",
                 )
 
-            # Deux clubs sont présents.
-            #
-            # On ne rejette pas automatiquement :
-            # il peut s'agir d'une compétition officielle dont les
-            # métadonnées ne sont pas disponibles dans Transfermarkt.
-            #
-            # On vérifie cependant que l'affectation à la saison n'est
-            # pas manifestement aberrante.
-            if not self._season_start_is_structurally_plausible(row):
+            if not self._season_assignment_is_plausible(row):
                 return (
-                    "REVIEW",
+                    self.STATUS_REVIEW_PENDING,
                     "UNKNOWN_COMPETITION_SUSPICIOUS_SEASON_ASSIGNMENT",
                 )
 
             return (
-                "KEEP",
+                self.STATUS_KEEP,
                 "OFFICIAL_CLUB_STRUCTURAL",
             )
 
@@ -545,25 +730,25 @@ class RawSeasonCalendarAudit:
 
         if not has_two_clubs:
             return (
-                "REVIEW",
+                self.STATUS_REVIEW_PENDING,
                 "OFFICIAL_COMPETITION_WITHOUT_TWO_CLUB_STRUCTURE",
             )
 
-        if not self._season_start_is_structurally_plausible(row):
+        if not self._season_assignment_is_plausible(row):
             return (
-                "REVIEW",
+                self.STATUS_REVIEW_PENDING,
                 "SUSPICIOUS_SEASON_ASSIGNMENT",
             )
 
         # Les qualifications européennes sont explicitement KEEP.
         if self._looks_like_european_qualification(row):
             return (
-                "KEEP",
+                self.STATUS_KEEP,
                 "OFFICIAL_EUROPEAN_QUALIFICATION",
             )
 
         return (
-            "KEEP",
+            self.STATUS_KEEP,
             "OFFICIAL_CLUB_COMPETITION",
         )
 
@@ -608,6 +793,10 @@ class RawSeasonCalendarAudit:
             errors="coerce",
         )
 
+        classified = self.apply_manual_validation(
+            classified
+        )
+
         self.classified_games = classified
 
         return classified
@@ -629,12 +818,17 @@ class RawSeasonCalendarAudit:
                 "Games have not been loaded/classified."
             )
 
-        self._print_title("3. CLASSIFICATION DES MATCHS")
+        self._print_title(
+            "3. CLASSIFICATION DES MATCHS"
+        )
 
         summary = (
             dataframe
             .groupby(
-                ["status", "classification_reason"],
+                [
+                    "status",
+                    "classification_reason",
+                ],
                 dropna=False,
             )
             .agg(
@@ -650,7 +844,10 @@ class RawSeasonCalendarAudit:
             )
         )
 
-        self._print_dataframe(summary, max_rows=100)
+        self._print_dataframe(
+            summary,
+            max_rows=100,
+        )
 
         return summary
 
@@ -672,11 +869,17 @@ class RawSeasonCalendarAudit:
             )
 
         review = dataframe.loc[
-            dataframe["status"] == "REVIEW"
+            dataframe["status"].isin(
+                self.REVIEW_STATUSES
+            )
         ].copy()
 
         review = review.sort_values(
-            ["season", "date", "game_id"]
+            [
+                "season",
+                "date",
+                "game_id",
+            ]
         )
 
         return review
@@ -686,7 +889,9 @@ class RawSeasonCalendarAudit:
         review: pd.DataFrame,
     ) -> None:
 
-        self._print_title("4. REVIEW À VALIDER AVANT INTÉGRATION")
+        self._print_title(
+            "4. REVIEWS ET VALIDATIONS"
+        )
 
         if review.empty:
             print("Aucun match REVIEW.")
@@ -695,7 +900,11 @@ class RawSeasonCalendarAudit:
         summary = (
             review
             .groupby(
-                ["season", "classification_reason"],
+                [
+                    "status",
+                    "season",
+                    "classification_reason",
+                ],
                 dropna=False,
             )
             .agg(
@@ -706,12 +915,23 @@ class RawSeasonCalendarAudit:
             )
             .reset_index()
             .sort_values(
-                ["season", "games"],
-                ascending=[True, False],
+                [
+                    "status",
+                    "season",
+                    "games",
+                ],
+                ascending=[
+                    True,
+                    True,
+                    False,
+                ],
             )
         )
 
-        self._print_dataframe(summary, max_rows=200)
+        self._print_dataframe(
+            summary,
+            max_rows=200,
+        )
 
         print()
         print("Détail des REVIEW :")
@@ -731,6 +951,10 @@ class RawSeasonCalendarAudit:
             "away_club_id",
             "status",
             "classification_reason",
+            "validation_status",
+            "validation_reason",
+            "validation_decision",
+            "validation_note",
         ]
 
         available_columns = [
@@ -761,8 +985,14 @@ class RawSeasonCalendarAudit:
                 "Games have not been loaded/classified."
             )
 
+        # IMPORTANT :
+        # seules les lignes KEEP alimentent les bornes.
+        #
+        # Les REVIEW_PENDING et REVIEW_CONFIRMED_DATA_QUALITY
+        # restent donc hors des bornes jusqu'à éventuelle décision
+        # contraire explicitement documentée.
         keep = dataframe.loc[
-            dataframe["status"] == "KEEP"
+            dataframe["status"] == self.STATUS_KEEP
         ].copy()
 
         if keep.empty:
@@ -774,8 +1004,12 @@ class RawSeasonCalendarAudit:
                     "duration_days",
                     "games",
                     "competitions",
-                    "first_competition",
-                    "last_competition",
+                    "first_competition_code",
+                    "first_competition_name",
+                    "first_classification_reason",
+                    "last_competition_code",
+                    "last_competition_name",
+                    "last_classification_reason",
                 ]
             )
 
@@ -792,24 +1026,39 @@ class RawSeasonCalendarAudit:
         )
 
         bounds["duration_days"] = (
-            bounds["season_end"] - bounds["season_start"]
+            bounds["season_end"]
+            - bounds["season_start"]
         ).dt.days
 
         first_rows = (
             keep
             .sort_values(
-                ["season", "date", "game_id"]
+                [
+                    "season",
+                    "date",
+                    "game_id",
+                ]
             )
-            .groupby("season", as_index=False)
+            .groupby(
+                "season",
+                as_index=False,
+            )
             .first()
         )
 
         last_rows = (
             keep
             .sort_values(
-                ["season", "date", "game_id"]
+                [
+                    "season",
+                    "date",
+                    "game_id",
+                ]
             )
-            .groupby("season", as_index=False)
+            .groupby(
+                "season",
+                as_index=False,
+            )
             .last()
         )
 
@@ -823,10 +1072,14 @@ class RawSeasonCalendarAudit:
             ]
         ].rename(
             columns={
-                "competition_code": "first_competition_code",
-                "competition_name": "first_competition_name",
-                "competition_type": "first_competition_type",
-                "classification_reason": "first_classification_reason",
+                "competition_code":
+                    "first_competition_code",
+                "competition_name":
+                    "first_competition_name",
+                "competition_type":
+                    "first_competition_type",
+                "classification_reason":
+                    "first_classification_reason",
             }
         )
 
@@ -840,10 +1093,14 @@ class RawSeasonCalendarAudit:
             ]
         ].rename(
             columns={
-                "competition_code": "last_competition_code",
-                "competition_name": "last_competition_name",
-                "competition_type": "last_competition_type",
-                "classification_reason": "last_classification_reason",
+                "competition_code":
+                    "last_competition_code",
+                "competition_name":
+                    "last_competition_name",
+                "competition_type":
+                    "last_competition_type",
+                "classification_reason":
+                    "last_classification_reason",
             }
         )
 
@@ -859,14 +1116,20 @@ class RawSeasonCalendarAudit:
             how="left",
         )
 
-        return bounds.sort_values("season").reset_index(drop=True)
+        return (
+            bounds
+            .sort_values("season")
+            .reset_index(drop=True)
+        )
 
     def print_candidate_bounds(
         self,
         bounds: pd.DataFrame,
     ) -> None:
 
-        self._print_title("5. BORNES CANDIDATES — MATCHS KEEP UNIQUEMENT")
+        self._print_title(
+            "5. BORNES CANDIDATES — MATCHS KEEP UNIQUEMENT"
+        )
 
         if bounds.empty:
             print("Aucune borne calculée.")
@@ -917,9 +1180,13 @@ class RawSeasonCalendarAudit:
             )
 
         if bounds is None:
-            bounds = self.calculate_candidate_bounds(classified)
+            bounds = self.calculate_candidate_bounds(
+                classified
+            )
 
-        review = self.extract_review_games(classified)
+        review = self.extract_review_games(
+            classified
+        )
 
         if review.empty:
             return pd.DataFrame(
@@ -944,59 +1211,88 @@ class RawSeasonCalendarAudit:
         }
 
         for (
+            status,
             season,
             reason,
         ), group in review.groupby(
-            ["season", "classification_reason"],
+            [
+                "status",
+                "season",
+                "classification_reason",
+            ],
             dropna=False,
         ):
 
             first_review_date = group["date"].min()
             last_review_date = group["date"].max()
 
-            candidate = bounds_by_season.get(season)
+            candidate = bounds_by_season.get(
+                season
+            )
 
             if candidate is None:
+
                 impact = "NO_KEEP_FOR_SEASON"
+
                 candidate_start = pd.NaT
                 candidate_end = pd.NaT
 
             else:
-                candidate_start = candidate["season_start"]
-                candidate_end = candidate["season_end"]
+
+                candidate_start = candidate[
+                    "season_start"
+                ]
+
+                candidate_end = candidate[
+                    "season_end"
+                ]
 
                 moves_start = (
                     pd.notna(first_review_date)
-                    and first_review_date < candidate_start
+                    and first_review_date
+                    < candidate_start
                 )
 
                 moves_end = (
                     pd.notna(last_review_date)
-                    and last_review_date > candidate_end
+                    and last_review_date
+                    > candidate_end
                 )
 
                 if moves_start and moves_end:
-                    impact = "COULD_MOVE_START_AND_END"
+                    impact = (
+                        "COULD_MOVE_START_AND_END"
+                    )
 
                 elif moves_start:
-                    impact = "COULD_MOVE_START_EARLIER"
+                    impact = (
+                        "COULD_MOVE_START_EARLIER"
+                    )
 
                 elif moves_end:
-                    impact = "COULD_MOVE_END_LATER"
+                    impact = (
+                        "COULD_MOVE_END_LATER"
+                    )
 
                 else:
-                    impact = "INSIDE_CURRENT_BOUNDS"
+                    impact = (
+                        "INSIDE_CURRENT_BOUNDS"
+                    )
 
             rows.append(
                 {
                     "season": season,
-                    "review_status": "REVIEW",
+                    "review_status": status,
                     "review_reason": reason,
                     "review_games": len(group),
-                    "first_review_date": first_review_date,
-                    "last_review_date": last_review_date,
-                    "candidate_start": candidate_start,
-                    "candidate_end": candidate_end,
+                    "first_review_date":
+                        first_review_date,
+                    "last_review_date":
+                        last_review_date,
+                    "candidate_start":
+                        candidate_start,
+                    "candidate_end":
+                        candidate_end,
                     "impact": impact,
                 }
             )
@@ -1004,8 +1300,18 @@ class RawSeasonCalendarAudit:
         return (
             pd.DataFrame(rows)
             .sort_values(
-                ["season", "impact", "review_games"],
-                ascending=[True, True, False],
+                [
+                    "season",
+                    "review_status",
+                    "impact",
+                    "review_games",
+                ],
+                ascending=[
+                    True,
+                    True,
+                    True,
+                    False,
+                ],
             )
             .reset_index(drop=True)
         )
@@ -1015,7 +1321,9 @@ class RawSeasonCalendarAudit:
         impact: pd.DataFrame,
     ) -> None:
 
-        self._print_title("6. IMPACT DES REVIEW SUR LES BORNES")
+        self._print_title(
+            "6. IMPACT DES REVIEWS SUR LES BORNES"
+        )
 
         if impact.empty:
             print("Aucun REVIEW.")
@@ -1043,15 +1351,17 @@ class RawSeasonCalendarAudit:
                 "Games have not been loaded/classified."
             )
 
-        self._print_title("7. MATCHS EXCLUS")
+        self._print_title(
+            "7. MATCHS EXCLUS"
+        )
 
         exclusions = (
             classified
             .loc[
                 classified["status"].isin(
                     [
-                        "EXCLUDE_NATIONAL",
-                        "EXCLUDE_FRIENDLY",
+                        self.STATUS_EXCLUDE_NATIONAL,
+                        self.STATUS_EXCLUDE_FRIENDLY,
                     ]
                 )
             ]
@@ -1085,6 +1395,74 @@ class RawSeasonCalendarAudit:
         return exclusions
 
     # ------------------------------------------------------------------
+    # Review validation trace
+    # ------------------------------------------------------------------
+
+    def audit_validation_trace(
+        self,
+        classified: Optional[pd.DataFrame] = None,
+    ) -> pd.DataFrame:
+
+        if classified is None:
+            classified = self.classified_games
+
+        if classified is None:
+            raise RuntimeError(
+                "Games have not been loaded/classified."
+            )
+
+        self._print_title(
+            "8. TRACE DES VALIDATIONS MANUELLES"
+        )
+
+        validated = classified.loc[
+            classified["validation_status"].astype(str).str.strip()
+            != ""
+        ].copy()
+
+        if validated.empty:
+            print(
+                "Aucune validation manuelle enregistrée."
+            )
+            return validated
+
+        columns = [
+            "game_id",
+            "season",
+            "date",
+            "competition_id",
+            "competition_code",
+            "competition_name",
+            "home_club_id",
+            "away_club_id",
+            "status",
+            "classification_reason",
+            "validation_status",
+            "validation_reason",
+            "validation_decision",
+            "validation_note",
+        ]
+
+        available_columns = [
+            column
+            for column in columns
+            if column in validated.columns
+        ]
+
+        self._print_dataframe(
+            validated[available_columns],
+            max_rows=200,
+        )
+
+        print()
+        print(
+            f"Validations manuelles enregistrées : "
+            f"{len(validated):,}"
+        )
+
+        return validated
+
+    # ------------------------------------------------------------------
     # Temporal outliers
     # ------------------------------------------------------------------
 
@@ -1097,7 +1475,7 @@ class RawSeasonCalendarAudit:
             bounds = self.calculate_candidate_bounds()
 
         self._print_title(
-            "8. DURÉE DES SAISONS — INDICATEUR D'AUDIT"
+            "9. DURÉE DES SAISONS — INDICATEUR D'AUDIT"
         )
 
         if bounds.empty:
@@ -1110,34 +1488,43 @@ class RawSeasonCalendarAudit:
         ].copy()
 
         if outliers.empty:
+
             print(
                 "Aucune saison ne dépasse "
                 f"{self.config.suspicious_duration_days} jours."
             )
+
         else:
+
             print(
                 f"Saisons dépassant "
                 f"{self.config.suspicious_duration_days} jours "
-                f"(indicateur d'audit, sans changement automatique de statut) :"
+                "(indicateur d'audit, sans changement automatique "
+                "de statut) :"
             )
+
             self._print_dataframe(
                 outliers,
                 max_rows=100,
             )
 
+        print()
+        print(
+            "IMPORTANT : une durée supérieure au seuil ne constitue "
+            "pas à elle seule une anomalie."
+        )
+
+        print(
+            "Elle ne modifie pas le statut KEEP/REVIEW."
+        )
+
+        print(
+            "L'interprétation doit tenir compte du contexte historique "
+            "et de la cohérence de l'affectation des matchs à la saison."
+        )
+
         return outliers
-    print()
-    print(
-        "IMPORTANT : une durée supérieure au seuil ne constitue "
-        "pas à elle seule une anomalie."
-    )
-    print(
-        "Elle ne modifie pas le statut KEEP/REVIEW d'une saison."
-    )
-    print(
-        "L'interprétation doit tenir compte du contexte historique "
-        "et de la cohérence de l'affectation des matchs à la saison."
-    )
+
     # ------------------------------------------------------------------
     # Boundary games
     # ------------------------------------------------------------------
@@ -1157,12 +1544,16 @@ class RawSeasonCalendarAudit:
             )
 
         if bounds is None:
-            bounds = self.calculate_candidate_bounds(classified)
+            bounds = self.calculate_candidate_bounds(
+                classified
+            )
 
-        self._print_title("9. MATCHS AUX BORNES")
+        self._print_title(
+            "10. MATCHS AUX BORNES"
+        )
 
         keep = classified.loc[
-            classified["status"] == "KEEP"
+            classified["status"] == self.STATUS_KEEP
         ].copy()
 
         if keep.empty:
@@ -1185,7 +1576,10 @@ class RawSeasonCalendarAudit:
             first = (
                 season_games
                 .sort_values(
-                    ["date", "game_id"]
+                    [
+                        "date",
+                        "game_id",
+                    ]
                 )
                 .iloc[0]
             )
@@ -1193,7 +1587,10 @@ class RawSeasonCalendarAudit:
             last = (
                 season_games
                 .sort_values(
-                    ["date", "game_id"]
+                    [
+                        "date",
+                        "game_id",
+                    ]
                 )
                 .iloc[-1]
             )
@@ -1201,30 +1598,30 @@ class RawSeasonCalendarAudit:
             rows.append(
                 {
                     "season": season,
-                    "first_game_id": first["game_id"],
-                    "first_date": first["date"],
-                    "first_competition_code": first[
-                        "competition_code"
-                    ],
-                    "first_competition_name": first[
-                        "competition_name"
-                    ],
-                    "first_round": first["round"],
-                    "first_reason": first[
-                        "classification_reason"
-                    ],
-                    "last_game_id": last["game_id"],
-                    "last_date": last["date"],
-                    "last_competition_code": last[
-                        "competition_code"
-                    ],
-                    "last_competition_name": last[
-                        "competition_name"
-                    ],
-                    "last_round": last["round"],
-                    "last_reason": last[
-                        "classification_reason"
-                    ],
+                    "first_game_id":
+                        first["game_id"],
+                    "first_date":
+                        first["date"],
+                    "first_competition_code":
+                        first["competition_code"],
+                    "first_competition_name":
+                        first["competition_name"],
+                    "first_round":
+                        first["round"],
+                    "first_reason":
+                        first["classification_reason"],
+                    "last_game_id":
+                        last["game_id"],
+                    "last_date":
+                        last["date"],
+                    "last_competition_code":
+                        last["competition_code"],
+                    "last_competition_name":
+                        last["competition_name"],
+                    "last_round":
+                        last["round"],
+                    "last_reason":
+                        last["classification_reason"],
                 }
             )
 
@@ -1256,12 +1653,16 @@ class RawSeasonCalendarAudit:
             )
 
         if bounds is None:
-            bounds = self.calculate_candidate_bounds(classified)
+            bounds = self.calculate_candidate_bounds(
+                classified
+            )
 
-        self._print_title("10. COMPÉTITIONS AUTOUR DES BORNES")
+        self._print_title(
+            "11. COMPÉTITIONS AUTOUR DES BORNES"
+        )
 
         keep = classified.loc[
-            classified["status"] == "KEEP"
+            classified["status"] == self.STATUS_KEEP
         ].copy()
 
         rows = []
@@ -1365,7 +1766,7 @@ class RawSeasonCalendarAudit:
             )
 
         self._print_title(
-            "11. AFFECTATIONS DE SAISON SUSPECTES"
+            "12. AFFECTATIONS DE SAISON SUSPECTES"
         )
 
         suspicious = classified.loc[
@@ -1373,6 +1774,7 @@ class RawSeasonCalendarAudit:
                 [
                     "SUSPICIOUS_SEASON_ASSIGNMENT",
                     "UNKNOWN_COMPETITION_SUSPICIOUS_SEASON_ASSIGNMENT",
+                    "CONFIRMED_INCOHERENT_SEASON_ASSIGNMENT",
                 ]
             )
         ].copy()
@@ -1397,6 +1799,9 @@ class RawSeasonCalendarAudit:
             "away_club_id",
             "status",
             "classification_reason",
+            "validation_status",
+            "validation_reason",
+            "validation_decision",
         ]
 
         available_columns = [
@@ -1432,10 +1837,12 @@ class RawSeasonCalendarAudit:
             )
 
         if bounds is None:
-            bounds = self.calculate_candidate_bounds(classified)
+            bounds = self.calculate_candidate_bounds(
+                classified
+            )
 
         self._print_title(
-            f"12. MATCHS AUTOUR DES BORNES ±{days} JOURS"
+            f"13. MATCHS AUTOUR DES BORNES ±{days} JOURS"
         )
 
         rows = []
@@ -1454,22 +1861,26 @@ class RawSeasonCalendarAudit:
                     (
                         (
                             classified["date"]
-                            >= start - pd.Timedelta(days=days)
+                            >= start
+                            - pd.Timedelta(days=days)
                         )
                         & (
                             classified["date"]
-                            <= start + pd.Timedelta(days=days)
+                            <= start
+                            + pd.Timedelta(days=days)
                         )
                     )
                     |
                     (
                         (
                             classified["date"]
-                            >= end - pd.Timedelta(days=days)
+                            >= end
+                            - pd.Timedelta(days=days)
                         )
                         & (
                             classified["date"]
-                            <= end + pd.Timedelta(days=days)
+                            <= end
+                            + pd.Timedelta(days=days)
                         )
                     )
                 )
@@ -1535,7 +1946,7 @@ class RawSeasonCalendarAudit:
         return result
 
     # ------------------------------------------------------------------
-    # Export
+    # Export season bounds
     # ------------------------------------------------------------------
 
     def export_season_bounds(
@@ -1543,7 +1954,9 @@ class RawSeasonCalendarAudit:
         bounds: pd.DataFrame,
     ) -> None:
 
-        output_path = self.config.output_bounds_path
+        output_path = (
+            self.config.output_bounds_path
+        )
 
         output_path.parent.mkdir(
             parents=True,
@@ -1584,25 +1997,39 @@ class RawSeasonCalendarAudit:
             f"{output_path}"
         )
 
+    # ------------------------------------------------------------------
+    # Export reviews
+    # ------------------------------------------------------------------
+
     def export_review(
         self,
         review: pd.DataFrame,
         impact: Optional[pd.DataFrame] = None,
     ) -> None:
 
-        output_path = self.config.output_review_path
+        output_path = (
+            self.config.output_review_path
+        )
 
         output_path.parent.mkdir(
             parents=True,
             exist_ok=True,
         )
 
-        export = review.copy()
+        if review.empty:
+            export = review.copy()
 
-        if impact is not None and not impact.empty:
+        else:
+            export = review.copy()
+
+        if (
+            impact is not None
+            and not impact.empty
+        ):
 
             impact_columns = [
                 "season",
+                "review_status",
                 "review_reason",
                 "review_games",
                 "first_review_date",
@@ -1624,18 +2051,31 @@ class RawSeasonCalendarAudit:
                 ],
                 left_on=[
                     "season",
+                    "status",
                     "classification_reason",
                 ],
                 right_on=[
                     "season",
+                    "review_status",
                     "review_reason",
                 ],
                 how="left",
             )
 
-            if "review_reason" in export.columns:
+            columns_to_drop = [
+                "review_status",
+                "review_reason",
+            ]
+
+            columns_to_drop = [
+                column
+                for column in columns_to_drop
+                if column in export.columns
+            ]
+
+            if columns_to_drop:
                 export = export.drop(
-                    columns=["review_reason"]
+                    columns=columns_to_drop
                 )
 
         export.to_csv(
@@ -1644,7 +2084,7 @@ class RawSeasonCalendarAudit:
         )
 
         print(
-            f"REVIEW exportés vers : "
+            f"Trace des REVIEW exportée vers : "
             f"{output_path}"
         )
 
@@ -1657,40 +2097,70 @@ class RawSeasonCalendarAudit:
         try:
             self.connect()
 
-            # 1
+            # ----------------------------------------------------------
+            # 1. Schema
+            # ----------------------------------------------------------
+
             self.audit_schema()
 
-            # 2
+            # ----------------------------------------------------------
+            # 2. Competition types
+            # ----------------------------------------------------------
+
             self.audit_competition_types()
 
-            # 3
+            # ----------------------------------------------------------
+            # 3. Raw games
+            # ----------------------------------------------------------
+
             raw_games = self.load_raw_games()
 
             print()
             print(
-                f"RAW games chargés : {len(raw_games):,}"
+                f"RAW games chargés : "
+                f"{len(raw_games):,}"
             )
 
-            # 4
-            classified = self.classify_games(raw_games)
+            # ----------------------------------------------------------
+            # 4. Classification
+            # ----------------------------------------------------------
 
-            self.audit_classification(classified)
+            classified = self.classify_games(
+                raw_games
+            )
 
-            # 5
+            self.audit_classification(
+                classified
+            )
+
+            # ----------------------------------------------------------
+            # 5. Reviews
+            # ----------------------------------------------------------
+
             review = self.extract_review_games(
                 classified
             )
 
-            self.print_review_summary(review)
+            self.print_review_summary(
+                review
+            )
 
-            # 6
+            # ----------------------------------------------------------
+            # 6. Candidate bounds
+            # ----------------------------------------------------------
+
             bounds = self.calculate_candidate_bounds(
                 classified
             )
 
-            self.print_candidate_bounds(bounds)
+            self.print_candidate_bounds(
+                bounds
+            )
 
-            # 7
+            # ----------------------------------------------------------
+            # 7. Review impact
+            # ----------------------------------------------------------
+
             review_impact = self.calculate_review_impact(
                 classified,
                 bounds,
@@ -1700,23 +2170,49 @@ class RawSeasonCalendarAudit:
                 review_impact
             )
 
-            # 8
-            self.audit_exclusions(
+            # ----------------------------------------------------------
+            # 8. Exclusions
+            # ----------------------------------------------------------
+
+            exclusions = self.audit_exclusions(
                 classified
             )
 
-            # 9
-            self.audit_temporal_outliers(
-                bounds
+            # ----------------------------------------------------------
+            # 9. Validation trace
+            # ----------------------------------------------------------
+
+            validation_trace = (
+                self.audit_validation_trace(
+                    classified
+                )
             )
 
-            # 10
-            boundary_games = self.audit_boundary_games(
-                classified,
-                bounds,
+            # ----------------------------------------------------------
+            # 10. Temporal audit
+            # ----------------------------------------------------------
+
+            temporal_outliers = (
+                self.audit_temporal_outliers(
+                    bounds
+                )
             )
 
-            # 11
+            # ----------------------------------------------------------
+            # 11. Boundary games
+            # ----------------------------------------------------------
+
+            boundary_games = (
+                self.audit_boundary_games(
+                    classified,
+                    bounds,
+                )
+            )
+
+            # ----------------------------------------------------------
+            # 12. Boundary competitions
+            # ----------------------------------------------------------
+
             boundary_competitions = (
                 self.audit_boundary_competitions(
                     classified,
@@ -1724,12 +2220,20 @@ class RawSeasonCalendarAudit:
                 )
             )
 
-            # 12
-            suspicious = self.audit_suspicious_seasons(
-                classified
+            # ----------------------------------------------------------
+            # 13. Suspicious season assignments
+            # ----------------------------------------------------------
+
+            suspicious = (
+                self.audit_suspicious_seasons(
+                    classified
+                )
             )
 
-            # 13
+            # ----------------------------------------------------------
+            # 14. Games around boundaries
+            # ----------------------------------------------------------
+
             around_boundaries = (
                 self.audit_games_around_boundaries(
                     classified,
@@ -1738,7 +2242,10 @@ class RawSeasonCalendarAudit:
                 )
             )
 
+            # ----------------------------------------------------------
             # Exports
+            # ----------------------------------------------------------
+
             self.export_season_bounds(
                 bounds
             )
@@ -1748,25 +2255,32 @@ class RawSeasonCalendarAudit:
                 review_impact,
             )
 
+            # ----------------------------------------------------------
             # Final summary
+            # ----------------------------------------------------------
+
             self._print_title(
-                "13. SYNTHÈSE FINALE"
+                "15. SYNTHÈSE FINALE"
             )
 
             print(
-                f"RAW games              : {len(raw_games):,}"
+                f"RAW games              : "
+                f"{len(raw_games):,}"
             )
 
             print(
                 f"KEEP                   : "
-                f"{(classified['status'] == 'KEEP').sum():,}"
+                f"{(
+                    classified['status']
+                    == self.STATUS_KEEP
+                ).sum():,}"
             )
 
             print(
                 f"EXCLUDE_NATIONAL       : "
                 f"{(
                     classified['status']
-                    == 'EXCLUDE_NATIONAL'
+                    == self.STATUS_EXCLUDE_NATIONAL
                 ).sum():,}"
             )
 
@@ -1774,15 +2288,23 @@ class RawSeasonCalendarAudit:
                 f"EXCLUDE_FRIENDLY       : "
                 f"{(
                     classified['status']
-                    == 'EXCLUDE_FRIENDLY'
+                    == self.STATUS_EXCLUDE_FRIENDLY
                 ).sum():,}"
             )
 
             print(
-                f"REVIEW                 : "
+                f"REVIEW_PENDING         : "
                 f"{(
                     classified['status']
-                    == 'REVIEW'
+                    == self.STATUS_REVIEW_PENDING
+                ).sum():,}"
+            )
+
+            print(
+                f"REVIEW_CONFIRMED_DATA_QUALITY : "
+                f"{(
+                    classified['status']
+                    == self.STATUS_REVIEW_CONFIRMED_DATA_QUALITY
                 ).sum():,}"
             )
 
@@ -1796,7 +2318,9 @@ class RawSeasonCalendarAudit:
             if not review_impact.empty:
 
                 impact_counts = (
-                    review_impact["impact"]
+                    review_impact[
+                        "impact"
+                    ]
                     .value_counts()
                 )
 
@@ -1813,14 +2337,63 @@ class RawSeasonCalendarAudit:
                     )
 
             print()
+
+            print(
+                "TRACE DE VALIDATION :"
+            )
+
+            if validation_trace.empty:
+
+                print(
+                    "  Aucune validation manuelle."
+                )
+
+            else:
+
+                for _, row in (
+                    validation_trace.iterrows()
+                ):
+
+                    print(
+                        f"  game_id={row['game_id']} "
+                        f"=> {row['status']} "
+                        f"| {row['validation_reason']}"
+                    )
+
+                    print(
+                        f"    décision : "
+                        f"{row['validation_decision']}"
+                    )
+
+            print()
+
             print(
                 "IMPORTANT : les bornes ci-dessus sont "
                 "des bornes CANDIDATES."
             )
+
             print(
-                "Les REVIEW susceptibles de déplacer "
-                "une borne doivent être validés avant "
-                "intégration dans PerformanceLoader."
+                "Elles sont calculées exclusivement à partir "
+                "des matchs KEEP."
+            )
+
+            print(
+                "Les REVIEW_PENDING et "
+                "REVIEW_CONFIRMED_DATA_QUALITY "
+                "sont exclus des bornes jusqu'à décision "
+                "explicite contraire."
+            )
+
+            print()
+
+            print(
+                "La durée des saisons est utilisée uniquement "
+                "comme indicateur d'audit."
+            )
+
+            print(
+                "Une saison longue n'est pas automatiquement "
+                "considérée comme une anomalie."
             )
 
             return {
@@ -1829,18 +2402,21 @@ class RawSeasonCalendarAudit:
                 "review": review,
                 "bounds": bounds,
                 "review_impact": review_impact,
+                "exclusions": exclusions,
+                "validation_trace": validation_trace,
+                "temporal_outliers": temporal_outliers,
                 "boundary_games": boundary_games,
-                "boundary_competitions": boundary_competitions,
+                "boundary_competitions":
+                    boundary_competitions,
                 "suspicious": suspicious,
-                "around_boundaries": around_boundaries,
+                "around_boundaries":
+                    around_boundaries,
             }
 
         finally:
             self.close()
 
-
 def main() -> None:
-
     config = AuditConfig(
         database_path=Path(
             "data/historical/transfermarkt-datasets.duckdb"

@@ -1,0 +1,9 @@
+validation,status,details
+UNIQUE_SEASON,PASS,0 doublon(s) de saison
+START_BEFORE_END,PASS,0 saison(s) avec start > end
+POSITIVE_GAME_COUNT,PASS,0 saison(s) sans match KEEP
+NON_NULL_BOUNDS,PASS,0 saison(s) avec borne NULL
+REVIEW_3606208_STATUS,PASS,game_id=3606208 doit être REVIEW_CONFIRMED_DATA_QUALITY
+SEASON_2025_START,PASS,season=2025 | start=2025-06-15 | expected=2025-06-15
+REVIEW_3606208_EXCLUDED_FROM_2025,PASS,game=3606208 date=2021-09-22 | season_2025_start=2025-06-15
+REVIEWS_EXCLUDED_FROM_BOUNDS,PASS,1 review(s) contrôlée(s)
