@@ -11,15 +11,26 @@ import pandas as pd
 @dataclass(frozen=True)
 class RealPerformanceLoaderConfig:
     """
-    Configuration du chargement des performances réelles depuis Transfermarkt DuckDB.
+    Configuration du chargement des performances réelles
+    depuis la base Transfermarkt DuckDB.
     """
 
-    db_path: str = "data/transfermarkt-datasets.duckdb"
+    # Base DuckDB Transfermarkt
+    db_path: str = (
+        "data/historical/transfermarkt-datasets.duckdb"
+    )
 
+    # Bornes de saison FIGÉES
+    season_bounds_path: str = (
+        "data/audits/season_calendar_bounds_final.csv"
+    )
+
+    # Dataset de sortie
     output_path: str = (
         "data/performances/player_competition_season_performance.csv"
     )
 
+    # 0 = aucune restriction au niveau du Loader
     min_minutes: int = 0
 
     # Les compétitions de sélections nationales sont exclues.
@@ -28,36 +39,68 @@ class RealPerformanceLoaderConfig:
 
 class RealPerformanceLoader:
     """
-    Charge et agrège les performances historiques réelles depuis la base
-    Transfermarkt DuckDB.
+    Charge et agrège les performances historiques réelles depuis
+    la base Transfermarkt DuckDB
 
     Architecture :
 
-        appearances
-              │
-              ├── games
-              │
-              ├── competitions
-              │
-              └── players
-                    │
-                    ▼
-        filtrage compétitions club
-                    │
-                    ▼
-        classification competition_level
-                    │
-                    ▼
-        agrégation joueur / saison / compétition
-                    │
-                    ▼
+    appearances
+          │
+          ├── games
+          │
+          ├── competitions
+          │
+          ├── players
+          │
+          └── season_calendar_bounds_final.csv
+                │
+                ▼
+          bornes de saison FIGÉES
+                │
+                ▼
+          filtrage calendrier
+                │
+                ▼
+          filtrage compétitions club
+                │
+                ▼
+          classification competition_level
+                │
+                ▼
+          agrégation joueur / saison / compétition
+                │
+                ▼
         player_competition_season_performance.csv
 
-    La majorité du traitement est réalisée directement dans DuckDB afin
-    d'éviter une boucle Python sur ~1,9 million d'apparitions.
+    IMPORTANT
+    ---------
+    Le calendrier de saison n'est plus calculé à partir des
+    performances.
+
+    La source de vérité est :
+
+        season_calendar_bounds_final.csv
+
+    Pour chaque match, la date doit respecter :
+
+        season_start <= match_date <= season_end
+
+    Les matchs hors de cette enveloppe sont exclus.
+
+    Cela permet notamment d'exclure explicitement le match
+    game_id=3606208, affecté à la saison RAW 2025 mais daté
+    du 2021-09-22.
     """
 
     UNKNOWN_COMPETITION_LEVEL = "UNKNOWN"
+
+    REQUIRED_BOUNDS_COLUMNS = {
+        "season",
+        "season_start",
+        "season_end",
+    }
+
+    EXPECTED_SEASON_COUNT = 14
 
     def __init__(
         self,
@@ -65,8 +108,17 @@ class RealPerformanceLoader:
     ) -> None:
         self.config = config or RealPerformanceLoaderConfig()
 
-        self.db_path = Path(self.config.db_path)
-        self.output_path = Path(self.config.output_path)
+        self.db_path = Path(
+            self.config.db_path
+        )
+
+        self.season_bounds_path = Path(
+            self.config.season_bounds_path
+        )
+
+        self.output_path = Path(
+            self.config.output_path
+        )
 
         self._validate_configuration()
 
@@ -79,22 +131,49 @@ class RealPerformanceLoader:
         Exécute le pipeline complet et retourne le dataset agrégé.
         """
 
-        print("[RealPerformanceLoader] Chargement des performances réelles...")
+        print(
+            "[RealPerformanceLoader] "
+            "Chargement des performances réelles..."
+        )
 
         self._validate_database()
+
+        season_bounds = (
+            self._load_and_validate_season_bounds()
+        )
 
         query = self._build_query()
 
         with self._connect() as con:
-            df = con.execute(query).fetchdf()
+
+            con.register(
+                "season_calendar_bounds",
+                season_bounds,
+            )
+
+            df = con.execute(
+                query
+            ).fetchdf()
+
+            con.unregister(
+                "season_calendar_bounds"
+            )
 
         if df.empty:
             print(
-                "[RealPerformanceLoader] Aucun enregistrement de performance trouvé."
+                "[RealPerformanceLoader] "
+                "Aucun enregistrement de performance trouvé."
             )
             return df
 
-        df = self._post_process(df)
+        df = self._post_process(
+            df
+        )
+
+        self._validate_calendar_integration(
+            df,
+            season_bounds,
+        )
 
         print(
             "[RealPerformanceLoader] "
@@ -103,7 +182,10 @@ class RealPerformanceLoader:
 
         return df
 
-    def save(self, df: pd.DataFrame) -> None:
+    def save(
+        self,
+        df: pd.DataFrame,
+    ) -> None:
         """
         Sauvegarde le dataset agrégé au format CSV.
         """
@@ -145,7 +227,9 @@ class RealPerformanceLoader:
     # DATABASE
     # ------------------------------------------------------------------
 
-    def _connect(self) -> duckdb.DuckDBPyConnection:
+    def _connect(
+        self,
+    ) -> duckdb.DuckDBPyConnection:
         """
         Ouvre une connexion DuckDB en lecture seule.
         """
@@ -173,18 +257,265 @@ class RealPerformanceLoader:
         }
 
         with self._connect() as con:
+
             tables = {
                 row[0]
-                for row in con.execute("SHOW TABLES").fetchall()
+                for row in con.execute(
+                    "SHOW TABLES"
+                ).fetchall()
             }
 
-        missing = required_tables - tables
+        missing = (
+            required_tables - tables
+        )
 
         if missing:
             raise RuntimeError(
                 "Tables manquantes dans la base DuckDB : "
-                + ", ".join(sorted(missing))
+                + ", ".join(
+                    sorted(missing)
+                )
             )
+
+    # ------------------------------------------------------------------
+    # SEASON CALENDAR
+    # ------------------------------------------------------------------
+
+    def _load_and_validate_season_bounds(
+        self,
+    ) -> pd.DataFrame:
+        """
+        Charge les bornes définitives de saison.
+
+        Cette méthode ne calcule aucune borne.
+
+        Elle vérifie uniquement que l'artefact figé est présent,
+        correctement structuré et cohérent.
+        """
+
+        if not self.season_bounds_path.exists():
+            raise FileNotFoundError(
+                "Fichier des bornes définitives introuvable : "
+                f"{self.season_bounds_path}"
+            )
+
+        bounds = pd.read_csv(
+            self.season_bounds_path
+        )
+
+        missing = (
+            self.REQUIRED_BOUNDS_COLUMNS
+            - set(bounds.columns)
+        )
+
+        if missing:
+            raise ValueError(
+                "Colonnes manquantes dans les bornes définitives : "
+                + ", ".join(
+                    sorted(missing)
+                )
+            )
+
+        bounds = bounds[
+            [
+                "season",
+                "season_start",
+                "season_end",
+            ]
+        ].copy()
+
+        # --------------------------------------------------------------
+        # Types
+        # --------------------------------------------------------------
+
+        bounds["season"] = pd.to_numeric(
+            bounds["season"],
+            errors="coerce",
+        )
+
+        bounds["season_start"] = pd.to_datetime(
+            bounds["season_start"],
+            errors="coerce",
+        )
+
+        bounds["season_end"] = pd.to_datetime(
+            bounds["season_end"],
+            errors="coerce",
+        )
+
+        # --------------------------------------------------------------
+        # NULL
+        # --------------------------------------------------------------
+
+        if bounds[
+            [
+                "season",
+                "season_start",
+                "season_end",
+            ]
+        ].isna().any().any():
+
+            raise ValueError(
+                "Les bornes définitives contiennent des valeurs NULL."
+            )
+
+        # --------------------------------------------------------------
+        # Saison entière
+        # --------------------------------------------------------------
+
+        bounds["season"] = (
+            bounds["season"]
+            .astype(int)
+        )
+
+        # --------------------------------------------------------------
+        # Unicité
+        # --------------------------------------------------------------
+
+        duplicated = (
+            bounds["season"]
+            .duplicated()
+        )
+
+        if duplicated.any():
+
+            duplicated_seasons = (
+                bounds.loc[
+                    duplicated,
+                    "season",
+                ]
+                .astype(str)
+                .tolist()
+            )
+
+            raise ValueError(
+                "Saisons dupliquées dans les bornes définitives : "
+                + ", ".join(
+                    duplicated_seasons
+                )
+            )
+
+        # --------------------------------------------------------------
+        # Ordre des bornes
+        # --------------------------------------------------------------
+
+        invalid_bounds = (
+            bounds["season_start"]
+            > bounds["season_end"]
+        )
+
+        if invalid_bounds.any():
+
+            invalid_seasons = (
+                bounds.loc[
+                    invalid_bounds,
+                    "season",
+                ]
+                .astype(str)
+                .tolist()
+            )
+
+            raise ValueError(
+                "Bornes invalides dans "
+                "season_calendar_bounds_final.csv "
+                "pour les saisons : "
+                + ", ".join(
+                    invalid_seasons
+                )
+            )
+
+        # --------------------------------------------------------------
+        # Nombre de saisons
+        # --------------------------------------------------------------
+
+        if len(bounds) != self.EXPECTED_SEASON_COUNT:
+
+            raise ValueError(
+                "Nombre inattendu de saisons dans les bornes définitives : "
+                f"{len(bounds)} "
+                f"(attendu : {self.EXPECTED_SEASON_COUNT})"
+            )
+
+        # --------------------------------------------------------------
+        # Contrôle spécifique 2025
+        # --------------------------------------------------------------
+
+        season_2025 = bounds[
+            bounds["season"] == 2025
+        ]
+
+        if season_2025.empty:
+            raise ValueError(
+                "La saison 2025 est absente "
+                "des bornes définitives."
+            )
+
+        expected_2025_start = pd.Timestamp(
+            "2025-06-15"
+        )
+
+        actual_2025_start = season_2025.iloc[0][
+            "season_start"
+        ]
+
+        if actual_2025_start != expected_2025_start:
+
+            raise ValueError(
+                "Borne de début de saison 2025 inattendue : "
+                f"{actual_2025_start} "
+                f"(attendu : {expected_2025_start})"
+            )
+
+        # --------------------------------------------------------------
+        # Contrôle spécifique 3606208
+        # --------------------------------------------------------------
+
+        season_2025_end = season_2025.iloc[0][
+            "season_end"
+        ]
+
+        review_game_date = pd.Timestamp(
+            "2021-09-22"
+        )
+
+        if (
+            actual_2025_start
+            <= review_game_date
+            <= season_2025_end
+        ):
+
+            raise ValueError(
+                "Le calendrier définitif de 2025 "
+                "inclurait le game_id=3606208 "
+                "(2021-09-22). "
+                "Les bornes définitives sont incohérentes."
+            )
+
+        print(
+            "[RealPerformanceLoader] "
+            "Bornes définitives chargées."
+        )
+
+        print(
+            f"  Fichier : {self.season_bounds_path}"
+        )
+
+        print(
+            f"  Saisons : {len(bounds)}"
+        )
+
+        print(
+            "  Saison 2025 : "
+            f"{actual_2025_start.date()} -> "
+            f"{season_2025_end.date()}"
+        )
+
+        print(
+            "  game_id=3606208 : "
+            "exclu par les bornes calendaires."
+        )
+
+        return bounds
 
     # ------------------------------------------------------------------
     # SQL
@@ -194,7 +525,8 @@ class RealPerformanceLoader:
         """
         Construit la requête DuckDB.
 
-        Toute l'agrégation lourde est réalisée côté DuckDB.
+        La table season_calendar_bounds est enregistrée temporairement
+        dans DuckDB depuis season_calendar_bounds_final.csv.
 
         La granularité finale est :
 
@@ -202,115 +534,213 @@ class RealPerformanceLoader:
             + season
             + competition_id
             + competition_level
-
-        Les noms, positions et informations de compétition sont ensuite
-        conservés pour permettre le calcul des percentiles dans
-        PerformanceScorer.
         """
 
         national_team_filter = ""
 
         if self.config.exclude_national_team:
+
             national_team_filter = """
-                AND COALESCE(g.competition_type, '') !=
-                    'national_team_competition'
+                AND COALESCE(
+                    g.competition_type,
+                    ''
+                ) != 'national_team_competition'
+
+                AND LOWER(
+                    COALESCE(
+                        c.competition_code,
+                        ''
+                    )
+                ) NOT IN (
+                    'world-cup',
+                    'uefa-euro',
+                    'euro',
+                    'africa-cup-of-nations',
+                    'afcon',
+                    'afc-asian-cup',
+                    'asian-cup',
+                    'copa-america',
+                    'concacaf-gold-cup',
+                    'concacaf-nations-league',
+                    'uefa-nations-league',
+                    'fifa-confederations-cup',
+                    'olympic-football',
+                    'olympics'
+                )
+
+                AND LOWER(
+                    COALESCE(
+                        c.name,
+                        ''
+                    )
+                ) NOT IN (
+                    'world cup',
+                    'uefa euro',
+                    'euro',
+                    'africa cup of nations',
+                    'afcon',
+                    'afc asian cup',
+                    'asian cup',
+                    'copa america',
+                    'concacaf gold cup',
+                    'concacaf nations league',
+                    'uefa nations league',
+                    'fifa confederations cup',
+                    'olympic football',
+                    'olympics'
+                )
             """
 
         min_minutes_filter = ""
 
         if self.config.min_minutes > 0:
+
             min_minutes_filter = f"""
-                HAVING SUM(COALESCE(a.minutes_played, 0))
-                    >= {int(self.config.min_minutes)}
+                HAVING SUM(
+                    COALESCE(
+                        a.minutes_played,
+                        0
+                    )
+                ) >= {int(self.config.min_minutes)}
             """
 
         query = f"""
         WITH base AS (
 
             SELECT
+
                 a.player_id,
 
                 p.name AS player,
 
                 p.position,
+
                 p.sub_position,
 
-                CAST(g.season AS VARCHAR) AS season,
+                CAST(
+                    g.season AS INTEGER
+                ) AS season,
 
                 g.date AS match_date,
 
                 a.game_id,
 
                 a.minutes_played,
+
                 a.goals,
+
                 a.assists,
 
                 a.competition_id,
 
+                c.competition_code,
+
                 c.name AS competition_name,
+
                 c.sub_type AS competition_sub_type,
+
                 c.type AS competition_type,
+
                 c.country_name,
+
                 c.confederation,
+
+                /*
+                * Bornes de saison FIGÉES.
+                *
+                * Elles proviennent exclusivement de :
+                *
+                * season_calendar_bounds_final.csv
+                */
+
+                sb.season_start,
+
+                sb.season_end,
 
                 CASE
 
                     /*
-                     * Champions League
-                     */
-                    WHEN c.sub_type = 'uefa_champions_league'
+                    * Champions League
+                    */
+
+                    WHEN c.sub_type =
+                        'uefa_champions_league'
+
                         THEN 'CHAMPIONS_LEAGUE'
 
                     /*
-                     * Europa League
-                     */
-                    WHEN c.sub_type = 'uefa_europa_league'
+                    * Europa League
+                    */
+
+                    WHEN c.sub_type =
+                        'uefa_europa_league'
+
                         THEN 'EUROPA_LEAGUE'
 
                     /*
-                     * Conference League
-                     */
-                    WHEN c.sub_type = 'uefa_conference_league'
+                    * Conference League
+                    */
+
+                    WHEN c.sub_type =
+                        'uefa_conference_league'
+
                         THEN 'CONFERENCE_LEAGUE'
 
                     /*
-                     * UEFA qualifications
-                     */
+                    * UEFA qualifications
+                    */
+
                     WHEN c.sub_type IN (
                         'uefa_champions_league_qualifying',
                         'uefa_europa_league_qualifying',
                         'uefa_conference_league_qualifying'
                     )
+
                         THEN 'EUROPE_QUALIFIER'
 
                     /*
-                     * Domestic first tier
-                     */
-                    WHEN c.type = 'domestic_league'
-                         AND c.sub_type = 'first_tier'
+                    * Domestic first tier
+                    */
+
+                    WHEN c.type =
+                        'domestic_league'
+
+                        AND c.sub_type =
+                            'first_tier'
+
                         THEN 'TOP_LEAGUE'
 
                     /*
-                     * Domestic cups
-                     */
-                    WHEN c.type = 'domestic_cup'
+                    * Domestic cups
+                    */
+
+                    WHEN c.type =
+                        'domestic_cup'
+
                         THEN 'DOMESTIC_CUP'
 
                     /*
-                     * Domestic super cups
-                     */
-                    WHEN c.sub_type = 'domestic_super_cup'
+                    * Domestic super cups
+                    */
+
+                    WHEN c.sub_type =
+                        'domestic_super_cup'
+
                         THEN 'DOMESTIC_SUPER_CUP'
 
                     /*
-                     * Playoffs
-                     */
-                    WHEN c.sub_type = 'play_off'
+                    * Playoffs
+                    */
+
+                    WHEN c.sub_type =
+                        'play_off'
+
                         THEN 'PLAY_OFF'
 
                     /*
-                     * Unknown metadata
-                     */
+                    * Unknown metadata
+                    */
+
                     ELSE '{self.UNKNOWN_COMPETITION_LEVEL}'
 
                 END AS competition_level
@@ -318,19 +748,51 @@ class RealPerformanceLoader:
             FROM appearances AS a
 
             INNER JOIN games AS g
-                ON CAST(a.game_id AS VARCHAR) =
-                   CAST(g.game_id AS VARCHAR)
+
+                ON CAST(
+                    a.game_id AS VARCHAR
+                )
+                =
+                CAST(
+                    g.game_id AS VARCHAR
+                )
+
+            /*
+            * Les bornes définitives sont une référence obligatoire.
+            */
+
+            INNER JOIN season_calendar_bounds AS sb
+
+                ON CAST(
+                    g.season AS INTEGER
+                )
+                =
+                sb.season
+
+                AND g.date >= sb.season_start
+
+                AND g.date <= sb.season_end
 
             LEFT JOIN competitions AS c
-                ON a.competition_id = c.competition_id
+
+                ON a.competition_id =
+                c.competition_id
 
             LEFT JOIN players AS p
-                ON a.player_id = p.player_id
 
-            WHERE a.player_id IS NOT NULL
-              AND g.season IS NOT NULL
-              AND g.date IS NOT NULL
-              {national_team_filter}
+                ON a.player_id =
+                p.player_id
+
+            WHERE
+
+                a.player_id IS NOT NULL
+
+                AND g.season IS NOT NULL
+
+                AND g.date IS NOT NULL
+
+                {national_team_filter}
+
         ),
 
         aggregated AS (
@@ -342,42 +804,81 @@ class RealPerformanceLoader:
                 MAX(player) AS player,
 
                 MAX(position) AS position,
+
                 MAX(sub_position) AS sub_position,
 
                 season,
 
+                /*
+                * Les bornes sont identiques pour toutes les lignes
+                * d'une même saison.
+                */
+
+                MAX(season_start)
+                    AS season_start,
+
+                MAX(season_end)
+                    AS season_end,
+
                 competition_id,
 
-                MAX(competition_name) AS competition_name,
-                MAX(competition_sub_type) AS competition_sub_type,
-                MAX(competition_type) AS competition_type,
-                MAX(country_name) AS country_name,
-                MAX(confederation) AS confederation,
+                MAX(competition_name)
+                    AS competition_name,
 
-                MAX(competition_level) AS competition_level,
+                MAX(competition_sub_type)
+                    AS competition_sub_type,
 
-                MIN(match_date) AS first_match_date,
-                MAX(match_date) AS last_match_date,
+                MAX(competition_type)
+                    AS competition_type,
 
-                COUNT(DISTINCT game_id) AS appearances,
+                MAX(country_name)
+                    AS country_name,
+
+                MAX(confederation)
+                    AS confederation,
+
+                MAX(competition_level)
+                    AS competition_level,
+
+                MIN(match_date)
+                    AS first_match_date,
+
+                MAX(match_date)
+                    AS last_match_date,
+
+                COUNT(
+                    DISTINCT game_id
+                ) AS appearances,
 
                 SUM(
-                    COALESCE(minutes_played, 0)
+                    COALESCE(
+                        minutes_played,
+                        0
+                    )
                 ) AS minutes,
 
                 SUM(
-                    COALESCE(goals, 0)
+                    COALESCE(
+                        goals,
+                        0
+                    )
                 ) AS goals,
 
                 SUM(
-                    COALESCE(assists, 0)
+                    COALESCE(
+                        assists,
+                        0
+                    )
                 ) AS assists
 
             FROM base
 
             GROUP BY
+
                 player_id,
+
                 season,
+
                 competition_id
 
             {min_minutes_filter}
@@ -386,70 +887,102 @@ class RealPerformanceLoader:
         SELECT
 
             player_id,
+
             player,
 
             position,
+
             sub_position,
 
             season,
 
+            season_start,
+
+            season_end,
+
             competition_id,
+
             competition_name,
+
             competition_sub_type,
+
             competition_type,
+
             country_name,
+
             confederation,
+
             competition_level,
 
             first_match_date,
+
             last_match_date,
 
             appearances,
+
             minutes,
+
             goals,
+
             assists,
 
             /*
-             * Performance rates.
-             *
-             * 90 minutes is the denominator used throughout
-             * the performance pipeline.
-             */
+            * Performance rates.
+            *
+            * 90 minutes is the denominator utilisé
+            * throughout the performance pipeline.
+            */
+
             CASE
+
                 WHEN minutes > 0
+
                     THEN goals * 90.0 / minutes
+
                 ELSE NULL
+
             END AS goals_per90,
 
             CASE
+
                 WHEN minutes > 0
+
                     THEN assists * 90.0 / minutes
+
                 ELSE NULL
+
             END AS assists_per90,
 
             /*
-             * xG / xA are deliberately NULL.
-             *
-             * Transfermarkt does not provide expected-goal or
-             * expected-assist data.
-             *
-             * They will be populated by the future enrichment
-             * stage before PerformanceScorer is executed.
-             */
-            CAST(NULL AS DOUBLE) AS xg,
+            * xG / xA intentionally NULL.
+            */
 
-            CAST(NULL AS DOUBLE) AS xa,
+            CAST(
+                NULL AS DOUBLE
+            ) AS xg,
 
-            CAST(NULL AS DOUBLE) AS xg_per90,
+            CAST(
+                NULL AS DOUBLE
+            ) AS xa,
 
-            CAST(NULL AS DOUBLE) AS xa_per90
+            CAST(
+                NULL AS DOUBLE
+            ) AS xg_per90,
+
+            CAST(
+                NULL AS DOUBLE
+            ) AS xa_per90
 
         FROM aggregated
 
         ORDER BY
+
             player_id,
+
             season,
+
             competition_level,
+
             competition_id
         """
 
@@ -459,11 +992,14 @@ class RealPerformanceLoader:
     # POST PROCESSING
     # ------------------------------------------------------------------
 
-    def _post_process(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _post_process(
+        self,
+        df: pd.DataFrame,
+    ) -> pd.DataFrame:
         """
         Nettoyage léger côté pandas.
 
-        Aucun calcul lourd n'est effectué ici.
+        Aucun calcul de bornes de saison n'est effectué ici.
         """
 
         result = df.copy()
@@ -473,8 +1009,16 @@ class RealPerformanceLoader:
         # --------------------------------------------------------------
 
         if "player_id" in result.columns:
+
             result["player_id"] = pd.to_numeric(
                 result["player_id"],
+                errors="coerce",
+            ).astype("Int64")
+
+        if "season" in result.columns:
+
+            result["season"] = pd.to_numeric(
+                result["season"],
                 errors="coerce",
             ).astype("Int64")
 
@@ -484,7 +1028,9 @@ class RealPerformanceLoader:
             "goals",
             "assists",
         ]:
+
             if column in result.columns:
+
                 result[column] = pd.to_numeric(
                     result[column],
                     errors="coerce",
@@ -498,7 +1044,9 @@ class RealPerformanceLoader:
             "xg_per90",
             "xa_per90",
         ]:
+
             if column in result.columns:
+
                 result[column] = pd.to_numeric(
                     result[column],
                     errors="coerce",
@@ -509,10 +1057,14 @@ class RealPerformanceLoader:
         # --------------------------------------------------------------
 
         for column in [
+            "season_start",
+            "season_end",
             "first_match_date",
             "last_match_date",
         ]:
+
             if column in result.columns:
+
                 result[column] = pd.to_datetime(
                     result[column],
                     errors="coerce",
@@ -524,45 +1076,67 @@ class RealPerformanceLoader:
 
         result["competition_level"] = (
             result["competition_level"]
-            .fillna(self.UNKNOWN_COMPETITION_LEVEL)
+            .fillna(
+                self.UNKNOWN_COMPETITION_LEVEL
+            )
             .astype(str)
         )
 
-        result["competition_level"] = result[
-            "competition_level"
-        ].replace(
-            {
-                "": self.UNKNOWN_COMPETITION_LEVEL,
-                "None": self.UNKNOWN_COMPETITION_LEVEL,
-                "nan": self.UNKNOWN_COMPETITION_LEVEL,
-            }
+        result["competition_level"] = (
+            result["competition_level"]
+            .replace(
+                {
+                    "":
+                        self.UNKNOWN_COMPETITION_LEVEL,
+                    "None":
+                        self.UNKNOWN_COMPETITION_LEVEL,
+                    "nan":
+                        self.UNKNOWN_COMPETITION_LEVEL,
+                }
+            )
         )
 
         # --------------------------------------------------------------
-        # Explicit season bounds
+        # Contrôle calendrier
         # --------------------------------------------------------------
 
-        season_bounds = self._build_season_bounds(result)
-
-        result = result.merge(
-            season_bounds,
-            on="season",
-            how="left",
-            validate="many_to_one",
+        invalid_calendar = (
+            result["first_match_date"]
+            < result["season_start"]
+        ) | (
+            result["last_match_date"]
+            > result["season_end"]
         )
+
+        if invalid_calendar.any():
+
+            invalid_rows = int(
+                invalid_calendar.sum()
+            )
+
+            raise ValueError(
+                "Des performances contiennent des dates "
+                "en dehors des bornes définitives : "
+                f"{invalid_rows} ligne(s)."
+            )
 
         # --------------------------------------------------------------
         # Column ordering
         # --------------------------------------------------------------
 
         ordered_columns = [
+
             "player_id",
             "player",
+
             "position",
             "sub_position",
+
             "season",
+
             "season_start",
             "season_end",
+
             "competition_id",
             "competition_name",
             "competition_sub_type",
@@ -570,14 +1144,18 @@ class RealPerformanceLoader:
             "country_name",
             "confederation",
             "competition_level",
+
             "first_match_date",
             "last_match_date",
+
             "appearances",
             "minutes",
             "goals",
             "assists",
+
             "goals_per90",
             "assists_per90",
+
             "xg",
             "xa",
             "xg_per90",
@@ -590,145 +1168,221 @@ class RealPerformanceLoader:
             if column in result.columns
         ]
 
-        result = result[existing_columns]
+        result = result[
+            existing_columns
+        ]
 
         return result
 
     # ------------------------------------------------------------------
-    # SEASON CALENDAR
+    # CALENDAR INTEGRATION VALIDATION
     # ------------------------------------------------------------------
 
-    def _build_season_bounds(
+    def _validate_calendar_integration(
         self,
         df: pd.DataFrame,
-    ) -> pd.DataFrame:
+        season_bounds: pd.DataFrame,
+    ) -> None:
         """
-        Construit les bornes calendaires de chaque saison.
-
-        Les bornes sont calculées à partir de l'ensemble des compétitions
-        club présentes dans le dataset pour chaque saison.
-
-        Cette définition permet notamment d'intégrer :
-
-        - les championnats nationaux ;
-        - les coupes nationales ;
-        - les super coupes ;
-        - les compétitions européennes ;
-        - les qualifications européennes ;
-        - les playoffs ;
-        - les autres compétitions club présentes dans les données.
-
-        Les compétitions de sélections nationales ont déjà été exclues
-        dans la requête DuckDB lorsque exclude_national_team=True.
-
-        Définition :
-
-            season_start = première date de match observée
-                           pour la saison
-
-            season_end   = dernière date de match observée
-                           pour la saison
-
-        Cette approche évite de considérer artificiellement comme
-        "hors saison" les compétitions qui commencent avant le premier
-        match du TOP_LEAGUE, notamment les qualifications UEFA.
+        Vérifie que le dataset final respecte exactement les bornes
+        définitives.
         """
 
-        required_columns = {
-            "season",
-            "first_match_date",
-            "last_match_date",
-        }
+        # --------------------------------------------------------------
+        # Toutes les saisons doivent exister dans l'artefact
+        # --------------------------------------------------------------
 
-        missing_columns = required_columns - set(df.columns)
+        known_seasons = set(
+            season_bounds["season"]
+            .astype(int)
+            .tolist()
+        )
 
-        if missing_columns:
+        output_seasons = set(
+            df["season"]
+            .dropna()
+            .astype(int)
+            .tolist()
+        )
+
+        unknown_seasons = (
+            output_seasons - known_seasons
+        )
+
+        if unknown_seasons:
+
             raise ValueError(
-                "Colonnes nécessaires à la construction des bornes "
-                "de saison absentes : "
-                + ", ".join(sorted(missing_columns))
-            )
-
-        work = df[
-            [
-                "season",
-                "first_match_date",
-                "last_match_date",
-            ]
-        ].copy()
-
-        work["first_match_date"] = pd.to_datetime(
-            work["first_match_date"],
-            errors="coerce",
-        )
-
-        work["last_match_date"] = pd.to_datetime(
-            work["last_match_date"],
-            errors="coerce",
-        )
-
-        # --------------------------------------------------------------
-        # Validation des dates observées
-        # --------------------------------------------------------------
-
-        work = work[
-            work["first_match_date"].notna()
-            & work["last_match_date"].notna()
-        ].copy()
-
-        if work.empty:
-            raise ValueError(
-                "Impossible de construire les bornes de saison : "
-                "aucune date de match valide."
+                "Des saisons absentes des bornes définitives "
+                "sont présentes dans le résultat : "
+                + ", ".join(
+                    map(
+                        str,
+                        sorted(
+                            unknown_seasons
+                        ),
+                    )
+                )
             )
 
         # --------------------------------------------------------------
-        # Saison complète = enveloppe de toutes les compétitions club
+        # Bornes identiques au référentiel
         # --------------------------------------------------------------
 
-        season_bounds = (
-            work
-            .groupby(
-                "season",
-                as_index=False,
-            )
-            .agg(
-                season_start=(
-                    "first_match_date",
-                    "min",
-                ),
-                season_end=(
-                    "last_match_date",
-                    "max",
-                ),
-            )
+        expected = season_bounds.copy()
+
+        expected["season"] = (
+            expected["season"]
+            .astype(int)
         )
 
-        # --------------------------------------------------------------
-        # Contrôle structurel
-        # --------------------------------------------------------------
-
-        invalid_bounds = (
-            season_bounds["season_start"]
-            > season_bounds["season_end"]
+        expected["season_start"] = pd.to_datetime(
+            expected["season_start"]
         )
 
-        if invalid_bounds.any():
-            invalid_seasons = (
-                season_bounds.loc[
-                    invalid_bounds,
+        expected["season_end"] = pd.to_datetime(
+            expected["season_end"]
+        )
+
+        actual = (
+            df[
+                [
                     "season",
+                    "season_start",
+                    "season_end",
                 ]
-                .astype(str)
-                .tolist()
+            ]
+            .drop_duplicates()
+            .copy()
+        )
+
+        actual["season"] = (
+            actual["season"]
+            .astype(int)
+        )
+
+        actual["season_start"] = pd.to_datetime(
+            actual["season_start"]
+        )
+
+        actual["season_end"] = pd.to_datetime(
+            actual["season_end"]
+        )
+
+        comparison = actual.merge(
+            expected,
+            on="season",
+            how="left",
+            suffixes=(
+                "_actual",
+                "_expected",
+            ),
+            validate="many_to_one",
+        )
+
+        mismatched = comparison[
+            (
+                comparison["season_start_actual"]
+                !=
+                comparison["season_start_expected"]
             )
+            |
+            (
+                comparison["season_end_actual"]
+                !=
+                comparison["season_end_expected"]
+            )
+        ]
+
+        if not mismatched.empty:
 
             raise ValueError(
-                "Bornes de saison invalides pour les saisons : "
-                + ", ".join(invalid_seasons)
+                "Les bornes présentes dans les performances "
+                "ne correspondent pas aux bornes définitives :\n"
+                + mismatched.to_string(
+                    index=False
+                )
             )
 
-        return season_bounds
+        # --------------------------------------------------------------
+        # Contrôle spécifique 3606208
+        # --------------------------------------------------------------
+
+        with self._connect() as con:
+
+            review_check = con.execute(
+                """
+                SELECT
+                    g.game_id,
+                    g.season,
+                    g.date
+                FROM games AS g
+                WHERE g.game_id = 3606208
+                """
+            ).fetchdf()
+
+        if not review_check.empty:
+
+            appears_in_output = False
+
+            if "season" in df.columns:
+
+                appears_in_output = bool(
+                    (
+                        (
+                            df["season"]
+                            .astype("Int64")
+                            == 2025
+                        )
+                        &
+                        (
+                            pd.to_datetime(
+                                df["first_match_date"]
+                            )
+                            <= pd.Timestamp(
+                                "2021-09-22"
+                            )
+                        )
+                        &
+                        (
+                            pd.to_datetime(
+                                df["last_match_date"]
+                            )
+                            >= pd.Timestamp(
+                                "2021-09-22"
+                            )
+                        )
+                    ).any()
+                )
+
+            if appears_in_output:
+
+                raise ValueError(
+                    "Le match 3606208 semble avoir été "
+                    "réintroduit dans les performances."
+                )
+
+        print(
+            "[RealPerformanceLoader] "
+            "Intégration des bornes calendaires : OK."
+        )
+
+        print(
+            f"  Saisons référentielles : "
+            f"{len(season_bounds)}"
+        )
+
+        print(
+            f"  Saisons dans output    : "
+            f"{len(output_seasons)}"
+        )
+
+        print(
+            "  Bornes identiques      : OUI"
+        )
+
+        print(
+            "  game_id=3606208        : EXCLU"
+        )
 
     # ------------------------------------------------------------------
     # VALIDATION
@@ -748,18 +1402,26 @@ class RealPerformanceLoader:
             )
 
         required_columns = [
+
             "player_id",
             "player",
+
             "position",
+
             "season",
+
             "season_start",
             "season_end",
+
             "competition_level",
+
             "minutes",
             "goals",
             "assists",
+
             "goals_per90",
             "assists_per90",
+
             "xg",
             "xa",
             "xg_per90",
@@ -773,51 +1435,108 @@ class RealPerformanceLoader:
         ]
 
         if missing:
+
             raise ValueError(
                 "Colonnes obligatoires absentes : "
                 + ", ".join(missing)
             )
 
+        # --------------------------------------------------------------
         # IDs joueurs valides
+        # --------------------------------------------------------------
+
         invalid_player_ids = int(
             df["player_id"].isna().sum()
         )
 
+        # --------------------------------------------------------------
         # Minutes négatives
+        # --------------------------------------------------------------
+
         negative_minutes = int(
-            (df["minutes"] < 0).sum()
+            (
+                df["minutes"] < 0
+            ).sum()
         )
 
+        # --------------------------------------------------------------
         # Goals négatifs
+        # --------------------------------------------------------------
+
         negative_goals = int(
-            (df["goals"] < 0).sum()
+            (
+                df["goals"] < 0
+            ).sum()
         )
 
+        # --------------------------------------------------------------
         # Assists négatives
+        # --------------------------------------------------------------
+
         negative_assists = int(
-            (df["assists"] < 0).sum()
+            (
+                df["assists"] < 0
+            ).sum()
         )
 
+        # --------------------------------------------------------------
         # Per90 incohérents
+        # --------------------------------------------------------------
+
         invalid_goals_per90 = int(
             (
-                (df["goals_per90"] < 0)
-                | (df["goals_per90"].isna() & (df["minutes"] > 0))
+                (
+                    df["goals_per90"] < 0
+                )
+                |
+                (
+                    df["goals_per90"].isna()
+                    &
+                    (
+                        df["minutes"] > 0
+                    )
+                )
             ).sum()
         )
 
         invalid_season_bounds = int(
             (
                 df["season_start"].isna()
-                | df["season_end"].isna()
-                | (
+                |
+                df["season_end"].isna()
+                |
+                (
                     df["season_start"]
-                    > df["season_end"]
+                    >
+                    df["season_end"]
                 )
             ).sum()
         )
 
+        # --------------------------------------------------------------
+        # Match dates hors bornes
+        # --------------------------------------------------------------
+
+        invalid_match_dates = int(
+            (
+                (
+                    df["first_match_date"]
+                    <
+                    df["season_start"]
+                )
+                |
+                (
+                    df["last_match_date"]
+                    >
+                    df["season_end"]
+                )
+            ).sum()
+        )
+
+        # --------------------------------------------------------------
         # xG/xA doivent être NULL à ce stade
+        # --------------------------------------------------------------
+
         non_null_xg = int(
             df["xg"].notna().sum()
         )
@@ -827,73 +1546,122 @@ class RealPerformanceLoader:
         )
 
         checks = {
-            "rows": len(df),
-            "unique_players": df["player_id"].nunique(),
-            "invalid_player_ids": invalid_player_ids,
-            "negative_minutes": negative_minutes,
-            "negative_goals": negative_goals,
-            "negative_assists": negative_assists,
-            "invalid_goals_per90": invalid_goals_per90,
-            "invalid_season_bounds": invalid_season_bounds,
-            "non_null_xg_before_enrichment": non_null_xg,
-            "non_null_xa_before_enrichment": non_null_xa,
-            "competition_levels": sorted(
-                df["competition_level"]
-                .dropna()
-                .unique()
-                .tolist()
-            ),
+
+            "rows":
+                len(df),
+
+            "unique_players":
+                df["player_id"].nunique(),
+
+            "invalid_player_ids":
+                invalid_player_ids,
+
+            "negative_minutes":
+                negative_minutes,
+
+            "negative_goals":
+                negative_goals,
+
+            "negative_assists":
+                negative_assists,
+
+            "invalid_goals_per90":
+                invalid_goals_per90,
+
+            "invalid_season_bounds":
+                invalid_season_bounds,
+
+            "invalid_match_dates":
+                invalid_match_dates,
+
+            "non_null_xg_before_enrichment":
+                non_null_xg,
+
+            "non_null_xa_before_enrichment":
+                non_null_xa,
+
+            "competition_levels":
+                sorted(
+                    df[
+                        "competition_level"
+                    ]
+                    .dropna()
+                    .unique()
+                    .tolist()
+                ),
         }
 
         errors = []
 
         if invalid_player_ids > 0:
+
             errors.append(
-                f"{invalid_player_ids} player_id invalides"
+                f"{invalid_player_ids} "
+                "player_id invalides"
             )
 
         if negative_minutes > 0:
+
             errors.append(
-                f"{negative_minutes} lignes avec minutes négatives"
+                f"{negative_minutes} lignes "
+                "avec minutes négatives"
             )
 
         if negative_goals > 0:
+
             errors.append(
-                f"{negative_goals} lignes avec goals négatifs"
+                f"{negative_goals} lignes "
+                "avec goals négatifs"
             )
 
         if negative_assists > 0:
+
             errors.append(
-                f"{negative_assists} lignes avec assists négatives"
+                f"{negative_assists} lignes "
+                "avec assists négatives"
             )
 
         if invalid_season_bounds > 0:
+
             errors.append(
-                f"{invalid_season_bounds} lignes avec bornes de saison invalides"
+                f"{invalid_season_bounds} lignes "
+                "avec bornes de saison invalides"
+            )
+
+        if invalid_match_dates > 0:
+
+            errors.append(
+                f"{invalid_match_dates} lignes "
+                "avec dates hors bornes définitives"
             )
 
         if non_null_xg > 0:
+
             errors.append(
                 "xg doit rester NULL avant enrichissement"
             )
 
         if non_null_xa > 0:
+
             errors.append(
                 "xa doit rester NULL avant enrichissement"
             )
 
         if errors:
+
             raise ValueError(
                 "Validation du dataset échouée : "
                 + " | ".join(errors)
             )
 
         print(
-            "[RealPerformanceLoader] Validation OK."
+            "[RealPerformanceLoader] "
+            "Validation OK."
         )
 
         print(
-            f"  Lignes               : {checks['rows']:,}"
+            f"  Lignes               : "
+            f"{checks['rows']:,}"
         )
 
         print(
@@ -902,8 +1670,20 @@ class RealPerformanceLoader:
         )
 
         print(
+            f"  Bornes invalides     : "
+            f"{checks['invalid_season_bounds']}"
+        )
+
+        print(
+            f"  Dates hors bornes    : "
+            f"{checks['invalid_match_dates']}"
+        )
+
+        print(
             "  Competition levels   : "
-            + ", ".join(checks["competition_levels"])
+            + ", ".join(
+                checks["competition_levels"]
+            )
         )
 
         print(
@@ -913,11 +1693,13 @@ class RealPerformanceLoader:
 
         return checks
 
-    # ------------------------------------------------------------------
-    # CONFIGURATION
-    # ------------------------------------------------------------------
+# ------------------------------------------------------------------
+# CONFIGURATION
+# ------------------------------------------------------------------
 
-    def _validate_configuration(self) -> None:
+    def _validate_configuration(
+        self,
+    ) -> None:
         """
         Valide la configuration initiale.
         """
@@ -938,16 +1720,29 @@ def main() -> None:
     """
 
     config = RealPerformanceLoaderConfig(
-        db_path="data/transfermarkt-datasets.duckdb",
+        db_path=(
+            "data/historical/"
+            "transfermarkt-datasets.duckdb"
+        ),
+
+        season_bounds_path=(
+            "data/audits/"
+            "season_calendar_bounds_final.csv"
+        ),
+
         output_path=(
             "data/performances/"
             "player_competition_season_performance.csv"
         ),
+
         min_minutes=0,
+
         exclude_national_team=True,
     )
 
-    loader = RealPerformanceLoader(config)
+    loader = RealPerformanceLoader(
+        config
+    )
 
     df = loader.run()
 
@@ -958,23 +1753,34 @@ def main() -> None:
         )
         return
 
-    loader.validate_output(df)
+    loader.validate_output(
+        df
+    )
 
     print()
-    print("=" * 72)
-    print("REAL PERFORMANCE LOADER — SUMMARY")
-    print("=" * 72)
-
     print(
-        f"Rows              : {len(df):,}"
+        "=" * 72
+    )
+    print(
+        "REAL PERFORMANCE LOADER — SUMMARY"
+    )
+    print(
+        "=" * 72
     )
 
     print(
-        f"Players           : {df['player_id'].nunique():,}"
+        f"Rows              : "
+        f"{len(df):,}"
     )
 
     print(
-        f"Seasons           : {df['season'].nunique():,}"
+        f"Players           : "
+        f"{df['player_id'].nunique():,}"
+    )
+
+    print(
+        f"Seasons           : "
+        f"{df['season'].nunique():,}"
     )
 
     print(
@@ -983,15 +1789,25 @@ def main() -> None:
     )
 
     print()
-    print("Competition levels:")
+
     print(
-        df["competition_level"]
+        "Competition levels:"
+    )
+
+    print(
+        df[
+            "competition_level"
+        ]
         .value_counts()
         .to_string()
     )
 
     print()
-    print("Season bounds:")
+
+    print(
+        "Season bounds:"
+    )
+
     print(
         df[
             [
@@ -1001,14 +1817,25 @@ def main() -> None:
             ]
         ]
         .drop_duplicates()
-        .sort_values("season")
-        .to_string(index=False)
+        .sort_values(
+            "season"
+        )
+        .to_string(
+            index=False
+        )
     )
 
     print()
-    print("Sample:")
+
     print(
-        df.head(10).to_string(index=False)
+        "Sample:"
+    )
+
+    print(
+        df.head(10)
+        .to_string(
+            index=False
+        )
     )
 
 
