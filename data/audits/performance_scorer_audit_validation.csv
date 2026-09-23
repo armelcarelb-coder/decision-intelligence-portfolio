@@ -1,0 +1,6 @@
+validation,expected,actual,status
+EXPECTED_ROW_COUNT,191355,191355,PASS
+NO_DUPLICATES,0,0,PASS
+STRICT_ELIGIBILITY_RULE,minutes >= 900 AND all four metrics available,Implemented in audit,PASS
+NO_PRODUCTION_SCORING,No raw score / percentile computed,Audit only,PASS
+STRUCTURAL_REVIEW_COUNT,0,1,REVIEW

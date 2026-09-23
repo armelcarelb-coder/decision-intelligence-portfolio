@@ -1,0 +1,58 @@
+================================================================================
+PERFORMANCE SCORER — REAL DATA AUDIT
+================================================================================
+
+DATASET
+--------------------------------------------------------------------------------
+Rows              : 191,355
+Players           : 29,330
+Seasons           : 14
+Competitions      : 46
+
+METRICS COVERAGE
+--------------------------------------------------------------------------------
+goals_per90          non-null=191,355 null=0 coverage=100.00%
+assists_per90        non-null=191,355 null=0 coverage=100.00%
+xg_per90             non-null=0 null=191,355 coverage=0.00%
+xa_per90             non-null=0 null=191,355 coverage=0.00%
+ALL FOUR AVAILABLE   0 / 191,355 (0.00%)
+
+MINUTES
+--------------------------------------------------------------------------------
+< 900 minutes       : 139,308
+>= 900 minutes      : 52,047
+Min minutes         : 1.0
+Max minutes         : 3420.0
+Mean minutes        : 677.30
+Median minutes      : 275.00
+
+THEORETICAL SCORER STATUS
+--------------------------------------------------------------------------------
+INSUFFICIENT_MINUTES      139,308 (72.80%)
+INSUFFICIENT_METRICS      52,047 (27.20%)
+ELIGIBLE                  0 (0.00%)
+INVALID                   0 (0.00%)
+
+PERCENTILE GROUPS
+--------------------------------------------------------------------------------
+Total groups                   : 438
+Groups with candidate >=900    : 186
+Groups with zero eligible      : 438
+Groups with one eligible       : 0
+Groups with >=2 eligible       : 0
+
+XG / XA CONCLUSION
+--------------------------------------------------------------------------------
+Production scoring possible : NO
+Reason : xG/xA enrichment required before production scoring.
+No partial scoring and no weight renormalization.
+
+METHODOLOGICAL RULE
+--------------------------------------------------------------------------------
+ELIGIBLE = minutes >= 900 AND all four metrics available.
+Missing metrics => INSUFFICIENT_METRICS.
+No missing metric is replaced by zero.
+No partial score and no weight renormalization.
+Production score and percentile are NOT calculated by this audit.
+
+================================================================================
