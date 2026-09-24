@@ -41,6 +41,13 @@ Groups with zero eligible      : 438
 Groups with one eligible       : 0
 Groups with >=2 eligible       : 0
 
+PLAYER REFERENCE
+--------------------------------------------------------------------------------
+Missing player IDs           : 1
+Rows affected               : 1
+Potential scoring impact    : 0
+Status                      : DATA_QUALITY_REVIEW
+
 XG / XA CONCLUSION
 --------------------------------------------------------------------------------
 Production scoring possible : NO

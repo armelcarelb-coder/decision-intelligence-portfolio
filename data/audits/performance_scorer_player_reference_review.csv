@@ -1,0 +1,2 @@
+player_id,player,position,sub_position,season,competition_id,competition_name,competition_level,minutes,reason,impact_on_scoring,decision
+380365,,,,2018,CDR,copa-del-rey,DOMESTIC_CUP,210.0,MISSING_PLAYER_REFERENCE_IN_SOURCE,NONE,KEEP_RAW_EXCLUDE_FROM_SCORING
