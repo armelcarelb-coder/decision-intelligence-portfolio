@@ -1,0 +1,12 @@
+metric,value
+game_player_rows,11567
+unique_games,380
+unique_players,562
+xg_non_null,3159
+xa_non_null,3159
+player_confirmed,3159
+match_confirmed,3367
+performance_rows,191355
+performance_complete,13
+performance_partial,549
+performance_out_of_scope,190793

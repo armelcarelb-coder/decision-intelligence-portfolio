@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 import unicodedata
 from typing import Iterable
-
+import numpy as np
 import pandas as pd
 
 
@@ -569,6 +569,7 @@ def build_player_mapping(
 
     if confirmed_matches.empty:
 
+
         result = tm.copy()
 
         result[
@@ -594,6 +595,59 @@ def build_player_mapping(
         result["xg"] = np.nan
         result["xa"] = np.nan
 
+        result[
+            "source_name"
+        ] = pd.NA
+
+        result[
+            "source_library"
+        ] = pd.NA
+
+        result[
+            "source_version"
+        ] = pd.NA
+
+        result[
+            "source_url"
+        ] = pd.NA
+
+        result[
+            "source_retrieved_at"
+        ] = pd.NaT
+
+        
+
+        # ------------------------------------------------------------------
+        # SCHEMA DE TRAÇABILITÉ GARANTI
+        # ------------------------------------------------------------------
+
+        required_mapping_columns = {
+            "mapping_status": pd.NA,
+            "mapping_method": pd.NA,
+            "mapping_reason": pd.NA,
+            "understat_game_id": pd.NA,
+            "understat_player_id": pd.NA,
+            "player_mapping_status": pd.NA,
+            "player_mapping_method": pd.NA,
+            "xg": pd.NA,
+            "xa": pd.NA,
+        }
+
+        for column, default in required_mapping_columns.items():
+
+            if column not in result.columns:
+                result[column] = default
+
+        result["xg"] = pd.to_numeric(
+            result["xg"],
+            errors="coerce",
+        )
+
+        result["xa"] = pd.to_numeric(
+            result["xa"],
+            errors="coerce",
+        )
+        
         return result
 
     tm = tm.merge(
@@ -601,7 +655,9 @@ def build_player_mapping(
             [
                 "tm_game_id",
                 "understat_game_id",
+                "mapping_status",
                 "mapping_method",
+                "mapping_reason",
             ]
         ].drop_duplicates(
             subset=[

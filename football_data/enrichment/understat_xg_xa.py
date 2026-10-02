@@ -4,7 +4,9 @@ import importlib.metadata
 import time
 from pathlib import Path
 from typing import Iterable
-
+import re
+import unicodedata
+import numpy as np
 import pandas as pd
 import soccerdata as sd
 
@@ -99,7 +101,64 @@ class UnderstatXgXaSource(XgXaSource):
         return cls.COUNTRY_TO_LEAGUE.get(
             normalized
         )
+    @staticmethod
+    def _project_season(
+        season_code: object,
+    ) -> int | pd.NA:
+        """
+        Convertit un code de saison Understat en année de début.
 
+        Exemples
+        --------
+        2425 -> 2024
+        2526 -> 2025
+        2021/22 -> 2021
+        """
+
+        if season_code is None:
+            return pd.NA
+
+        if pd.isna(season_code):
+            return pd.NA
+
+        value = str(season_code).strip()
+
+        # --------------------------------------------------------------
+        # Code numérique Understat : 2425, 2526, etc.
+        # --------------------------------------------------------------
+
+        if (
+            value.isdigit()
+            and len(value) == 4
+        ):
+
+            return int(
+                "20"
+                + value[:2]
+            )
+
+        # --------------------------------------------------------------
+        # Code explicite : 2024/25 ou 24/25
+        # --------------------------------------------------------------
+
+        if "/" in value:
+
+            left = value.split(
+                "/",
+                1,
+            )[0].strip()
+
+            if left.isdigit():
+
+                year = int(left)
+
+                if len(left) == 2:
+                    return 2000 + year
+
+                if len(left) == 4:
+                    return year
+
+        return pd.NA
     # ======================================================================
     # READER
     # ======================================================================
@@ -201,10 +260,16 @@ class UnderstatXgXaSource(XgXaSource):
                 cache_path
             )
 
-            return self._normalize_schedule(
+            df = self._normalize_schedule(
                 df
             )
 
+            # Convention projet :
+            # 2024 = saison 2024/25
+            df["season"] = int(season)
+
+            return df
+        
         print(
             "[Understat] "
             f"Chargement calendrier : "
@@ -246,7 +311,14 @@ class UnderstatXgXaSource(XgXaSource):
             df
         )
 
+        # --------------------------------------------------------------
+        # CONVENTION PROJET
+        # --------------------------------------------------------------
+
         if not df.empty:
+
+            df["season"] = int(season)
+
             df.to_parquet(
                 cache_path,
                 index=False,
@@ -472,6 +544,16 @@ class UnderstatXgXaSource(XgXaSource):
                 result
             )
         )
+
+        # --------------------------------------------------------------
+        # CONVENTION PROJET
+        # --------------------------------------------------------------
+
+        if not result.empty:
+
+            result["season"] = int(
+                season
+            )
 
         result = (
             result
