@@ -1422,6 +1422,50 @@ class XgXaEnricher:
             errors="coerce",
         )
 
+        # ------------------------------------------------------------------
+        # PROTECTION CONTRE LA COLLISION DES COLONNES
+        # ------------------------------------------------------------------
+        #
+        # Le dataset performance possède déjà des placeholders xg/xa et
+        # xg_per90/xa_per90, actuellement NULL.
+        #
+        # Ils doivent être retirés avant le merge afin d'éviter la création
+        # de colonnes xg_xgxa / xa_xgxa et de conserver les métriques
+        # Understat dans les colonnes canoniques xg / xa.
+        #
+
+        placeholder_columns = [
+            "xg",
+            "xa",
+            "xg_per90",
+            "xa_per90",
+        ]
+
+        for column in placeholder_columns:
+
+            if column in performance.columns:
+
+                non_null_count = (
+                    performance[column]
+                    .notna()
+                    .sum()
+                )
+
+                if non_null_count > 0:
+                    raise ValueError(
+                        f"La colonne performance '{column}' "
+                        f"contient déjà {non_null_count} valeurs non nulles. "
+                        "Le pipeline refuse d'écraser des métriques existantes."
+                    )
+
+        performance = performance.drop(
+            columns=[
+                column
+                for column in placeholder_columns
+                if column in performance.columns
+            ]
+        )
+
         result = performance.merge(
             aggregated,
             on=[

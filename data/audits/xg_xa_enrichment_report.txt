@@ -1,19 +1,63 @@
-XG/XA ENRICHMENT V1 — AUDIT
+XG/XA ENRICHMENT V1 — REPORT
 
-Game/player rows : 11,567
-Performance rows : 191,355
+SOURCE
+------
+Name       : Understat
+Library    : soccerdata
+Version    : 1.9.1
 
-VALIDATION
-----------
-                           check status          actual
-              UNIQUE_GAME_PLAYER   PASS    duplicates=0
-                 NON_NEGATIVE_XG   PASS negative_rows=0
-                 NON_NEGATIVE_XA   PASS negative_rows=0
-      CONFIRMED_HAS_SOURCE_MATCH   PASS          rows=0
-             CONFIRMED_HAS_XG_XA   PASS          rows=0
-UNIQUE_PLAYER_COMPETITION_SEASON   PASS    duplicates=0
-  COMPLETE_HAS_ALL_XG_XA_METRICS   FAIL         rows=13
-             NO_MINUTES_MISMATCH   PASS          rows=0
-              NON_NEGATIVE_PER90   PASS  invalid_rows=0
+METHODOLOGY
+-----------
+Grain source           : game_id × player_id
+XG reconstruction      : NO
+XA reconstruction      : NO
+Missing source data    : NULL
+Partial aggregation    : NOT USED FOR SCORING
+Only confirmed maps    : YES
 
-FAILURES : 1
+GAME/PLAYER DATA
+----------------
+Rows                     : 11,567
+Unique game/player       : 11,567
+xG non-null              : 3,159
+xA non-null              : 3,159
+
+MATCH MAPPING
+-------------
+mapping_status
+NaN                8200
+MATCH_CONFIRMED    3367
+
+PLAYER MAPPING
+--------------
+player_mapping_status
+PLAYER_UNMATCHED    8408
+PLAYER_CONFIRMED    3159
+
+AGGREGATION
+-----------
+Groups                   : 562
+Complete source groups   : 13
+Partial source groups    : 549
+
+PERFORMANCE DATASET
+-------------------
+Rows                     : 191,355
+COMPLETE                 : 13
+PARTIAL                 : 549
+OUT_OF_SCOPE            : 190,793
+MINUTES_MISMATCH_REVIEW : 0
+
+PERFORMANCE xG/xA
+-----------------
+xG non-null             : 13
+xA non-null             : 13
+xG/90 non-null          : 13
+xA/90 non-null          : 13
+
+IMPORTANT
+---------
+Les groupes incomplets ne reçoivent pas de xG/xA agrégé.
+Aucun NULL n'est transformé en zéro.
+Aucune métrique n'est reconstruite à partir des buts/passes.
+Le PerformanceScorer n'est pas modifié par cette étape.
