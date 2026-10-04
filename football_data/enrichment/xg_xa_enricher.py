@@ -290,7 +290,7 @@ class XgXaEnricher:
         ):
 
             # --------------------------------------------------------------
-            # SOURCE UNDERSTAT NON DISPONIBLE POUR CE GROUPE
+            # SOURCE UNDERSTAT NON DISPONIBLE / PAYS NON MAPPÉ
             # --------------------------------------------------------------
 
             if pd.isna(league):
@@ -301,50 +301,35 @@ class XgXaEnricher:
 
                     fallback_rows.append(
                         {
-                            "tm_game_id": tm_row[
-                                "game_id"
-                            ],
+                            "tm_game_id": tm_row["game_id"],
                             "understat_game_id": pd.NA,
-                            "tm_match_date": tm_row[
-                                "match_date"
-                            ],
+                            "tm_match_date": tm_row["match_date"],
                             "understat_match_date": pd.NaT,
-                            "tm_home_team": tm_row[
-                                "home_team"
-                            ],
-                            "tm_away_team": tm_row[
-                                "away_team"
-                            ],
+                            "tm_home_team": tm_row["home_team"],
+                            "tm_away_team": tm_row["away_team"],
                             "understat_home_team": pd.NA,
                             "understat_away_team": pd.NA,
                             "candidate_count": 0,
                             "candidate_ids": "",
-                            "mapping_status": (
-                                "MATCH_UNMATCHED"
-                            ),
-                            "mapping_method": (
-                                "COUNTRY_NOT_MAPPED"
-                            ),
+                            "mapping_status": "MATCH_UNMATCHED",
+                            "mapping_method": "COUNTRY_NOT_MAPPED",
                             "mapping_reason": (
                                 "NO_UNDERSTAT_LEAGUE_MAPPING"
                             ),
                             "understat_league": pd.NA,
-                            "season": season,
+                            "season": int(season),
                         }
                     )
 
                 if fallback_rows:
-
                     match_mappings.append(
-                        pd.DataFrame(
-                            fallback_rows
-                        )
+                        pd.DataFrame(fallback_rows)
                     )
 
                 continue
 
             # --------------------------------------------------------------
-            # SOURCE UNDERSTAT
+            # SOUS-ENSEMBLE UNDERSTAT
             # --------------------------------------------------------------
 
             us_group = understat_schedule[
@@ -362,6 +347,10 @@ class XgXaEnricher:
                     == season
                 )
             ].copy()
+
+            # --------------------------------------------------------------
+            # CALENDRIER UNDERSTAT ABSENT
+            # --------------------------------------------------------------
 
             if us_group.empty:
 
@@ -371,27 +360,17 @@ class XgXaEnricher:
 
                     fallback_rows.append(
                         {
-                            "tm_game_id": tm_row[
-                                "game_id"
-                            ],
+                            "tm_game_id": tm_row["game_id"],
                             "understat_game_id": pd.NA,
-                            "tm_match_date": tm_row[
-                                "match_date"
-                            ],
+                            "tm_match_date": tm_row["match_date"],
                             "understat_match_date": pd.NaT,
-                            "tm_home_team": tm_row[
-                                "home_team"
-                            ],
-                            "tm_away_team": tm_row[
-                                "away_team"
-                            ],
+                            "tm_home_team": tm_row["home_team"],
+                            "tm_away_team": tm_row["away_team"],
                             "understat_home_team": pd.NA,
                             "understat_away_team": pd.NA,
                             "candidate_count": 0,
                             "candidate_ids": "",
-                            "mapping_status": (
-                                "MATCH_UNMATCHED"
-                            ),
+                            "mapping_status": "MATCH_UNMATCHED",
                             "mapping_method": (
                                 "UNDERSTAT_SCHEDULE_UNAVAILABLE"
                             ),
@@ -399,107 +378,36 @@ class XgXaEnricher:
                                 "SOURCE_SCHEDULE_UNAVAILABLE"
                             ),
                             "understat_league": league,
-                            "season": season,
+                            "season": int(season),
                         }
                     )
 
-                match_mappings.append(
-                    pd.DataFrame(
-                        fallback_rows
-                    )
-                )
-
-                continue
-
-            mapped = build_match_mapping(
-                transfermarkt_matches=tm_group,
-                understat_schedule=us_group,
-            )
-
-            mapped[
-                "understat_league"
-            ] = league
-
-            mapped[
-                "season"
-            ] = int(season)
-
-            match_mappings.append(
-                mapped
-            )
-
-            us_group = understat_schedule[
-                (
-                    understat_schedule[
-                        "understat_league"
-                    ]
-                    == league
-                )
-                &
-                (
-                    understat_schedule[
-                        "season"
-                    ]
-                    == season
-                )
-            ].copy()
-
-            if us_group.empty:
-
-                for _, tm_row in tm_group.iterrows():
-
+                if fallback_rows:
                     match_mappings.append(
-                        pd.DataFrame(
-                            [
-                                {
-                                    "tm_game_id": tm_row[
-                                        "game_id"
-                                    ],
-                                    "understat_game_id": pd.NA,
-                                    "tm_match_date": tm_row[
-                                        "match_date"
-                                    ],
-                                    "understat_match_date": pd.NaT,
-                                    "tm_home_team": tm_row[
-                                        "home_team"
-                                    ],
-                                    "tm_away_team": tm_row[
-                                        "away_team"
-                                    ],
-                                    "understat_home_team": pd.NA,
-                                    "understat_away_team": pd.NA,
-                                    "candidate_count": 0,
-                                    "candidate_ids": "",
-                                    "mapping_status": (
-                                        "MATCH_UNMATCHED"
-                                    ),
-                                    "mapping_method": (
-                                        "UNDERSTAT_SCHEDULE_UNAVAILABLE"
-                                    ),
-                                    "mapping_reason": (
-                                        "SOURCE_SCHEDULE_UNAVAILABLE"
-                                    ),
-                                }
-                            ]
-                        )
+                        pd.DataFrame(fallback_rows)
                     )
 
                 continue
+
+            # --------------------------------------------------------------
+            # MATCH MAPPING UNIQUE
+            # --------------------------------------------------------------
 
             mapped = build_match_mapping(
                 transfermarkt_matches=tm_group,
                 understat_schedule=us_group,
             )
 
-            mapped[
-                "understat_league"
-            ] = league
-
-            mapped["season"] = season
+            mapped["understat_league"] = league
+            mapped["season"] = int(season)
 
             match_mappings.append(
                 mapped
             )
+
+        # ------------------------------------------------------------------
+        # CONSOLIDATION UNIQUE
+        # ------------------------------------------------------------------
 
         if match_mappings:
 
@@ -508,38 +416,61 @@ class XgXaEnricher:
                 ignore_index=True,
             )
 
-            if match_mappings:
-
-                match_mapping = pd.concat(
-                    match_mappings,
-                    ignore_index=True,
-                )
-
-            else:
-
-                match_mapping = pd.DataFrame(
-                    columns=[
-                        "tm_game_id",
-                        "understat_game_id",
-                        "tm_match_date",
-                        "understat_match_date",
-                        "tm_home_team",
-                        "tm_away_team",
-                        "understat_home_team",
-                        "understat_away_team",
-                        "candidate_count",
-                        "candidate_ids",
-                        "mapping_status",
-                        "mapping_method",
-                        "mapping_reason",
-                        "understat_league",
-                        "season",
-                    ]
-                )
-
         else:
 
-            match_mapping = pd.DataFrame()
+            match_mapping = pd.DataFrame(
+                columns=[
+                    "tm_game_id",
+                    "understat_game_id",
+                    "tm_match_date",
+                    "understat_match_date",
+                    "tm_home_team",
+                    "tm_away_team",
+                    "understat_home_team",
+                    "understat_away_team",
+                    "candidate_count",
+                    "candidate_ids",
+                    "mapping_status",
+                    "mapping_method",
+                    "mapping_reason",
+                    "understat_league",
+                    "season",
+                ]
+            )
+
+        # ------------------------------------------------------------------
+        # CONTRÔLE DU GRAIN DU MATCH MAPPING
+        # ------------------------------------------------------------------
+
+        if not match_mapping.empty:
+
+            duplicated_mapping = match_mapping.duplicated(
+                subset=[
+                    "tm_game_id",
+                ],
+                keep=False,
+            )
+
+            if duplicated_mapping.any():
+
+                sample = (
+                    match_mapping.loc[
+                        duplicated_mapping,
+                        [
+                            "tm_game_id",
+                            "mapping_status",
+                            "mapping_method",
+                        ],
+                    ]
+                    .drop_duplicates()
+                    .head(20)
+                )
+
+                raise ValueError(
+                    "Duplication du grain match_mapping : "
+                    "plus d'une ligne pour un même tm_game_id.\n"
+                    f"{sample.to_string(index=False)}"
+                )
 
         # ------------------------------------------------------------------
         # UNDERSTAT PLAYER MATCH DATA
@@ -1397,6 +1328,10 @@ class XgXaEnricher:
                 + ", ".join(sorted(missing))
             )
 
+        # ------------------------------------------------------------------
+        # NORMALISATION DES TYPES
+        # ------------------------------------------------------------------
+
         performance["player_id"] = pd.to_numeric(
             performance["player_id"],
             errors="coerce",
@@ -1412,6 +1347,8 @@ class XgXaEnricher:
             errors="coerce",
         )
 
+        aggregated = aggregated.copy()
+
         aggregated["player_id"] = pd.to_numeric(
             aggregated["player_id"],
             errors="coerce",
@@ -1426,12 +1363,10 @@ class XgXaEnricher:
         # PROTECTION CONTRE LA COLLISION DES COLONNES
         # ------------------------------------------------------------------
         #
-        # Le dataset performance possède déjà des placeholders xg/xa et
-        # xg_per90/xa_per90, actuellement NULL.
-        #
-        # Ils doivent être retirés avant le merge afin d'éviter la création
-        # de colonnes xg_xgxa / xa_xgxa et de conserver les métriques
-        # Understat dans les colonnes canoniques xg / xa.
+        # Le dataset performance contient déjà des placeholders xg/xa/xg_per90/xa_per90.
+        # Ils doivent être NULL avant l'enrichissement.
+        # On les retire avant le merge afin que les métriques Understat deviennent
+        # directement les colonnes canoniques xg / xa.
         #
 
         placeholder_columns = [
@@ -1441,30 +1376,55 @@ class XgXaEnricher:
             "xa_per90",
         ]
 
-        for column in placeholder_columns:
+        existing_placeholder_columns = [
+            column
+            for column in placeholder_columns
+            if column in performance.columns
+        ]
 
-            if column in performance.columns:
+        for column in existing_placeholder_columns:
 
-                non_null_count = (
-                    performance[column]
-                    .notna()
-                    .sum()
+            non_null_count = (
+                performance[column]
+                .notna()
+                .sum()
+            )
+
+            if non_null_count > 0:
+                raise ValueError(
+                    f"La colonne performance '{column}' "
+                    f"contient déjà {non_null_count} valeurs non nulles. "
+                    "Le pipeline refuse d'écraser des métriques existantes."
                 )
 
-                if non_null_count > 0:
-                    raise ValueError(
-                        f"La colonne performance '{column}' "
-                        f"contient déjà {non_null_count} valeurs non nulles. "
-                        "Le pipeline refuse d'écraser des métriques existantes."
-                    )
-
         performance = performance.drop(
-            columns=[
-                column
-                for column in placeholder_columns
-                if column in performance.columns
-            ]
+            columns=existing_placeholder_columns
         )
+
+        # ------------------------------------------------------------------
+        # UNICITÉ DE L'AGRÉGAT SOURCE
+        # ------------------------------------------------------------------
+
+        aggregated_duplicates = aggregated.duplicated(
+            subset=[
+                "player_id",
+                "season",
+                "competition_id",
+            ],
+            keep=False,
+        )
+
+        if aggregated_duplicates.any():
+
+            raise ValueError(
+                "Agrégat xG/xA non unique sur "
+                "(player_id, season, competition_id) : "
+                f"{int(aggregated_duplicates.sum())} lignes."
+            )
+
+        # ------------------------------------------------------------------
+        # MERGE
+        # ------------------------------------------------------------------
 
         result = performance.merge(
             aggregated,
@@ -1474,6 +1434,7 @@ class XgXaEnricher:
                 "competition_id",
             ],
             how="left",
+            validate="one_to_one",
             suffixes=(
                 "",
                 "_xgxa",
@@ -1517,7 +1478,7 @@ class XgXaEnricher:
         )
 
         # ------------------------------------------------------------------
-        # MINUTES CONSISTENCY
+        # COHÉRENCE DES MINUTES
         # ------------------------------------------------------------------
 
         result[
@@ -1531,7 +1492,7 @@ class XgXaEnricher:
         )
 
         # ------------------------------------------------------------------
-        # CALCUL xG/xA PER90
+        # IDENTIFICATION DES GROUPES COMPLETS
         # ------------------------------------------------------------------
 
         complete = (
@@ -1555,6 +1516,10 @@ class XgXaEnricher:
             & result["xg"].notna()
             & result["xa"].notna()
         )
+
+        # ------------------------------------------------------------------
+        # MÉTRIQUES CANONIQUES
+        # ------------------------------------------------------------------
 
         result["xg"] = (
             result["xg"]
@@ -1592,22 +1557,32 @@ class XgXaEnricher:
             )
         )
 
-        result["xg_xa_enrichment_status"] = np.select(
+        # ------------------------------------------------------------------
+        # STATUT FINAL
+        # ------------------------------------------------------------------
+
+        result[
+            "xg_xa_enrichment_status"
+        ] = np.select(
             [
-                result[
-                    "xg_xa_enrichment_status"
-                ].eq(
-                    "COMPLETE_SOURCE_COVERAGE"
-                )
-                &
-                ~result[
-                    "minutes_consistent_with_game_level"
-                ],
+                (
+                    result[
+                        "xg_xa_enrichment_status"
+                    ].eq(
+                        "COMPLETE_SOURCE_COVERAGE"
+                    )
+                    &
+                    ~result[
+                        "minutes_consistent_with_game_level"
+                    ]
+                ),
+
                 result[
                     "xg_xa_enrichment_status"
                 ].eq(
                     "COMPLETE_SOURCE_COVERAGE"
                 ),
+
                 result[
                     "xg_xa_enrichment_status"
                 ].eq(
@@ -1621,6 +1596,34 @@ class XgXaEnricher:
             ],
             default="OUT_OF_SCOPE",
         )
+
+        # ------------------------------------------------------------------
+        # CONTRÔLE DE SÉCURITÉ FINAL
+        # ------------------------------------------------------------------
+
+        invalid_complete = (
+            result[
+                "xg_xa_enrichment_status"
+            ].eq("COMPLETE")
+            &
+            (
+                result["xg"].isna()
+                |
+                result["xa"].isna()
+                |
+                result["xg_per90"].isna()
+                |
+                result["xa_per90"].isna()
+            )
+        )
+
+        if invalid_complete.any():
+
+            raise ValueError(
+                "Incohérence finale : "
+                f"{int(invalid_complete.sum())} lignes sont "
+                "COMPLETE mais possèdent des métriques xG/xA manquantes."
+            )
 
         return result
 

@@ -12,7 +12,7 @@ GAME_PLAYER_DEFAULT = Path(
 )
 
 PERFORMANCE_DEFAULT = Path(
-    "data/performances/"
+    "data/enrichment/"
     "player_competition_season_performance_xgxa.csv"
 )
 
