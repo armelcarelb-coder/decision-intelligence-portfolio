@@ -25,6 +25,7 @@ TEAM_ALIASES = {
     "nottm forest": "nottingham forest",
     "leicester": "leicester city",
     "leeds": "leeds united",
+    "ipswich": "ipswich town",
 
     # Spain
     "atletico": "atletico madrid",
@@ -107,6 +108,37 @@ def normalize_text(
         " ",
         text,
     ).strip()
+
+    # ------------------------------------------------------------------
+    # NORMALISATION DES MARQUEURS DE TYPE DE CLUB
+    # ------------------------------------------------------------------
+    #
+    # Sous la forme observée dans le périmètre V1 :
+    #
+    #   AFC Bournemouth -> Bournemouth
+    #   Fulham FC       -> Fulham
+    #   Arsenal FC      -> Arsenal
+    #
+    # On ne retire PAS "FC" en préfixe afin de préserver les alias
+    # spécifiques déjà définis, notamment FC Bayern München.
+    #
+
+    tokens = text.split()
+
+    if tokens and tokens[0] == "afc":
+        tokens.pop(0)
+
+    if tokens and tokens[-1] in {
+        "fc",
+        "afc",
+    }:
+        tokens.pop()
+
+    text = " ".join(tokens)
+
+    # ------------------------------------------------------------------
+    # ALIAS MÉTIER
+    # ------------------------------------------------------------------
 
     return TEAM_ALIASES.get(
         text,

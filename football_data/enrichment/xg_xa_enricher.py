@@ -322,8 +322,11 @@ class XgXaEnricher:
                     )
 
                 if fallback_rows:
+
                     match_mappings.append(
-                        pd.DataFrame(fallback_rows)
+                        pd.DataFrame(
+                            fallback_rows
+                        )
                     )
 
                 continue
@@ -383,14 +386,17 @@ class XgXaEnricher:
                     )
 
                 if fallback_rows:
+
                     match_mappings.append(
-                        pd.DataFrame(fallback_rows)
+                        pd.DataFrame(
+                            fallback_rows
+                        )
                     )
 
                 continue
 
             # --------------------------------------------------------------
-            # MATCH MAPPING UNIQUE
+            # MATCH MAPPING
             # --------------------------------------------------------------
 
             mapped = build_match_mapping(
