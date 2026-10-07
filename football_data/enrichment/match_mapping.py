@@ -515,6 +515,9 @@ def build_player_mapping(
     transfermarkt_player_games: pd.DataFrame,
     understat_player_stats: pd.DataFrame,
     match_mapping: pd.DataFrame,
+    identity_crosswalk_path: str = (
+        "data/audits/player_identity_crosswalk.csv"
+    ),
 ) -> pd.DataFrame:
 
     tm = transfermarkt_player_games.copy()
@@ -524,7 +527,7 @@ def build_player_mapping(
     mm = match_mapping.copy()
 
     # ------------------------------------------------------------------
-    # SCHEMA UNDERSTAT VIDE
+    # SCHEMA UNDERSTAT
     # ------------------------------------------------------------------
 
     understat_columns = [
@@ -545,7 +548,6 @@ def build_player_mapping(
     for column in understat_columns:
 
         if column not in us.columns:
-
             us[column] = pd.NA
 
     # ------------------------------------------------------------------
@@ -555,11 +557,12 @@ def build_player_mapping(
     for column in [
         "tm_game_id",
         "understat_game_id",
+        "mapping_status",
         "mapping_method",
+        "mapping_reason",
     ]:
 
         if column not in mm.columns:
-
             mm[column] = pd.NA
 
     # ------------------------------------------------------------------
@@ -586,8 +589,130 @@ def build_player_mapping(
         .map(normalize_text)
     )
 
+    tm["player_id"] = pd.to_numeric(
+        tm["player_id"],
+        errors="coerce",
+    )
+
+    us["player_id"] = pd.to_numeric(
+        us["player_id"],
+        errors="coerce",
+    )
+
     # ------------------------------------------------------------------
-    # MATCHES CONFIRMES UNIQUEMENT
+    # PLAYER IDENTITY CROSSWALK
+    # ------------------------------------------------------------------
+
+    crosswalk_path = Path(
+        identity_crosswalk_path
+    )
+
+    if not crosswalk_path.exists():
+
+        raise FileNotFoundError(
+            "Crosswalk identité joueur introuvable : "
+            f"{crosswalk_path}"
+        )
+
+    crosswalk = pd.read_csv(
+        crosswalk_path
+    )
+
+    required_crosswalk_columns = {
+        "transfermarkt_player_id",
+        "transfermarkt_player_name",
+        "understat_player_id",
+        "understat_player_name",
+        "identity_status",
+        "identity_method",
+    }
+
+    missing_crosswalk = (
+        required_crosswalk_columns
+        - set(crosswalk.columns)
+    )
+
+    if missing_crosswalk:
+
+        raise ValueError(
+            "Colonnes manquantes dans le crosswalk : "
+            + ", ".join(
+                sorted(
+                    missing_crosswalk
+                )
+            )
+        )
+
+    crosswalk[
+        "transfermarkt_player_id"
+    ] = pd.to_numeric(
+        crosswalk[
+            "transfermarkt_player_id"
+        ],
+        errors="coerce",
+    )
+
+    crosswalk[
+        "understat_player_id"
+    ] = pd.to_numeric(
+        crosswalk[
+            "understat_player_id"
+        ],
+        errors="coerce",
+    )
+
+    if crosswalk[
+        "transfermarkt_player_id"
+    ].isna().any():
+
+        raise ValueError(
+            "Crosswalk : Transfermarkt player_id invalide."
+        )
+
+    if crosswalk[
+        "understat_player_id"
+    ].isna().any():
+
+        raise ValueError(
+            "Crosswalk : Understat player_id invalide."
+        )
+
+    if (
+        crosswalk[
+            "transfermarkt_player_id"
+        ]
+        .duplicated()
+        .any()
+    ):
+
+        raise ValueError(
+            "Crosswalk : Transfermarkt player_id dupliqué."
+        )
+
+    if (
+        crosswalk[
+            "understat_player_id"
+        ]
+        .duplicated()
+        .any()
+    ):
+
+        raise ValueError(
+            "Crosswalk : Understat player_id dupliqué."
+        )
+
+    crosswalk_by_tm_id = (
+        crosswalk
+        .set_index(
+            "transfermarkt_player_id"
+        )
+        .to_dict(
+            orient="index"
+        )
+    )
+
+    # ------------------------------------------------------------------
+    # MATCHES CONFIRMÉS UNIQUEMENT
     # ------------------------------------------------------------------
 
     confirmed_matches = mm[
@@ -595,92 +720,46 @@ def build_player_mapping(
         == "MATCH_CONFIRMED"
     ].copy()
 
-    # --------------------------------------------------------------
-    # Aucun match confirmé
-    # --------------------------------------------------------------
+    # ------------------------------------------------------------------
+    # AUCUN MATCH CONFIRMÉ
+    # ------------------------------------------------------------------
 
     if confirmed_matches.empty:
 
-
         result = tm.copy()
 
-        result[
-            "understat_game_id"
-        ] = pd.NA
+        result["understat_game_id"] = pd.NA
+        result["understat_player_id"] = pd.NA
 
-        result[
-            "understat_player_id"
-        ] = pd.NA
+        result["mapping_status"] = (
+            "MATCH_UNMATCHED"
+        )
 
-        result[
-            "mapping_status"
-        ] = "MATCH_UNMATCHED"
+        result["mapping_method"] = pd.NA
+        result["mapping_reason"] = pd.NA
 
-        result[
-            "player_mapping_status"
-        ] = "PLAYER_UNMATCHED"
+        result["player_mapping_status"] = (
+            "PLAYER_UNMATCHED"
+        )
 
-        result[
-            "player_mapping_method"
-        ] = "NO_CONFIRMED_MATCH"
+        result["player_mapping_method"] = (
+            "NO_CONFIRMED_MATCH"
+        )
 
         result["xg"] = np.nan
         result["xa"] = np.nan
 
-        result[
-            "source_name"
-        ] = pd.NA
+        result["source_name"] = pd.NA
+        result["source_library"] = pd.NA
+        result["source_version"] = pd.NA
+        result["source_url"] = pd.NA
+        result["source_retrieved_at"] = pd.NaT
 
-        result[
-            "source_library"
-        ] = pd.NA
-
-        result[
-            "source_version"
-        ] = pd.NA
-
-        result[
-            "source_url"
-        ] = pd.NA
-
-        result[
-            "source_retrieved_at"
-        ] = pd.NaT
-
-        
-
-        # ------------------------------------------------------------------
-        # SCHEMA DE TRAÇABILITÉ GARANTI
-        # ------------------------------------------------------------------
-
-        required_mapping_columns = {
-            "mapping_status": pd.NA,
-            "mapping_method": pd.NA,
-            "mapping_reason": pd.NA,
-            "understat_game_id": pd.NA,
-            "understat_player_id": pd.NA,
-            "player_mapping_status": pd.NA,
-            "player_mapping_method": pd.NA,
-            "xg": pd.NA,
-            "xa": pd.NA,
-        }
-
-        for column, default in required_mapping_columns.items():
-
-            if column not in result.columns:
-                result[column] = default
-
-        result["xg"] = pd.to_numeric(
-            result["xg"],
-            errors="coerce",
-        )
-
-        result["xa"] = pd.to_numeric(
-            result["xa"],
-            errors="coerce",
-        )
-        
         return result
+
+    # ------------------------------------------------------------------
+    # ATTACHEMENT DU MATCH UNDERSTAT
+    # ------------------------------------------------------------------
 
     tm = tm.merge(
         confirmed_matches[
@@ -691,7 +770,8 @@ def build_player_mapping(
                 "mapping_method",
                 "mapping_reason",
             ]
-        ].drop_duplicates(
+        ]
+        .drop_duplicates(
             subset=[
                 "tm_game_id"
             ]
@@ -702,6 +782,10 @@ def build_player_mapping(
     )
 
     rows = []
+
+    # ------------------------------------------------------------------
+    # PLAYER MAPPING
+    # ------------------------------------------------------------------
 
     for _, tm_row in tm.iterrows():
 
@@ -726,24 +810,162 @@ def build_player_mapping(
 
             continue
 
-        source_candidates = us[
+        understat_game_id = int(
+            tm_row[
+                "understat_game_id"
+            ]
+        )
+
+        # --------------------------------------------------------------
+        # CANDIDATS UNDERSTAT : MÊME MATCH + MÊME ÉQUIPE
+        # --------------------------------------------------------------
+
+        source_team_candidates = us[
             (
                 us["game_id"]
-                == int(
-                    tm_row["understat_game_id"]
-                )
+                == understat_game_id
             )
             &
             (
                 us["team_norm"]
                 == tm_row["team_norm"]
             )
-            &
-            (
-                us["player_norm"]
-                == tm_row["player_norm"]
-            )
+        ].copy()
+
+        # --------------------------------------------------------------
+        # CROSSWALK D'IDENTITÉ
+        # --------------------------------------------------------------
+
+        tm_player_id = tm_row[
+            "player_id"
         ]
+
+        crosswalk_entry = (
+            crosswalk_by_tm_id.get(
+                tm_player_id
+            )
+        )
+
+        if crosswalk_entry is not None:
+
+            expected_understat_id = int(
+                crosswalk_entry[
+                    "understat_player_id"
+                ]
+            )
+
+            source_candidates = (
+                source_team_candidates[
+                    source_team_candidates[
+                        "player_id"
+                    ]
+                    == expected_understat_id
+                ]
+            )
+
+            # ----------------------------------------------------------
+            # IDENTITÉ CONFIRMÉE
+            # ----------------------------------------------------------
+
+            if len(source_candidates) == 1:
+
+                source = (
+                    source_candidates.iloc[0]
+                )
+
+                rows.append(
+                    {
+                        **tm_row.to_dict(),
+                        "understat_player_id": (
+                            source["player_id"]
+                        ),
+                        "player_mapping_status": (
+                            "PLAYER_CONFIRMED"
+                        ),
+                        "player_mapping_method": (
+                            "IDENTITY_CROSSWALK_TEAM_PLAYER"
+                        ),
+                        "xg": source["xg"],
+                        "xa": source["xa"],
+                        "source_name": (
+                            source["source_name"]
+                        ),
+                        "source_library": (
+                            source["source_library"]
+                        ),
+                        "source_version": (
+                            source["source_version"]
+                        ),
+                        "source_url": (
+                            source["source_url"]
+                        ),
+                        "source_retrieved_at": (
+                            source[
+                                "source_retrieved_at"
+                            ]
+                        ),
+                    }
+                )
+
+                continue
+
+            # ----------------------------------------------------------
+            # CROSSWALK MAIS ID ABSENT DU MATCH
+            # ----------------------------------------------------------
+
+            if len(source_candidates) == 0:
+
+                rows.append(
+                    {
+                        **tm_row.to_dict(),
+                        "understat_player_id": pd.NA,
+                        "player_mapping_status": (
+                            "PLAYER_REVIEW_CROSSWALK_ID_NOT_FOUND"
+                        ),
+                        "player_mapping_method": (
+                            "IDENTITY_CROSSWALK_ID_NOT_FOUND"
+                        ),
+                        "xg": pd.NA,
+                        "xa": pd.NA,
+                    }
+                )
+
+                continue
+
+            # ----------------------------------------------------------
+            # PLUSIEURS OCCURRENCES
+            # ----------------------------------------------------------
+
+            rows.append(
+                {
+                    **tm_row.to_dict(),
+                    "understat_player_id": pd.NA,
+                    "player_mapping_status": (
+                        "PLAYER_REVIEW_CROSSWALK_MULTIPLE_MATCHES"
+                    ),
+                    "player_mapping_method": (
+                        "IDENTITY_CROSSWALK_MULTIPLE_MATCHES"
+                    ),
+                    "xg": pd.NA,
+                    "xa": pd.NA,
+                }
+            )
+
+            continue
+
+        # --------------------------------------------------------------
+        # PAS DE CROSSWALK :
+        # IDENTITÉ EXACTE NOM + ÉQUIPE
+        # --------------------------------------------------------------
+
+        source_candidates = (
+            source_team_candidates[
+                source_team_candidates[
+                    "player_norm"
+                ]
+                == tm_row["player_norm"]
+            ]
+        )
 
         if len(source_candidates) == 1:
 
@@ -787,13 +1009,14 @@ def build_player_mapping(
 
             continue
 
-        # Nom identique mais équipe différente
+        # --------------------------------------------------------------
+        # MÊME NOM MAIS AUTRE ÉQUIPE
+        # --------------------------------------------------------------
+
         same_name = us[
             (
                 us["game_id"]
-                == int(
-                    tm_row["understat_game_id"]
-                )
+                == understat_game_id
             )
             &
             (
@@ -808,33 +1031,61 @@ def build_player_mapping(
                 "PLAYER_REVIEW_TEAM_MISMATCH"
             )
 
+            method = (
+                "EXACT_NAME_DIFFERENT_TEAM"
+            )
+
         else:
 
-            status = "PLAYER_UNMATCHED"
+            status = (
+                "PLAYER_UNMATCHED"
+            )
+
+            method = (
+                "NO_CONFIRMED_PLAYER_MATCH"
+            )
 
         rows.append(
             {
                 **tm_row.to_dict(),
                 "understat_player_id": pd.NA,
                 "player_mapping_status": status,
-                "player_mapping_method": (
-                    "NO_CONFIRMED_PLAYER_MATCH"
-                ),
+                "player_mapping_method": method,
                 "xg": pd.NA,
                 "xa": pd.NA,
             }
         )
 
-    result = pd.DataFrame(rows)
+    # ------------------------------------------------------------------
+    # RESULTAT FINAL
+    # ------------------------------------------------------------------
+
+    result = pd.DataFrame(
+        rows
+    )
 
     if result.empty:
         return result
 
-    if "xg" not in result.columns:
-        result["xg"] = pd.NA
+    required_mapping_columns = {
+        "mapping_status": pd.NA,
+        "mapping_method": pd.NA,
+        "mapping_reason": pd.NA,
+        "understat_game_id": pd.NA,
+        "understat_player_id": pd.NA,
+        "player_mapping_status": pd.NA,
+        "player_mapping_method": pd.NA,
+        "xg": pd.NA,
+        "xa": pd.NA,
+    }
 
-    if "xa" not in result.columns:
-        result["xa"] = pd.NA
+    for (
+        column,
+        default,
+    ) in required_mapping_columns.items():
+
+        if column not in result.columns:
+            result[column] = default
 
     result["xg"] = pd.to_numeric(
         result["xg"],
