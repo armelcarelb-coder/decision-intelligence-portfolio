@@ -3,7 +3,12 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
+import numpy as np
 import pandas as pd
+from .performance_scorer import (
+    PerformanceScorer,
+    REQUIRED_COLUMNS as SCORER_REQUIRED_COLUMNS,
+)
 
 
 # ============================================================================
@@ -11,7 +16,7 @@ import pandas as pd
 # ============================================================================
 
 PERFORMANCE_INPUT_PATH = Path(
-    "data/performances/performance_sample.csv"
+    "data/enrichment/player_competition_season_performance_xgxa.csv"
 )
 
 PERFORMANCE_SCORED_PATH = Path(
@@ -31,10 +36,12 @@ PERFORMANCE_SCORED_REAL_OUTPUT_PATH = Path(
 )
 
 DEFAULT_DATABASE_PATHS = [
+    Path("data/historical/transfermarkt-datasets.duckdb"),
     Path("dbt/duck.db"),
     Path("data/transfermarkt-datasets.duckdb"),
     Path("transfermarkt-datasets.duckdb"),
 ]
+
 
 MIN_MINUTES = 900
 
@@ -100,18 +107,7 @@ class RealTransferLoader:
         market_value_in_eur
     """
 
-    REQUIRED_COLUMNS = [
-        "player_id",
-        "player_name",
-        "transfer_date",
-        "transfer_season",
-        "from_club_id",
-        "to_club_id",
-        "from_club_name",
-        "to_club_name",
-        "transfer_fee",
-        "market_value_in_eur",
-    ]
+    REQUIRED_COLUMNS = SCORER_REQUIRED_COLUMNS
 
     def __init__(
         self,
@@ -259,198 +255,68 @@ class RealPerformanceLoader:
         self.input_path = Path(input_path)
 
     def load(self) -> pd.DataFrame:
-
         print(
             "[RealPerformanceLoader] "
-            "Chargement des performances..."
+            "Chargement des performances enrichies..."
         )
 
         if not self.input_path.exists():
-
             raise FileNotFoundError(
                 f"Fichier introuvable : {self.input_path}"
             )
 
-        df = pd.read_csv(
-            self.input_path
-        )
+        df = pd.read_csv(self.input_path)
 
         if df.empty:
-
             raise RuntimeError(
-                "Le fichier de performances est vide."
+                "Le fichier de performances enrichies est vide."
             )
 
+        aliases = {
+            "season_start": "season_start_date",
+            "season_end": "season_end_date",
+            "competition_name": "competition",
+        }
+
+        for source, target in aliases.items():
+            if target not in df.columns and source in df.columns:
+                df = df.rename(columns={source: target})
+
+        # Valeurs explicitement manquantes, jamais des statistiques inventées.
+        if "team" not in df.columns:
+            df["team"] = pd.NA
+
+        if "starts" not in df.columns:
+            df["starts"] = np.nan
+
+        required = list(self.REQUIRED_COLUMNS) + ["player_id"]
         missing = [
-            column
-            for column in self.REQUIRED_COLUMNS
+            column for column in required
             if column not in df.columns
         ]
 
         if missing:
-
             raise ValueError(
-                "Colonnes manquantes dans les performances : "
+                "Colonnes manquantes après normalisation : "
                 + ", ".join(missing)
             )
 
+        df["player_id"] = pd.to_numeric(
+            df["player_id"],
+            errors="coerce",
+        ).astype("Int64")
+
+        print(
+            f"[RealPerformanceLoader] {len(df):,} lignes chargées."
+        )
         print(
             f"[RealPerformanceLoader] "
-            f"{len(df):,} lignes chargées."
+            f"{df['player_id'].nunique():,} identifiants joueurs."
         )
 
         return df
 
 
-# ============================================================================
-# PERFORMANCE SCORER
-# ============================================================================
-
-class PerformanceScorer:
-
-    WEIGHTS = {
-        "goals_per90": 0.30,
-        "assists_per90": 0.20,
-        "xg_per90": 0.30,
-        "xa_per90": 0.20,
-    }
-
-    def __init__(
-        self,
-        performances_df: pd.DataFrame,
-    ):
-        self.performances_df = performances_df.copy()
-
-    def calculate_scores(self) -> pd.DataFrame:
-
-        print(
-            "[PerformanceScorer] "
-            "Calcul des scores et percentiles..."
-        )
-
-        df = self.performances_df.copy()
-
-        df["season_start_date"] = pd.to_datetime(
-            df["season_start_date"],
-            errors="coerce",
-        )
-
-        df["season_end_date"] = pd.to_datetime(
-            df["season_end_date"],
-            errors="coerce",
-        )
-
-        numeric_columns = [
-            "minutes",
-            "appearances",
-            "starts",
-            "goals",
-            "assists",
-            "xg",
-            "xa",
-            "goals_per90",
-            "assists_per90",
-            "xg_per90",
-            "xa_per90",
-        ]
-
-        for column in numeric_columns:
-
-            df[column] = pd.to_numeric(
-                df[column],
-                errors="coerce",
-            )
-
-        weighted_sum = pd.Series(
-            0.0,
-            index=df.index,
-        )
-
-        available_weight = pd.Series(
-            0.0,
-            index=df.index,
-        )
-
-        for metric, weight in self.WEIGHTS.items():
-
-            values = pd.to_numeric(
-                df[metric],
-                errors="coerce",
-            )
-
-            valid = values.notna()
-
-            weighted_sum.loc[valid] += (
-                values.loc[valid]
-                * weight
-            )
-
-            available_weight.loc[valid] += weight
-
-        df["performance_score"] = (
-            weighted_sum
-            / available_weight.replace(
-                0,
-                pd.NA,
-            )
-        )
-
-        eligible = (
-            df["minutes"].fillna(0)
-            >= MIN_MINUTES
-        ) & (
-            df["performance_score"].notna()
-        )
-
-        df["performance_percentile"] = pd.NA
-
-        grouping_columns = [
-            "position",
-            "competition_level",
-            "season",
-        ]
-
-        df.loc[
-            eligible,
-            "performance_percentile",
-        ] = (
-            df.loc[eligible]
-            .groupby(grouping_columns)[
-                "performance_score"
-            ]
-            .rank(
-                method="average",
-                pct=True,
-            )
-        )
-
-        df["performance_percentile"] = pd.to_numeric(
-            df["performance_percentile"],
-            errors="coerce",
-        )
-
-        df["performance_score_status"] = (
-            "INSUFFICIENT_MINUTES"
-        )
-
-        df.loc[
-            df["minutes"].fillna(0)
-            >= MIN_MINUTES,
-            "performance_score_status",
-        ] = "VALID"
-
-        df.loc[
-            df["performance_score"].isna(),
-            "performance_score_status",
-        ] = "MISSING_METRICS"
-
-        print(
-            "[PerformanceScorer] "
-            f"{df['performance_percentile'].notna().sum():,} "
-            "percentile(s) calculé(s)."
-        )
-
-        return df
 
 
 # ============================================================================
@@ -458,6 +324,37 @@ class PerformanceScorer:
 # ============================================================================
 
 class TransferPerformanceBuilder:
+
+    @staticmethod
+    def _make_player_key(
+        df: pd.DataFrame,
+        name_column: str,
+    ) -> pd.Series:
+        """
+        Privilégie l'identifiant Transfermarkt.
+        Utilise le nom normalisé uniquement si l'identifiant manque.
+        """
+
+        names = (
+            df[name_column]
+            .astype("string")
+            .str.strip()
+            .str.casefold()
+        )
+
+        if "player_id" not in df.columns:
+            return "name:" + names
+
+        ids = pd.to_numeric(
+            df["player_id"],
+            errors="coerce",
+        )
+
+        id_keys = "id:" + ids.astype("Int64").astype("string")
+        name_keys = "name:" + names
+
+        return id_keys.where(ids.notna(), name_keys)
+
 
     def __init__(
         self,
@@ -500,13 +397,8 @@ class TransferPerformanceBuilder:
                 + ", ".join(missing)
             )
 
-        self.performances[
-            "player_key"
-        ] = (
-            self.performances["player"]
-            .astype(str)
-            .str.strip()
-            .str.casefold()
+        self.performances["player_key"] = self._make_player_key(
+            self.performances, "player"
         )
 
         self.performances[
@@ -564,13 +456,8 @@ class TransferPerformanceBuilder:
                 + ", ".join(missing)
             )
 
-        self.transfers[
-            "player_key"
-        ] = (
-            self.transfers["player_name"]
-            .astype(str)
-            .str.strip()
-            .str.casefold()
+        self.transfers["player_key"] = self._make_player_key(
+            self.transfers, "player_name"
         )
 
         self.transfers[
