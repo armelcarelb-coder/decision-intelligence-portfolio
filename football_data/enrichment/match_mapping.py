@@ -3,7 +3,6 @@ from __future__ import annotations
 import re
 import unicodedata
 from typing import Iterable
-from pathlib import Path
 import numpy as np
 import pandas as pd
 
@@ -549,6 +548,7 @@ def build_player_mapping(
     for column in understat_columns:
 
         if column not in us.columns:
+
             us[column] = pd.NA
 
     # ------------------------------------------------------------------
@@ -564,6 +564,7 @@ def build_player_mapping(
     ]:
 
         if column not in mm.columns:
+
             mm[column] = pd.NA
 
     # ------------------------------------------------------------------
@@ -667,7 +668,7 @@ def build_player_mapping(
     ].isna().any():
 
         raise ValueError(
-            "Crosswalk : Transfermarkt player_id invalide."
+            "Crosswalk : player_id Transfermarkt invalide."
         )
 
     if crosswalk[
@@ -675,31 +676,39 @@ def build_player_mapping(
     ].isna().any():
 
         raise ValueError(
-            "Crosswalk : Understat player_id invalide."
+            "Crosswalk : player_id Understat invalide."
         )
 
-    if (
+    duplicated_tm_ids = (
         crosswalk[
             "transfermarkt_player_id"
         ]
-        .duplicated()
-        .any()
-    ):
+        .duplicated(
+            keep=False
+        )
+    )
+
+    if duplicated_tm_ids.any():
 
         raise ValueError(
-            "Crosswalk : Transfermarkt player_id dupliqué."
+            "Crosswalk : un même Transfermarkt player_id "
+            "possède plusieurs correspondances."
         )
 
-    if (
+    duplicated_us_ids = (
         crosswalk[
             "understat_player_id"
         ]
-        .duplicated()
-        .any()
-    ):
+        .duplicated(
+            keep=False
+        )
+    )
+
+    if duplicated_us_ids.any():
 
         raise ValueError(
-            "Crosswalk : Understat player_id dupliqué."
+            "Crosswalk : un même Understat player_id "
+            "est associé à plusieurs Transfermarkt player_id."
         )
 
     crosswalk_by_tm_id = (
@@ -729,32 +738,56 @@ def build_player_mapping(
 
         result = tm.copy()
 
-        result["understat_game_id"] = pd.NA
-        result["understat_player_id"] = pd.NA
+        result[
+            "understat_game_id"
+        ] = pd.NA
 
-        result["mapping_status"] = (
-            "MATCH_UNMATCHED"
-        )
+        result[
+            "understat_player_id"
+        ] = pd.NA
 
-        result["mapping_method"] = pd.NA
-        result["mapping_reason"] = pd.NA
+        result[
+            "mapping_status"
+        ] = "MATCH_UNMATCHED"
 
-        result["player_mapping_status"] = (
-            "PLAYER_UNMATCHED"
-        )
+        result[
+            "mapping_method"
+        ] = pd.NA
 
-        result["player_mapping_method"] = (
-            "NO_CONFIRMED_MATCH"
-        )
+        result[
+            "mapping_reason"
+        ] = pd.NA
+
+        result[
+            "player_mapping_status"
+        ] = "PLAYER_UNMATCHED"
+
+        result[
+            "player_mapping_method"
+        ] = "NO_CONFIRMED_MATCH"
 
         result["xg"] = np.nan
         result["xa"] = np.nan
 
-        result["source_name"] = pd.NA
-        result["source_library"] = pd.NA
-        result["source_version"] = pd.NA
-        result["source_url"] = pd.NA
-        result["source_retrieved_at"] = pd.NaT
+        result[
+            "source_name"
+        ] = pd.NA
+
+        result[
+            "source_library"
+        ] = pd.NA
+
+        result[
+            "source_version"
+        ] = pd.NA
+
+        result[
+            "source_url"
+        ] = pd.NA
+
+        result[
+            "source_retrieved_at"
+        ] = pd.NaT
 
         return result
 
@@ -818,7 +851,7 @@ def build_player_mapping(
         )
 
         # --------------------------------------------------------------
-        # CANDIDATS UNDERSTAT : MÊME MATCH + MÊME ÉQUIPE
+        # JOUEURS UNDERSTAT DU MATCH + ÉQUIPE
         # --------------------------------------------------------------
 
         source_team_candidates = us[
@@ -834,7 +867,7 @@ def build_player_mapping(
         ].copy()
 
         # --------------------------------------------------------------
-        # CROSSWALK D'IDENTITÉ
+        # CROSSWALK
         # --------------------------------------------------------------
 
         tm_player_id = tm_row[
@@ -865,7 +898,7 @@ def build_player_mapping(
             )
 
             # ----------------------------------------------------------
-            # IDENTITÉ CONFIRMÉE
+            # CROSSWALK CONFIRMÉ
             # ----------------------------------------------------------
 
             if len(source_candidates) == 1:
@@ -934,7 +967,7 @@ def build_player_mapping(
                 continue
 
             # ----------------------------------------------------------
-            # PLUSIEURS OCCURRENCES
+            # CROSSWALK MAIS PLUSIEURS OCCURRENCES
             # ----------------------------------------------------------
 
             rows.append(
@@ -956,7 +989,7 @@ def build_player_mapping(
 
         # --------------------------------------------------------------
         # PAS DE CROSSWALK :
-        # IDENTITÉ EXACTE NOM + ÉQUIPE
+        # MATCH EXACT NOM + ÉQUIPE
         # --------------------------------------------------------------
 
         source_candidates = (
@@ -1011,7 +1044,7 @@ def build_player_mapping(
             continue
 
         # --------------------------------------------------------------
-        # MÊME NOM MAIS AUTRE ÉQUIPE
+        # NOM EXISTE MAIS ÉQUIPE DIFFÉRENTE
         # --------------------------------------------------------------
 
         same_name = us[
@@ -1065,8 +1098,9 @@ def build_player_mapping(
         rows
     )
 
-    if result.empty:
-        return result
+    # ------------------------------------------------------------------
+    # SCHEMA GARANTI
+    # ------------------------------------------------------------------
 
     required_mapping_columns = {
         "mapping_status": pd.NA,
@@ -1086,6 +1120,7 @@ def build_player_mapping(
     ) in required_mapping_columns.items():
 
         if column not in result.columns:
+
             result[column] = default
 
     result["xg"] = pd.to_numeric(
