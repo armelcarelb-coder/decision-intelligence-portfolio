@@ -1,62 +1,19 @@
-XG/XA ENRICHMENT V1 — REPORT
+XG/XA ENRICHMENT V1 — AUDIT
 
-SOURCE
-------
-Name       : Understat
-Library    : soccerdata
-Version    : 1.9.1
+Game/player rows : 11,567
+Performance rows : 191,355
 
-METHODOLOGY
------------
-Grain source           : game_id × player_id
-XG reconstruction      : NO
-XA reconstruction      : NO
-Missing source data    : NULL
-Partial aggregation    : NOT USED FOR SCORING
-Only confirmed maps    : YES
+VALIDATION
+----------
+                           check status          actual
+              UNIQUE_GAME_PLAYER   PASS    duplicates=0
+                 NON_NEGATIVE_XG   PASS negative_rows=0
+                 NON_NEGATIVE_XA   PASS negative_rows=0
+      CONFIRMED_HAS_SOURCE_MATCH   PASS          rows=0
+             CONFIRMED_HAS_XG_XA   PASS          rows=0
+UNIQUE_PLAYER_COMPETITION_SEASON   PASS    duplicates=0
+  COMPLETE_HAS_ALL_XG_XA_METRICS   PASS          rows=0
+             NO_MINUTES_MISMATCH   PASS          rows=0
+              NON_NEGATIVE_PER90   PASS  invalid_rows=0
 
-GAME/PLAYER DATA
-----------------
-Rows                     : 11,567
-Unique game/player       : 11,567
-xG non-null              : 10,838
-xA non-null              : 10,838
-
-MATCH MAPPING
--------------
-mapping_status
-MATCH_CONFIRMED    11567
-
-PLAYER MAPPING
---------------
-player_mapping_status
-PLAYER_CONFIRMED    10838
-PLAYER_UNMATCHED      729
-
-AGGREGATION
------------
-Groups                   : 562
-Complete source groups   : 526
-Partial source groups    : 36
-
-PERFORMANCE DATASET
--------------------
-Rows                     : 191,355
-COMPLETE                 : 526
-PARTIAL                 : 36
-OUT_OF_SCOPE            : 190,793
-MINUTES_MISMATCH_REVIEW : 0
-
-PERFORMANCE xG/xA
------------------
-xG non-null             : 526
-xA non-null             : 526
-xG/90 non-null          : 526
-xA/90 non-null          : 526
-
-IMPORTANT
----------
-Les groupes incomplets ne reçoivent pas de xG/xA agrégé.
-Aucun NULL n'est transformé en zéro.
-Aucune métrique n'est reconstruite à partir des buts/passes.
-Le PerformanceScorer n'est pas modifié par cette étape.
+FAILURES : 0

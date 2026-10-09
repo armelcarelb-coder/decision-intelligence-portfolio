@@ -60,8 +60,8 @@ avec les pondérations :
     xg_per90      : 30 %
     xa_per90      : 20 %
 
-Si certaines métriques sont absentes, les poids disponibles
-sont renormalisés.
+Les quatre métriques sont obligatoires. Aucun score partiel
+et aucune renormalisation des poids ne sont autorisés.
 
 Exemple :
 
@@ -333,10 +333,14 @@ class PerformanceScorer:
 
         for column in string_columns:
 
-            df[column] = (
+            values = (
                 df[column]
                 .astype("string")
                 .str.strip()
+            )
+
+            df[column] = values.mask(
+                values.eq("")
             )
 
         # --------------------------------------------------------------------
@@ -370,67 +374,53 @@ class PerformanceScorer:
     # SCORE BRUT
     # ========================================================================
 
+
     def _calculate_raw_score(
         self,
         df: pd.DataFrame,
     ) -> pd.Series:
         """
-        Calcule le score pondéré à partir des métriques /90.
+        Calcule le score pondéré uniquement si les quatre métriques
+        sont présentes.
 
-        Les métriques disponibles sont renormalisées.
-
-        Exemple :
-
-            goals_per90 + xg_per90 disponibles
-
-        alors :
-
-            score =
-                (goals_per90 * 0.30
-                + xg_per90 * 0.30)
-                / 0.60
+        Aucune renormalisation n'est effectuée.
         """
 
-        score = pd.Series(
-            0.0,
+        metric_columns = list(SCORE_COMPONENTS)
+
+        numeric_metrics = pd.DataFrame(
+            {
+                column: pd.to_numeric(
+                    df[column],
+                    errors="coerce",
+                )
+                for column in metric_columns
+            },
             index=df.index,
-            dtype=float,
         )
 
-        total_weight = pd.Series(
+        all_metrics_available = (
+            numeric_metrics
+            .notna()
+            .all(axis=1)
+        )
+
+        weighted_score = pd.Series(
             0.0,
             index=df.index,
             dtype=float,
         )
 
         for column, weight in SCORE_COMPONENTS.items():
-
-            values = pd.to_numeric(
-                df[column],
-                errors="coerce",
+            weighted_score += (
+                numeric_metrics[column]
+                .fillna(0.0)
+                * weight
             )
 
-            valid = values.notna()
-
-            score.loc[valid] += (
-                values.loc[valid] * weight
-            )
-
-            total_weight.loc[valid] += weight
-
-        score = score.where(
-            total_weight > 0
+        return weighted_score.where(
+            all_metrics_available
         )
-
-        score = (
-            score
-            / total_weight.replace(
-                0,
-                np.nan,
-            )
-        )
-
-        return score
 
     # ========================================================================
     # PERCENTILE
@@ -486,42 +476,30 @@ class PerformanceScorer:
     # CALCUL SCORE
     # ========================================================================
 
+
     def calculate_scores(
         self,
     ) -> pd.DataFrame:
         """
-        Calcule score et percentile.
+        Calcule le score brut et le percentile.
 
-        Retourne un DataFrame enrichi avec :
+        Éligibilité stricte :
+        - minutes >= seuil ;
+        - les quatre métriques /90 sont présentes ;
+        - position, competition_level et season sont renseignés.
 
-            performance_score
-            performance_percentile
-            performance_score_status
+        Seules les lignes ELIGIBLE reçoivent un score et un percentile.
         """
 
         df = self.performances_df.copy()
 
-        # --------------------------------------------------------------------
-        # SCORE BRUT
-        # --------------------------------------------------------------------
+        metric_columns = list(SCORE_COMPONENTS)
 
-        df["performance_score"] = (
-            self._calculate_raw_score(
-                df
-            )
+        metrics_complete = (
+            df[metric_columns]
+            .notna()
+            .all(axis=1)
         )
-
-        # --------------------------------------------------------------------
-        # STATUT INITIAL
-        # --------------------------------------------------------------------
-
-        df["performance_score_status"] = (
-            STATUS_ELIGIBLE
-        )
-
-        # --------------------------------------------------------------------
-        # MINUTES
-        # --------------------------------------------------------------------
 
         insufficient_minutes = (
             df["minutes"].isna()
@@ -531,18 +509,10 @@ class PerformanceScorer:
             )
         )
 
-        # --------------------------------------------------------------------
-        # SCORE MANQUANT
-        # --------------------------------------------------------------------
-
-        missing_score = (
-            df["performance_score"]
-            .isna()
+        insufficient_metrics = (
+            ~insufficient_minutes
+            & ~metrics_complete
         )
-
-        # --------------------------------------------------------------------
-        # GROUPE INCOMPLET
-        # --------------------------------------------------------------------
 
         missing_group = (
             df[GROUP_COLUMNS]
@@ -550,9 +520,20 @@ class PerformanceScorer:
             .any(axis=1)
         )
 
-        # --------------------------------------------------------------------
-        # STATUTS
-        # --------------------------------------------------------------------
+        insufficient_group = (
+            ~insufficient_minutes
+            & metrics_complete
+            & missing_group
+        )
+
+        eligible = (
+            ~insufficient_minutes
+            & metrics_complete
+            & ~missing_group
+        )
+
+        # Statut exclusif de chaque ligne.
+        df["performance_score_status"] = STATUS_ELIGIBLE
 
         df.loc[
             insufficient_minutes,
@@ -560,62 +541,28 @@ class PerformanceScorer:
         ] = STATUS_INSUFFICIENT_MINUTES
 
         df.loc[
-            (~insufficient_minutes)
-            & missing_score,
+            insufficient_metrics,
             "performance_score_status",
         ] = STATUS_INSUFFICIENT_METRICS
 
         df.loc[
-            (~insufficient_minutes)
-            & (~missing_score)
-            & missing_group,
+            insufficient_group,
             "performance_score_status",
         ] = STATUS_INSUFFICIENT_GROUP
 
-        # --------------------------------------------------------------------
-        # ELIGIBILITE SCORE
-        #
-        # Un joueur doit :
-        #
-        # - avoir suffisamment de minutes
-        # - avoir au moins une métrique valide
-        # --------------------------------------------------------------------
+        # Même si certaines métriques existent, aucun score partiel
+        # n'est conservé.
+        raw_score = self._calculate_raw_score(df)
 
-        eligible_score = (
-            (~insufficient_minutes)
-            & df["performance_score"].notna()
+        df["performance_score"] = (
+            raw_score.where(eligible)
         )
 
-        # --------------------------------------------------------------------
-        # SCORE NON ELIGIBLE
-        # --------------------------------------------------------------------
-
-        df.loc[
-            ~eligible_score,
-            "performance_score",
-        ] = np.nan
-
-        # --------------------------------------------------------------------
-        # PERCENTILE
-        #
-        # Groupe :
-        #
-        # position
-        # competition_level
-        # season
-        #
-        # Les joueurs ayant un score invalide sont exclus.
-        # --------------------------------------------------------------------
-
+        # Le percentile est calculé exclusivement sur les ELIGIBLE.
         df["performance_percentile"] = np.nan
 
-        eligible_percentile = (
-            eligible_score
-            & (~missing_group)
-        )
-
         eligible_df = df.loc[
-            eligible_percentile
+            eligible
         ].copy()
 
         if not eligible_df.empty:
@@ -625,9 +572,7 @@ class PerformanceScorer:
                 .groupby(
                     GROUP_COLUMNS,
                     dropna=False,
-                )[
-                    "performance_score"
-                ]
+                )["performance_score"]
                 .transform(
                     self._group_percentile
                 )
@@ -638,10 +583,6 @@ class PerformanceScorer:
                 "performance_percentile",
             ] = percentiles
 
-        # --------------------------------------------------------------------
-        # ARRONDI
-        # --------------------------------------------------------------------
-
         df["performance_score"] = (
             df["performance_score"]
             .round(6)
@@ -651,6 +592,25 @@ class PerformanceScorer:
             df["performance_percentile"]
             .round(6)
         )
+
+        # Contrôle interne : aucune ligne non éligible ne doit conserver
+        # un score ou un percentile.
+        non_eligible = ~eligible
+
+        invalid_non_eligible = (
+            non_eligible
+            & (
+                df["performance_score"].notna()
+                | df["performance_percentile"].notna()
+            )
+        )
+
+        if invalid_non_eligible.any():
+            raise RuntimeError(
+                "Incohérence du scorer : "
+                f"{int(invalid_non_eligible.sum())} lignes non éligibles "
+                "possèdent un score ou un percentile."
+            )
 
         self.scored_dataset = df
 
@@ -1044,21 +1004,17 @@ def validate_insufficient_minutes(
 # ============================================================================
 
 
+
 def validate_missing_metrics(
     scorer: PerformanceScorer,
 ) -> bool:
     """
-    Vérifie :
-
-    1. toutes les métriques manquantes
-    2. une seule métrique disponible
-    3. renormalisation des poids
+    Vérifie que toutes les lignes auxquelles il manque au moins une
+    des quatre métriques sont INSUFFICIENT_METRICS et sans score.
     """
 
     print()
-    print(
-        "TEST CAS LIMITE : METRIQUES MANQUANTES"
-    )
+    print("TEST CAS LIMITE : MÉTRIQUES MANQUANTES")
     print("-" * 70)
 
     base = {
@@ -1080,12 +1036,8 @@ def validate_missing_metrics(
 
     rows = []
 
-    # ------------------------------------------------------------------------
-    # Toutes les métriques manquantes
-    # ------------------------------------------------------------------------
-
+    # Aucune métrique /90 disponible.
     row_all_missing = base.copy()
-
     row_all_missing.update(
         {
             "player": "All Metrics Missing",
@@ -1095,15 +1047,10 @@ def validate_missing_metrics(
             "xa_per90": np.nan,
         }
     )
-
     rows.append(row_all_missing)
 
-    # ------------------------------------------------------------------------
-    # Une seule métrique disponible
-    # ------------------------------------------------------------------------
-
+    # Une seule métrique disponible.
     row_one_metric = base.copy()
-
     row_one_metric.update(
         {
             "player": "One Metric Available",
@@ -1113,8 +1060,20 @@ def validate_missing_metrics(
             "xa_per90": np.nan,
         }
     )
-
     rows.append(row_one_metric)
+
+    # Trois métriques disponibles, une absente.
+    row_three_metrics = base.copy()
+    row_three_metrics.update(
+        {
+            "player": "Three Metrics Available",
+            "goals_per90": 0.80,
+            "assists_per90": 0.30,
+            "xg_per90": 0.70,
+            "xa_per90": np.nan,
+        }
+    )
+    rows.append(row_three_metrics)
 
     test_scorer = PerformanceScorer(
         pd.DataFrame(rows),
@@ -1123,82 +1082,32 @@ def validate_missing_metrics(
 
     result = test_scorer.calculate_scores()
 
-    missing_row = result[
-        result["player"]
-        == "All Metrics Missing"
-    ].iloc[0]
-
-    one_metric_row = result[
-        result["player"]
-        == "One Metric Available"
-    ].iloc[0]
-
-    # Avec une seule métrique :
-    #
-    # score = (0.80 * 0.30) / 0.30
-    #
-    # donc :
-    #
-    # score = 0.80
-
-    expected_one_metric_score = 0.80
-
-    success_missing = (
-        missing_row[
-            "performance_score_status"
-        ]
+    all_ineligible = (
+        result["performance_score_status"]
         == STATUS_INSUFFICIENT_METRICS
-        and pd.isna(
-            missing_row[
-                "performance_score"
-            ]
-        )
+    ).all()
+
+    all_scores_missing = (
+        result["performance_score"].isna().all()
     )
 
-    success_renormalization = (
-        one_metric_row[
-            "performance_score_status"
-        ]
-        == STATUS_ELIGIBLE
-        and abs(
-            one_metric_row[
-                "performance_score"
-            ]
-            - expected_one_metric_score
-        )
-        < 1e-6
+    all_percentiles_missing = (
+        result["performance_percentile"].isna().all()
     )
 
-    if success_missing:
-
-        print(
-            "✓ Toutes les métriques manquantes "
-            "-> INSUFFICIENT_METRICS."
-        )
-
-    else:
-
-        print(
-            "✗ Erreur sur les métriques entièrement manquantes."
-        )
-
-    if success_renormalization:
-
-        print(
-            "✓ Renormalisation des poids correcte."
-        )
-
-    else:
-
-        print(
-            "✗ Erreur de renormalisation."
-        )
-
-    return bool(
-        success_missing
-        and success_renormalization
+    success = (
+        all_ineligible
+        and all_scores_missing
+        and all_percentiles_missing
     )
 
+    print(
+        "✓ PASS : aucune métrique manquante ne reçoit de score partiel."
+        if success
+        else "✗ FAIL : un score partiel a été calculé."
+    )
+
+    return bool(success)
 
 # ============================================================================
 # TEST CAS LIMITE : GROUPE UNIQUE
@@ -1511,16 +1420,15 @@ def validate_ineligible_excluded_from_percentile() -> bool:
 # ============================================================================
 
 
+
 def validate_missing_group() -> bool:
     """
-    Vérifie qu'un joueur dont le groupe est incomplet
-    ne reçoit pas de percentile.
+    Vérifie qu'un joueur ayant les quatre métriques mais dont le groupe
+    est incomplet ne reçoit ni score ni percentile.
     """
 
     print()
-    print(
-        "TEST CAS LIMITE : GROUPE INCOMPLET"
-    )
+    print("TEST CAS LIMITE : GROUPE INCOMPLET")
     print("-" * 70)
 
     row = {
@@ -1531,7 +1439,7 @@ def validate_missing_group() -> bool:
         "competition": "Ligue 1",
         "competition_level": "TOP_5",
         "team": "Test FC",
-        "position": np.nan,
+        "position": pd.NA,
         "minutes": 1800,
         "appearances": 25,
         "starts": 20,
@@ -1550,40 +1458,22 @@ def validate_missing_group() -> bool:
     )
 
     result = scorer.calculate_scores()
-
     output = result.iloc[0]
 
     success = (
-        output[
-            "performance_score_status"
-        ]
+        output["performance_score_status"]
         == STATUS_INSUFFICIENT_GROUP
-        and pd.notna(
-            output[
-                "performance_score"
-            ]
-        )
-        and pd.isna(
-            output[
-                "performance_percentile"
-            ]
-        )
+        and pd.isna(output["performance_score"])
+        and pd.isna(output["performance_percentile"])
     )
 
-    if success:
-
-        print(
-            "✓ Groupe incomplet correctement détecté."
-        )
-
-    else:
-
-        print(
-            "✗ Erreur dans la gestion du groupe incomplet."
-        )
+    print(
+        "✓ PASS : groupe incomplet sans score ni percentile."
+        if success
+        else "✗ FAIL : incohérence sur le groupe incomplet."
+    )
 
     return bool(success)
-
 
 # ============================================================================
 # TEST PRINCIPAL
