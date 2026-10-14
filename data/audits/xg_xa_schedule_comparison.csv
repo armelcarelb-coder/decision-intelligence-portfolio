@@ -1,0 +1,71 @@
+season,understat_league,transfermarkt_matches,cache_path,cache_status,understat_rows,unique_understat_matches,same_date_any_teams,same_teams_any_date,same_date_and_teams,date_min,date_max
+2012,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2012.parquet,ABSENT,0,0,0,0,0,,
+2012,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2012.parquet,ABSENT,0,0,0,0,0,,
+2012,FRA-Ligue 1,380,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2012.parquet,ABSENT,0,0,0,0,0,,
+2012,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2012.parquet,ABSENT,0,0,0,0,0,,
+2012,ITA-Serie A,379,data\enrichment\understat_cache\schedule_ITA-Serie_A_2012.parquet,ABSENT,0,0,0,0,0,,
+2013,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2013.parquet,ABSENT,0,0,0,0,0,,
+2013,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2013.parquet,ABSENT,0,0,0,0,0,,
+2013,FRA-Ligue 1,380,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2013.parquet,ABSENT,0,0,0,0,0,,
+2013,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2013.parquet,ABSENT,0,0,0,0,0,,
+2013,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2013.parquet,ABSENT,0,0,0,0,0,,
+2014,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2014.parquet,PRESENT,380,380,0,272,0,2014-08-16 00:00:00,2015-05-24 00:00:00
+2014,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2014.parquet,PRESENT,380,380,0,30,0,2014-08-23 00:00:00,2015-05-23 00:00:00
+2014,FRA-Ligue 1,380,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2014.parquet,PRESENT,380,380,0,110,0,2014-08-08 00:00:00,2015-05-23 00:00:00
+2014,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2014.parquet,PRESENT,306,306,0,42,0,2014-08-22 00:00:00,2015-05-23 00:00:00
+2014,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2014.parquet,PRESENT,380,380,0,30,0,2014-08-30 00:00:00,2015-05-31 00:00:00
+2015,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2015.parquet,PRESENT,380,380,0,272,0,2015-08-08 00:00:00,2016-05-17 00:00:00
+2015,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2015.parquet,PRESENT,380,380,0,42,0,2015-08-21 00:00:00,2016-05-15 00:00:00
+2015,FRA-Ligue 1,380,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2015.parquet,PRESENT,380,380,0,110,0,2015-08-07 00:00:00,2016-05-14 00:00:00
+2015,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2015.parquet,PRESENT,306,306,0,42,0,2015-08-14 00:00:00,2016-05-14 00:00:00
+2015,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2015.parquet,PRESENT,380,380,0,20,0,2015-08-22 00:00:00,2016-05-15 00:00:00
+2016,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2016.parquet,PRESENT,380,380,0,272,0,2016-08-13 00:00:00,2017-05-21 00:00:00
+2016,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2016.parquet,PRESENT,380,380,0,30,0,2016-08-19 00:00:00,2017-05-21 00:00:00
+2016,FRA-Ligue 1,380,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2016.parquet,PRESENT,380,380,0,90,0,2016-08-12 00:00:00,2017-05-20 00:00:00
+2016,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2016.parquet,PRESENT,306,306,0,20,0,2016-08-26 00:00:00,2017-05-20 00:00:00
+2016,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2016.parquet,PRESENT,380,380,0,20,0,2016-08-20 00:00:00,2017-05-28 00:00:00
+2017,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2017.parquet,PRESENT,380,380,0,272,0,2017-08-11 00:00:00,2018-05-13 00:00:00
+2017,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2017.parquet,PRESENT,380,380,0,30,0,2017-08-18 00:00:00,2018-05-20 00:00:00
+2017,FRA-Ligue 1,380,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2017.parquet,PRESENT,380,380,0,72,0,2017-08-04 00:00:00,2018-05-19 00:00:00
+2017,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2017.parquet,PRESENT,306,306,0,42,0,2017-08-18 00:00:00,2018-05-12 00:00:00
+2017,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2017.parquet,PRESENT,380,380,0,12,0,2017-08-19 00:00:00,2018-05-20 00:00:00
+2018,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2018.parquet,PRESENT,380,380,0,306,0,2018-08-10 00:00:00,2019-05-12 00:00:00
+2018,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2018.parquet,PRESENT,380,380,0,56,0,2018-08-17 00:00:00,2019-05-19 00:00:00
+2018,FRA-Ligue 1,380,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2018.parquet,PRESENT,380,380,0,72,0,2018-08-10 00:00:00,2019-05-24 00:00:00
+2018,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2018.parquet,PRESENT,306,306,0,30,0,2018-08-24 00:00:00,2019-05-18 00:00:00
+2018,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2018.parquet,PRESENT,380,380,0,20,0,2018-08-18 00:00:00,2019-05-26 00:00:00
+2019,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2019.parquet,PRESENT,380,380,0,342,0,2019-08-09 00:00:00,2020-07-26 00:00:00
+2019,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2019.parquet,PRESENT,380,380,0,20,0,2019-08-16 00:00:00,2020-07-19 00:00:00
+2019,FRA-Ligue 1,279,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2019.parquet,PRESENT,380,380,0,52,0,2019-08-09 00:00:00,2020-07-09 00:00:00
+2019,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2019.parquet,PRESENT,306,306,0,12,0,2019-08-16 00:00:00,2020-06-27 00:00:00
+2019,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2019.parquet,PRESENT,380,380,0,20,0,2019-08-24 00:00:00,2020-08-02 00:00:00
+2020,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2020.parquet,PRESENT,380,380,0,380,0,2020-09-12 00:00:00,2021-05-23 00:00:00
+2020,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2020.parquet,PRESENT,380,380,0,30,0,2020-09-12 00:00:00,2021-05-23 00:00:00
+2020,FRA-Ligue 1,380,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2020.parquet,PRESENT,380,380,0,90,0,2020-08-21 00:00:00,2021-05-23 00:00:00
+2020,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2020.parquet,PRESENT,306,306,0,30,0,2020-09-18 00:00:00,2021-05-22 00:00:00
+2020,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2020.parquet,PRESENT,380,380,0,20,0,2020-09-19 00:00:00,2021-05-23 00:00:00
+2021,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2021.parquet,PRESENT,380,380,0,272,0,2020-09-12 00:00:00,2021-05-23 00:00:00
+2021,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2021.parquet,PRESENT,380,380,0,20,0,2020-09-12 00:00:00,2021-05-23 00:00:00
+2021,FRA-Ligue 1,380,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2021.parquet,PRESENT,380,380,0,90,0,2020-08-21 00:00:00,2021-05-23 00:00:00
+2021,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2021.parquet,PRESENT,306,306,0,30,0,2020-09-18 00:00:00,2021-05-22 00:00:00
+2021,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2021.parquet,PRESENT,380,380,0,12,0,2020-09-19 00:00:00,2021-05-23 00:00:00
+2022,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2022.parquet,PRESENT,380,380,0,380,0,2022-08-05 00:00:00,2023-05-28 00:00:00
+2022,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2022.parquet,PRESENT,380,380,0,42,0,2022-08-12 00:00:00,2023-06-04 00:00:00
+2022,FRA-Ligue 1,380,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2022.parquet,PRESENT,380,380,0,72,0,2022-08-05 00:00:00,2023-06-03 00:00:00
+2022,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2022.parquet,PRESENT,306,306,0,20,0,2022-08-05 00:00:00,2023-05-27 00:00:00
+2022,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2022.parquet,PRESENT,380,380,0,12,0,2022-08-13 00:00:00,2023-06-04 00:00:00
+2023,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2023.parquet,PRESENT,380,380,0,342,0,2023-08-11 00:00:00,2024-05-19 00:00:00
+2023,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2023.parquet,PRESENT,380,380,0,42,0,2023-08-11 00:00:00,2024-05-26 00:00:00
+2023,FRA-Ligue 1,306,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2023.parquet,PRESENT,306,306,0,72,0,2023-08-12 00:00:00,2024-05-19 00:00:00
+2023,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2023.parquet,PRESENT,306,306,0,20,0,2023-08-18 00:00:00,2024-05-18 00:00:00
+2023,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2023.parquet,PRESENT,380,380,0,12,0,2023-08-19 00:00:00,2024-06-02 00:00:00
+2024,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2024.parquet,PRESENT,380,380,0,380,0,2024-08-16 00:00:00,2025-05-25 00:00:00
+2024,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2024.parquet,PRESENT,380,380,0,42,0,2024-08-15 00:00:00,2025-05-25 00:00:00
+2024,FRA-Ligue 1,306,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2024.parquet,PRESENT,306,306,0,90,0,2024-08-16 00:00:00,2025-05-17 00:00:00
+2024,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2024.parquet,PRESENT,306,306,0,30,0,2024-08-23 00:00:00,2025-05-17 00:00:00
+2024,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2024.parquet,PRESENT,380,380,0,30,0,2024-08-17 00:00:00,2025-05-25 00:00:00
+2025,ENG-Premier League,380,data\enrichment\understat_cache\schedule_ENG-Premier_League_2025.parquet,PRESENT,380,380,0,380,0,2025-08-15 00:00:00,2026-05-24 00:00:00
+2025,ESP-La Liga,380,data\enrichment\understat_cache\schedule_ESP-La_Liga_2025.parquet,PRESENT,380,380,0,56,0,2025-08-15 00:00:00,2026-05-24 00:00:00
+2025,FRA-Ligue 1,305,data\enrichment\understat_cache\schedule_FRA-Ligue_1_2025.parquet,PRESENT,306,306,0,72,0,2025-08-15 00:00:00,2026-05-17 00:00:00
+2025,GER-Bundesliga,306,data\enrichment\understat_cache\schedule_GER-Bundesliga_2025.parquet,PRESENT,306,306,0,30,0,2025-08-22 00:00:00,2026-05-16 00:00:00
+2025,ITA-Serie A,380,data\enrichment\understat_cache\schedule_ITA-Serie_A_2025.parquet,PRESENT,380,380,0,20,0,2025-08-23 00:00:00,2026-05-24 00:00:00

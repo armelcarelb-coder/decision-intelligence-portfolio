@@ -2,11 +2,11 @@ metric,value
 game_player_rows,726823
 unique_games,25239
 unique_players,10596
-xg_non_null,149041
-xa_non_null,149041
-player_confirmed,149041
-match_confirmed,155059
+xg_non_null,162878
+xa_non_null,162878
+player_confirmed,162878
+match_confirmed,169427
 performance_rows,191355
-performance_complete,2891
-performance_partial,34528
+performance_complete,3020
+performance_partial,34399
 performance_out_of_scope,153936
