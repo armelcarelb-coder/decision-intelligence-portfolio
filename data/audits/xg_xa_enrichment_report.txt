@@ -1,6 +1,6 @@
 XG/XA ENRICHMENT V1 — AUDIT
 
-Game/player rows : 11,567
+Game/player rows : 726,823
 Performance rows : 191,355
 
 VALIDATION

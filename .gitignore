@@ -1,1 +1,4 @@
 *.duckdb
+data/enrichment/xg_xa_game_player.csv
+data/audits/xg_xa_player_mapping_review.csv
+data/enrichment/understat_cache/

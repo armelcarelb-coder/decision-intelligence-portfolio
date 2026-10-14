@@ -1,1 +1,2 @@
 *.duckdb filter=lfs diff=lfs merge=lfs -text
+data/enrichment/xg_xa_game_player.csv filter=lfs diff=lfs merge=lfs -text
