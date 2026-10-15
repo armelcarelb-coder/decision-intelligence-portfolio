@@ -6,6 +6,9 @@
 
 ### Problem
 Football recruitment involves costly decisions under uncertainty. Recruitment teams must identify players who match a coach's tactical requirements, squad needs, and financial constraints. Decisions based on isolated statistics or reputation can lead to poor role fit, inefficient spending, and an unbalanced squad.
+Controlled datasets support method testing and calculation audits, while
+FBref and Transfermarkt loaders provide an integration path for real football
+and market data.
 
 ### Approach
 This project develops a **Football Recruitment Decision Support framework** combining player-performance analysis, profiling, probabilistic estimation, tactical compatibility, and recruitment constraints.
@@ -127,6 +130,96 @@ The framework is designed to work with football performance data and relevant pl
 - **Current implementation:** The repository includes loader components intended to retrieve and combine player-performance and market/contract-related information. Metrics and coverage in a particular run depend on source, competition, and successful pipeline execution. Simulated or test data supports development and method testing; it should not be presented as real-world validation.
 - **Development direction:** Improve data provenance, coverage, consistency, and missing-value handling. Add specialized physical, tracking, or injury-related sources only when access, definitions, and integration are established.
 - **Validation objective:** Record the source and date of each dataset, verify key fields and joins, inspect missingness and duplicates, and distinguish simulated demonstrations from analyses based on real observations.
+
+### Data Strategy
+
+Simulated and controlled datasets are used to test the methodology, while the
+repository includes real football-data loaders and historical transfer data.
+
+The project separates controlled demonstrations, source-derived observations,
+and calculated outputs. A successful test on synthetic inputs is not treated
+as evidence of real-world recruitment validity.
+
+### 1. Prototype & Validation — Simulated and Controlled Data
+
+Controlled player profiles are used to test analytical methods under explicit,
+reproducible assumptions.
+
+Profiles such as `FW Low`, `FW Medium`, `FW High`, and their midfield
+equivalents provide structured inputs for checking:
+
+- Per-90 metric calculations.
+- Performance-score calculations and ordering.
+- Percentile outputs within defined comparison groups.
+- Consistency across positions and seasons.
+
+Synthetic inputs can also be used to test probabilistic models under known
+assumptions. However, the presence of a scored test dataset does not establish
+that it has been used by the Bayesian model.
+
+These datasets support calculation checks, method development, and controlled
+demonstrations. They do not establish predictive accuracy, transfer success,
+or real-world recruitment effectiveness.
+
+Dataset classification depends on provenance and generation logic, not on the
+filename alone.
+
+### 2. Real-Data Integration — Source Loaders
+
+`FootballDataLoader` provides an integration workflow for real football data
+through dedicated source loaders.
+
+| Component | Implemented role |
+|---|---|
+| `FBrefLoader` | Uses the `soccerdata` FBref interface to retrieve player season statistics through `read_player_season_stats(stat_type="standard")`. |
+| `TransfermarktLoader` | Uses the `soccerdata` Transfermarkt interface to retrieve squad information through `read_squads()`. |
+| `FootballDataLoader.build_global_scouting_dataset()` | Loads FBref and Transfermarkt data, joins the tables on `player`, derives contract years remaining when contract expiry is available, removes duplicate player names, and returns the combined scouting dataset. |
+| `StatsBombLoader` | Instantiated by `FootballDataLoader`, but not called by the current global dataset-building method. StatsBomb integration is therefore not demonstrated by this workflow. |
+
+This means the project is not limited to simulated inputs: it includes a
+concrete path from external football sources to a combined player and market
+dataset.
+
+The actual fields, coverage, and successful retrieval depend on the selected
+leagues and seasons, source availability, and execution of the loaders.
+
+### 3. Historical Transfer Context
+
+The repository includes `data/historical/historical_transfers.parquet`, a
+historical transfer dataset intended to provide player and transfer context
+for recruitment-oriented analysis.
+
+Historical data can support retrospective analysis, but it does not
+automatically validate current recruitment recommendations. Its use requires
+documenting the covered seasons, competitions, transfer types, and any
+restrictions introduced by data availability.
+
+### 4. Provenance, Coverage & Current Boundaries
+
+The project distinguishes:
+
+- **Source-derived observations**: data retrieved through the FBref and
+  Transfermarkt loaders.
+- **Synthetic or controlled inputs**: constructed records used for testing and
+  demonstration.
+- **Derived outputs**: calculated metrics, scores, percentiles, or model
+  estimates. Their interpretation depends on their inputs and calculation
+  method.
+
+Real-data runs should document the source, retrieval date, leagues, seasons,
+and missing fields.
+
+The current dataset-building workflow joins and deduplicates on player name.
+Identity matching and preservation of team, competition, and season context
+are therefore important validation points.
+
+Contract years remaining are calculated relative to the execution year.
+Historical analyses require an explicit reference date to avoid interpreting
+past contract information against the current year.
+
+Real-data integration and recruitment validation are separate milestones:
+retrieving and combining observations does not by itself validate downstream
+scores, Bayesian estimates, or recruitment recommendations.
 
 ## 11. CURRENT LIMITATIONS
 
