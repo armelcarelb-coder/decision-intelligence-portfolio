@@ -1,722 +1,216 @@
 import math
 from typing import Dict, List, Optional
 
-import pandas as pd
-
 from interfaces.player_engine import PlayerEngine
 
 
-class BayesianTransferSimulator(PlayerEngine):
+import numpy as np
+import pandas as pd
+import pymc as pm
+import arviz as az
 
+
+class BayesianTransferSimulator:
     """
-    Bayesian Transfer Simulator
+    Hierarchical Bayesian logistic-regression transfer simulator.
 
-    ---------------------------------------------------------------
-    Modèle :
-        Bayesian Naive Bayes
+    Estimates:
 
-    Objectif :
-        Estimer P(transfer_success | player_features)
+        P(transfer_success | fit, market, age, injury risk, salary)
 
-    Le modèle utilise :
+    rather than assuming feature independence.
 
-        P(Success | Features)
-
-    ∝
-
-        P(Success)
-        ×
-        Π P(Feature_i | Success)
-
-    Les probabilités conditionnelles sont estimées avec
-    des distributions Beta.
-
-    ---------------------------------------------------------------
-    Important :
-
-    Ce moteur NE prend PAS de décision de recrutement.
-
-    Il produit uniquement :
-
-        - success_probability
-        - probability_interval
-        - risk_level
-        - simulation_reasons
-
-    La décision SIGN / MONITOR / AVOID appartient
-    au RecruitmentEngine.
+    The model produces:
+    - posterior coefficients
+    - posterior predictive success probabilities
+    - credible intervals for predicted probabilities
+    - calibration-oriented diagnostics
     """
-
-    # =============================================================
-    # INITIALISATION
-    # =============================================================
 
     def __init__(
         self,
-        prior_alpha: float = 2.0,
-        prior_beta: float = 2.0
+        random_seed: int = 42,
+        draws: int = 2000,
+        tune: int = 1000,
+        chains: int = 4,
+        target_accept: float = 0.9,
     ):
+        self.random_seed = random_seed
+        self.draws = draws
+        self.tune = tune
+        self.chains = chains
+        self.target_accept = target_accept
 
-        self.prior_alpha = prior_alpha
-        self.prior_beta = prior_beta
-
-        self.is_fitted = False
-
-        self.feature_models = {}
-
-        self.success_count = 0
-        self.failure_count = 0
-
-        self.total_count = 0
-
-    # =============================================================
-    # FEATURES
-    # =============================================================
+        self.model = None
+        self.idata = None
+        self.feature_columns = None
 
     @staticmethod
-    def _extract_features(player: dict) -> dict:
+    def _prepare_features(data: pd.DataFrame):
+        data = data.copy()
 
-        age = player.get("age")
-
-        salary = player.get("salary")
-
-        if age is None:
-            age_bucket = "unknown"
-
-        elif age <= 22:
-            age_bucket = "young"
-
-        elif age <= 27:
-            age_bucket = "prime"
-
-        elif age <= 30:
-            age_bucket = "experienced"
-
-        else:
-            age_bucket = "veteran"
-
-        if salary is None:
-            salary_bucket = "unknown"
-
-        elif salary <= 8:
-            salary_bucket = "low"
-
-        elif salary <= 15:
-            salary_bucket = "medium"
-
-        else:
-            salary_bucket = "high"
-
-        return {
-
-            "fit_level":
-                player.get(
-                    "fit_level",
-                    "LOW"
-                ),
-
-            "market_level":
-                player.get(
-                    "market_level",
-                    "RISKY"
-                ),
-
-            "age_bucket":
-                age_bucket,
-
-            "injury_risk":
-                player.get(
-                    "injury_risk",
-                    "medium"
-                ),
-
-            "salary_bucket":
-                salary_bucket
-        }
-
-    # =============================================================
-    # FIT MODEL
-    # =============================================================
-
-    def fit(
-        self,
-        historical_data: pd.DataFrame,
-        target_column: str = "transfer_success"
-    ):
-
-        if historical_data is None:
-
-            raise ValueError(
-                "historical_data ne peut pas être None."
-            )
-
-        if historical_data.empty:
-
-            raise ValueError(
-                "historical_data est vide."
-            )
-
-        if target_column not in historical_data.columns:
-
-            raise ValueError(
-                f"La colonne '{target_column}' "
-                f"est obligatoire."
-            )
-
-        data = historical_data.copy()
-
-        # ---------------------------------------------------------
-        # Vérification target
-        # ---------------------------------------------------------
-
-        data = data[
-            data[target_column].isin([0, 1])
-        ].copy()
-
-        if data.empty:
-
-            raise ValueError(
-                "Aucune observation valide "
-                "pour transfer_success."
-            )
-
-        self.total_count = len(data)
-
-        self.success_count = int(
-            data[target_column].sum()
-        )
-
-        self.failure_count = (
-            self.total_count
-            - self.success_count
-        )
-
-        if self.success_count == 0:
-
-            raise ValueError(
-                "Le dataset ne contient aucun "
-                "transfert réussi."
-            )
-
-        if self.failure_count == 0:
-
-            raise ValueError(
-                "Le dataset ne contient aucun "
-                "transfert échoué."
-            )
-
-        # ---------------------------------------------------------
-        # Prior Bayesian
-        # ---------------------------------------------------------
-
-        self.prior_success_probability = (
-
-            (
-                self.prior_alpha
-                + self.success_count
-            )
-            /
-            (
-                self.prior_alpha
-                + self.prior_beta
-                + self.total_count
-            )
-
-        )
-
-        # ---------------------------------------------------------
-        # Feature models
-        # ---------------------------------------------------------
-
-        feature_columns = [
-
-            "fit_level",
-            "market_level",
-            "age_bucket",
-            "injury_risk",
-            "salary_bucket"
-
+        required = [
+            "fit_level", "market_level", "age",
+            "injury_risk", "salary", "transfer_success"
         ]
 
-        self.feature_models = {}
+        missing = [c for c in required if c not in data.columns]
+        if missing:
+            raise ValueError(f"Missing required columns: {missing}")
 
-        # ---------------------------------------------------------
-        # Construction des distributions Beta
-        # ---------------------------------------------------------
+        data = data[data["transfer_success"].isin([0, 1])].copy()
 
-        for feature in feature_columns:
+        if data.empty:
+            raise ValueError("No valid transfer observations.")
 
-            feature_data = {}
+        # Ordered / categorical feature encoding.
+        fit_map = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
+        market_map = {"RISKY": 0, "GOOD": 1, "EXCELLENT": 2}
+        injury_map = {"low": 0, "medium": 1, "high": 2}
 
-            temp = data.copy()
+        data["fit_score"] = data["fit_level"].map(fit_map)
+        data["market_score"] = data["market_level"].map(market_map)
+        data["injury_score"] = data["injury_risk"].map(injury_map)
 
-            # Créer les catégories dérivées
-            if feature == "age_bucket":
+        if data[["fit_score", "market_score", "injury_score"]].isna().any().any():
+            raise ValueError("Unknown category in fit, market or injury risk.")
 
-                temp["age_bucket"] = temp["age"].apply(
-                    self._age_bucket
-                )
+        # Standardise continuous variables.
+        for column in ["age", "salary"]:
+            mean = data[column].mean()
+            std = data[column].std()
 
-            elif feature == "salary_bucket":
+            if std == 0 or np.isnan(std):
+                raise ValueError(f"'{column}' has no variation.")
 
-                temp["salary_bucket"] = temp["salary"].apply(
-                    self._salary_bucket
-                )
+            data[f"{column}_z"] = (data[column] - mean) / std
 
-            # Valeurs manquantes
-            temp[feature] = (
-                temp[feature]
-                .fillna("unknown")
-                .astype(str)
-                .str.lower()
+        feature_columns = [
+            "fit_score",
+            "market_score",
+            "age_z",
+            "injury_score",
+            "salary_z",
+        ]
+
+        X = data[feature_columns].to_numpy(dtype="float64")
+        y = data["transfer_success"].to_numpy(dtype="int32")
+
+        return data, X, y, feature_columns
+
+    def fit(self, historical_data: pd.DataFrame):
+        data, X, y, feature_columns = self._prepare_features(historical_data)
+
+        self.feature_columns = feature_columns
+
+        n_features = X.shape[1]
+
+        with pm.Model() as self.model:
+            X_data = pm.Data("X", X)
+            y_data = pm.Data("y", y)
+
+            # Weakly informative priors.
+            intercept = pm.Normal("intercept", mu=0.0, sigma=1.5)
+
+            # Hierarchical structure: feature effects share a common scale.
+            global_scale = pm.HalfNormal("global_scale", sigma=1.0)
+
+            coefficients = pm.Normal(
+                "coefficients",
+                mu=0.0,
+                sigma=global_scale,
+                shape=n_features,
             )
 
-            categories = temp[feature].unique()
+            logits = intercept + pm.math.dot(X_data, coefficients)
 
-            for category in categories:
+            pm.Bernoulli(
+                "transfer_success",
+                logit_p=logits,
+                observed=y_data,
+            )
 
-                category_data = temp[
-                    temp[feature] == category
-                ]
+            # Posterior predictive success probability for observed records.
+            pm.Deterministic(
+                "success_probability",
+                pm.math.sigmoid(logits),
+            )
 
-                success = int(
-                    category_data[
-                        target_column
-                    ].sum()
-                )
-
-                observations = len(
-                    category_data
-                )
-
-                failure = (
-                    observations
-                    - success
-                )
-
-                # -------------------------------------------------
-                # Beta posterior
-                #
-                # alpha_post = alpha_prior + successes
-                # beta_post  = beta_prior + failures
-                # -------------------------------------------------
-
-                alpha_success = (
-                    self.prior_alpha
-                    + success
-                )
-
-                beta_success = (
-                    self.prior_beta
-                    + failure
-                )
-
-                # -------------------------------------------------
-                # P(feature=value | success)
-                #
-                # Ici nous utilisons une estimation bayésienne
-                # lissée par le prior.
-                # -------------------------------------------------
-
-                p_feature_given_success = (
-
-                    alpha_success
-                    /
-                    (
-                        alpha_success
-                        + beta_success
-                    )
-
-                )
-
-                # -------------------------------------------------
-                # Distribution Beta pour la classe failure
-                # -------------------------------------------------
-
-                failure_success = failure
-
-                failure_failure = (
-                    observations
-                    - failure_success
-                )
-
-                alpha_failure = (
-                    self.prior_alpha
-                    + failure_success
-                )
-
-                beta_failure = (
-                    self.prior_beta
-                    + failure_failure
-                )
-
-                p_feature_given_failure = (
-
-                    alpha_failure
-                    /
-                    (
-                        alpha_failure
-                        + beta_failure
-                    )
-
-                )
-
-                feature_data[
-                    category
-                ] = {
-
-                    "success":
-                        p_feature_given_success,
-
-                    "failure":
-                        p_feature_given_failure,
-
-                    "observations":
-                        observations,
-
-                    "success_count":
-                        success,
-
-                    "failure_count":
-                        failure
-                }
-
-            self.feature_models[
-                feature
-            ] = feature_data
-
-        self.is_fitted = True
+            self.idata = pm.sample(
+                draws=self.draws,
+                tune=self.tune,
+                chains=self.chains,
+                target_accept=self.target_accept,
+                random_seed=self.random_seed,
+                return_inferencedata=True,
+            )
 
         return self
 
-    # =============================================================
-    # AGE BUCKET
-    # =============================================================
-
-    @staticmethod
-    def _age_bucket(age):
-
-        if pd.isna(age):
-
-            return "unknown"
-
-        if age <= 22:
-
-            return "young"
-
-        if age <= 27:
-
-            return "prime"
-
-        if age <= 30:
-
-            return "experienced"
-
-        return "veteran"
-
-    # =============================================================
-    # SALARY BUCKET
-    # =============================================================
-
-    @staticmethod
-    def _salary_bucket(salary):
-
-        if pd.isna(salary):
-
-            return "unknown"
-
-        if salary <= 8:
-
-            return "low"
-
-        if salary <= 15:
-
-            return "medium"
-
-        return "high"
-
-    # =============================================================
-    # BETA INTERVAL
-    # =============================================================
-
-    def _estimate_interval(
-        self,
-        probability: float,
-        confidence: float = 0.90
-    ):
-
-        """
-        Approximation bayésienne de l'incertitude.
-
-        Nous utilisons une approximation normale autour
-        de la probabilité prédictive.
-
-        Ce n'est pas utilisé pour le calcul principal.
-        Il sert à communiquer l'incertitude.
-        """
-
-        n = max(
-            self.total_count,
-            1
-        )
-
-        variance = (
-
-            probability
-            *
-            (1 - probability)
-            /
-            n
-
-        )
-
-        std = math.sqrt(
-            max(variance, 0)
-        )
-
-        z = 1.645
-
-        lower = max(
-            0.0,
-            probability - z * std
-        )
-
-        upper = min(
-            1.0,
-            probability + z * std
-        )
-
-        return (
-            round(lower, 2),
-            round(upper, 2)
-        )
-
-    # =============================================================
-    # BAYESIAN PREDICTION
-    # =============================================================
-
     def predict_probability(
         self,
-        player: dict
+        player: dict,
+        hdi_probability: float = 0.94,
     ):
+        if self.idata is None:
+            raise RuntimeError("Model must be fitted before prediction.")
 
-        if not self.is_fitted:
+        fit_map = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
+        market_map = {"RISKY": 0, "GOOD": 1, "EXCELLENT": 2}
+        injury_map = {"low": 0, "medium": 1, "high": 2}
 
-            raise RuntimeError(
-                "Le modèle BayesianTransferSimulator "
-                "doit être entraîné avec .fit() "
-                "avant d'appeler .process()."
-            )
+        try:
+            fit_score = fit_map[player["fit_level"]]
+            market_score = market_map[player["market_level"]]
+            injury_score = injury_map[player["injury_risk"]]
+        except KeyError as error:
+            raise ValueError(f"Unknown category: {error}")
 
-        features = self._extract_features(
-            player
+        # In production, store training means and standard deviations.
+        age_z = (player["age"] - self._training_mean["age"]) / self._training_std["age"]
+        salary_z = (
+            (player["salary"] - self._training_mean["salary"])
+            / self._training_std["salary"]
         )
 
-        # ---------------------------------------------------------
-        # Prior
-        # ---------------------------------------------------------
-
-        prior_success = (
-
-            (
-                self.prior_alpha
-                + self.success_count
-            )
-            /
-            (
-                self.prior_alpha
-                + self.prior_beta
-                + self.total_count
-            )
-
+        x = np.array(
+            [fit_score, market_score, age_z, injury_score, salary_z],
+            dtype="float64",
         )
 
-        prior_failure = 1 - prior_success
-
-        # ---------------------------------------------------------
-        # Log probabilities
-        #
-        # Nous travaillons en log pour éviter
-        # les problèmes numériques.
-        # ---------------------------------------------------------
-
-        log_success = math.log(
-            prior_success
+        intercept_samples = self.idata.posterior["intercept"].values.flatten()
+        coefficient_samples = (
+            self.idata.posterior["coefficients"]
+            .values.reshape(-1, len(self.feature_columns))
         )
 
-        log_failure = math.log(
-            prior_failure
+        logits = intercept_samples + coefficient_samples @ x
+        probabilities = 1 / (1 + np.exp(-logits))
+
+        hdi = az.hdi(probabilities, hdi_prob=hdi_probability)
+
+        return {
+            "success_probability": float(probabilities.mean()),
+            "probability_hdi": [float(hdi[0]), float(hdi[1])],
+            "hdi_probability": hdi_probability,
+        }
+
+    def diagnostics(self):
+        if self.idata is None:
+            raise ValueError("Model must be fitted before diagnostics.")
+
+        summary = az.summary(
+            self.idata,
+            var_names=["intercept", "coefficients"],
+            kind="diagnostics",
         )
 
-        reasons = []
-
-        # ---------------------------------------------------------
-        # Evidence
-        # ---------------------------------------------------------
-
-        for feature, value in features.items():
-
-            model = self.feature_models.get(
-                feature,
-                {}
-            )
-
-            category = str(
-                value
-            ).lower()
-
-            statistics = model.get(
-                category
-            )
-
-            if statistics is None:
-
-                continue
-
-            p_success = max(
-                statistics["success"],
-                1e-9
-            )
-
-            p_failure = max(
-                statistics["failure"],
-                1e-9
-            )
-
-            log_success += math.log(
-                p_success
-            )
-
-            log_failure += math.log(
-                p_failure
-            )
-
-            # -----------------------------------------------------
-            # Explication
-            # -----------------------------------------------------
-
-            if (
-                p_success
-                >
-                p_failure
-            ):
-
-                reasons.append(
-                    f"{feature}={value} "
-                    "constitue une evidence "
-                    "favorable"
-                )
-
-            elif (
-                p_success
-                <
-                p_failure
-            ):
-
-                reasons.append(
-                    f"{feature}={value} "
-                    "constitue une evidence "
-                    "défavorable"
-                )
-
-        # ---------------------------------------------------------
-        # Normalisation Bayésienne
-        #
-        # P(S|X) =
-        #
-        # P(X|S)P(S)
-        # -------------------------
-        # P(X|S)P(S) + P(X|F)P(F)
-        # ---------------------------------------------------------
-
-        max_log = max(
-            log_success,
-            log_failure
-        )
-
-        success_exp = math.exp(
-            log_success - max_log
-        )
-
-        failure_exp = math.exp(
-            log_failure - max_log
-        )
-
-        probability = (
-
-            success_exp
-            /
-            (
-                success_exp
-                + failure_exp
-            )
-
-        )
-
-        return (
-            probability,
-            reasons
-        )
-
-    # =============================================================
-    # PROCESS
-    # =============================================================
-
-    def process(self, player):
-
-        probability, reasons = (
-            self.predict_probability(
-                player
-            )
-        )
-
-        # ---------------------------------------------------------
-        # Risk classification
-        # ---------------------------------------------------------
-
-        if probability >= 0.75:
-
-            risk = "LOW"
-
-        elif probability >= 0.55:
-
-            risk = "MEDIUM"
-
-        else:
-
-            risk = "HIGH"
-
-        # ---------------------------------------------------------
-        # Uncertainty interval
-        # ---------------------------------------------------------
-
-        interval = self._estimate_interval(
-            probability
-        )
-
-        # ---------------------------------------------------------
-        # Update player
-        # ---------------------------------------------------------
-
-        player.update({
-
-            "success_probability":
-                round(
-                    probability,
-                    3
-                ),
-
-            "probability_interval":
-                interval,
-
-            "risk_level":
-                risk,
-
-            "simulation_reasons":
-                reasons
-        })
-
-        return player
+        return {
+            "r_hat_max": float(summary["r_hat"].max()),
+            "ess_bulk_min": float(summary["ess_bulk"].min()),
+            "ess_tail_min": float(summary["ess_tail"].min()),
+            "summary": summary,
+        }
 
 
 # =================================================================

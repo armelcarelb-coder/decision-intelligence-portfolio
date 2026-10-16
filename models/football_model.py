@@ -27,13 +27,19 @@ class FootballAnalystProbabilistic:
             lambda_ = self.talent * xg_data
             pm.Poisson("goals", mu=lambda_, observed=goals_data)
 
-    def train(self):
+    def train(self, random_seed=42, chains=4):
         if self.model is None:
             raise ValueError("Model not built yet.")
-        
+
         with self.model:
-            self.trace = pm.sample(2000, tune=1000, target_accept=0.9)
-        
+            self.trace = pm.sample(
+                draws=2000,
+                tune=1000,
+                chains=chains,
+                target_accept=0.9,
+                random_seed=random_seed,
+            )
+
         return self.trace
 
     def summary(self):
@@ -63,6 +69,55 @@ class FootballAnalystProbabilistic:
         az.plot_trace(self.trace)
         plt.savefig(filename)
         print(f"Graphique sauvegardé sous : {filename}")
+
+    def diagnostics(self, rhat_threshold=1.01, min_ess=400):
+        if self.trace is None:
+            raise ValueError("Model not trained yet.")
+
+        summary = az.summary(self.trace, var_names=["talent"])
+
+        r_hat = float(summary.loc["talent", "r_hat"])
+        ess_bulk = float(summary.loc["talent", "ess_bulk"])
+        ess_tail = float(summary.loc["talent", "ess_tail"])
+        hdi_low = float(summary.loc["talent", "hdi_3%"])
+        hdi_high = float(summary.loc["talent", "hdi_97%"])
+
+        checks = {
+            "r_hat_pass": r_hat < rhat_threshold,
+            "ess_bulk_pass": ess_bulk >= min_ess,
+            "ess_tail_pass": ess_tail >= min_ess,
+        }
+
+        diagnostics = {
+            "r_hat": r_hat,
+            "ess_bulk": ess_bulk,
+            "ess_tail": ess_tail,
+            "hdi_94": (hdi_low, hdi_high),
+            "thresholds": {
+                "r_hat_max": rhat_threshold,
+                "min_ess": min_ess,
+            },
+            "checks": checks,
+            "all_checks_passed": all(checks.values()),
+        }
+
+        return diagnostics
+
+    def report(self):
+        if self.trace is None:
+            raise ValueError("Model not trained yet.")
+
+        diagnostics = self.diagnostics()
+        posterior = self.trace.posterior["talent"].values.flatten()
+        prob_performant = (posterior > 1).mean()
+
+        return {
+            "player": self.player_name,
+            "posterior_mean": float(posterior.mean()),
+            "probability_talent_above_1": float(prob_performant),
+            "credible_interval_94": diagnostics["hdi_94"],
+            "diagnostics": diagnostics,
+        }
 
 
 if __name__ == "__main__":

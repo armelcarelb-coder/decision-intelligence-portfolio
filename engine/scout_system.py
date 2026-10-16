@@ -12,6 +12,12 @@ from features.feature_engineering import (
     FeatureEngineer
 )
 
+from data.football_loader import FootballDataLoader
+from engine.role_aware_talent_engine import (
+    PlayerSeasonRecord,
+    RoleAwareBayesianTalentEngine,
+)
+
 
 class ScoutSystem:
 
@@ -20,6 +26,7 @@ class ScoutSystem:
         self.loader = loader
 
         self.feature_engineer = FeatureEngineer()
+
 
     def analyze_player(self, player_name, match_ids):
 
