@@ -1,14 +1,11 @@
 # Decision Intelligence System — Probabilistic Football Recruitment Analytics
 
-> **Project status:** Evolving R&D project. This README distinguishes implemented capabilities from features in development and objectives that still require validation.
+> **Project status:** Evolving R&D project. This README distinguishes implemented capabilities from features in development and objectives that still require validation.Controlled datasets support method testing and calculation audits, while FBref and Transfermarkt loaders provide an integration path for real football and market data.
 
 ## 1. PROJECT OVERVIEW
 
 ### Problem
 Football recruitment involves costly decisions under uncertainty. Recruitment teams must identify players who match a coach's tactical requirements, squad needs, and financial constraints. Decisions based on isolated statistics or reputation can lead to poor role fit, inefficient spending, and an unbalanced squad.
-Controlled datasets support method testing and calculation audits, while
-FBref and Transfermarkt loaders provide an integration path for real football
-and market data.
 
 ### Approach
 This project develops a **Football Recruitment Decision Support framework** combining player-performance analysis, profiling, probabilistic estimation, tactical compatibility, and recruitment constraints.

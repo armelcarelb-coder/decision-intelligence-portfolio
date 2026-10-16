@@ -1,0 +1,476 @@
+player_id,player_name,transfer_date,transfer_season,from_club_id,to_club_id,from_club_name,to_club_name,transfer_fee,market_value_in_eur,player_key,_date_parsed,_year
+374554,Joshua Yaro,2026-11-30,26/27,133925,82686,AC Boise,St. Louis CITY,0.0,400000.0,joshua yaro,2026-11-30,2026
+401361,Mason Stajduhar,2026-11-30,26/27,62204,6643,LV Lights,Salt Lake,0.0,175000.0,mason stajduhar,2026-11-30,2026
+492104,Abdelrahman Boudah,2026-11-30,26/27,5202,8344,Västerås SK,Albirex Niigata,0.0,900000.0,abdelrahman boudah,2026-11-30,2026
+565014,Jordan Farr,2026-11-30,26/27,68031,2440,Loudoun United,D.C. United,0.0,150000.0,jordan farr,2026-11-30,2026
+583163,Jacob Jackson,2026-11-30,26/27,87631,114977,Monterey Bay,San Diego,0.0,100000.0,jacob jackson,2026-11-30,2026
+673626,Tucker Lepley,2026-11-30,26/27,69044,1061,Oakland Roots,LA Galaxy,0.0,200000.0,tucker lepley,2026-11-30,2026
+763648,Tyler Wolff,2026-11-30,26/27,40835,6643,Sacramento FC,Salt Lake,0.0,400000.0,tyler wolff,2026-11-30,2026
+796528,Isaiah LeFlore,2026-11-30,26/27,23565,63966,TB Rowdies,Nashville,0.0,25000.0,isaiah leflore,2026-11-30,2026
+852939,Stephen McMullan,2026-11-30,26/27,7609,11177,Waterford FC,Fleetwood,0.0,125000.0,stephen mcmullan,2026-11-30,2026
+892087,Kazper Karlsson,2026-11-30,26/27,3641,272,Degerfors,AIK,0.0,650000.0,kazper karlsson,2026-11-30,2026
+916129,Jonathan Karlsson,2026-11-30,26/27,5202,1059,Västerås SK,Hammarby,0.0,275000.0,jonathan karlsson,2026-11-30,2026
+934722,Viktor Andersson,2026-11-30,26/27,801,3622,IFK Göteborg,Värnamo,0.0,400000.0,viktor andersson,2026-11-30,2026
+939246,Casper Andersson,2026-11-30,26/27,57117,3654,FK Karlskrona,Kalmar FF,0.0,,casper andersson,2026-11-30,2026
+980081,Demirel Hodzic,2026-11-30,26/27,1118,41107,Örgryte,Milan Futuro,0.0,100000.0,demirel hodzic,2026-11-30,2026
+1016312,William Andersson,2026-11-30,26/27,57117,3654,FK Karlskrona,Kalmar FF,0.0,175000.0,william andersson,2026-11-30,2026
+1088713,Isaac Yawe Höök,2026-11-30,26/27,78287,7945,IF Karlstad,Sirius,0.0,,isaac yawe höök,2026-11-30,2026
+1093464,Wilmer Andersson,2026-11-30,26/27,57117,3654,FK Karlskrona,Kalmar FF,0.0,,wilmer andersson,2026-11-30,2026
+1128650,Hakim Karamoko,2026-11-30,26/27,69748,2440,Forward Madison,D.C. United,0.0,50000.0,hakim karamoko,2026-11-30,2026
+1129935,Momoh Kamara,2026-11-30,26/27,1101,95337,Elfsborg,Minnesota 2,0.0,100000.0,momoh kamara,2026-11-30,2026
+1170094,Björn Hedlöf,2026-11-30,26/27,17938,1059,Hammarby TFF,Hammarby,0.0,,björn hedlöf,2026-11-30,2026
+1401544,Bidemi Amole,2026-11-30,26/27,1092,81833,Brommapojkarna,Real Sapphire,0.0,,bidemi amole,2026-11-30,2026
+531040,Min-kyu Kim,2026-12-01,26/27,6505,46292,Gimcheon Sangmu,Seoul E-Land,0.0,225000.0,min-kyu kim,2026-12-01,2026
+586944,Tae-joon Park,2026-12-01,26/27,6505,30925,Gimcheon Sangmu,Gwangju FC,0.0,450000.0,tae-joon park,2026-12-01,2026
+639133,Jin-seong Park,2026-12-01,26/27,6505,6499,Gimcheon Sangmu,Daejeon Hana C.,0.0,150000.0,jin-seong park,2026-12-01,2026
+643325,Deok-geun Lim,2026-12-01,26/27,6505,6499,Gimcheon Sangmu,Daejeon Hana C.,0.0,250000.0,deok-geun lim,2026-12-01,2026
+735654,In-gyun Kim,2026-12-01,26/27,6505,6499,Gimcheon Sangmu,Daejeon Hana C.,0.0,350000.0,in-gyun kim,2026-12-01,2026
+870390,César Augusto,2026-12-01,26/27,23829,75,Matonense,Unknown,0.0,100000.0,césar augusto,2026-12-01,2026
+968728,Kyeong-hyeon Min,2026-12-01,26/27,6505,2996,Gimcheon Sangmu,Incheon Utd.,0.0,325000.0,kyeong-hyeon min,2026-12-01,2026
+1091519,Caio Gomes,2026-12-01,26/27,11086,14390,Treze,Brusque,0.0,,caio gomes,2026-12-01,2026
+561403,Hyun-woo Kim,2026-12-04,26/27,6505,6499,Gimcheon Sangmu,Daejeon Hana C.,0.0,325000.0,hyun-woo kim,2026-12-04,2026
+646676,Matheus Aurélio,2026-12-16,26/27,17776,3234,Chapecoense,Tombense,0.0,,matheus aurélio,2026-12-16,2026
+915016,Juan Domínguez,2026-12-25,25/26,1804,4941,Toluca,León,,2500000.0,juan domínguez,2026-12-25,2026
+103381,Tiquinho Soares,2026-12-31,26/27,3876,221,Mirassol-SP,Santos,0.0,800000.0,tiquinho soares,2026-12-31,2026
+123487,Jesús Hernández,2026-12-31,26/27,7136,14555,Envigado,Estudiantes,0.0,150000.0,jesús hernández,2026-12-31,2026
+140470,Aleksey Gavrilovich,2026-12-31,26/27,10694,1180,Gomel,Dinamo Minsk,0.0,75000.0,aleksey gavrilovich,2026-12-31,2026
+140811,Santos,2026-12-31,26/27,679,10870,Athletico-PR,Fortaleza,0.0,400000.0,santos,2026-12-31,2026
+162812,Cauly,2026-12-31,26/27,585,10010,São Paulo,EC Bahia,0.0,3000000.0,cauly,2026-12-31,2026
+176585,Sergey Karpovich,2026-12-31,26/27,1180,36596,Dinamo Minsk,ML Vitebsk,0.0,450000.0,sergey karpovich,2026-12-31,2026
+178107,Michael Santos,2026-12-31,26/27,31284,1029,Central Córdoba,Vélez Sarsfield,0.0,350000.0,michael santos,2026-12-31,2026
+205041,Everaldo,2026-12-31,26/27,10010,2462,EC Bahia,Fluminense,0.0,350000.0,everaldo,2026-12-31,2026
+216730,Jonatan Galván,2026-12-31,26/27,1829,1030,Instituto ACC,Argentinos Jrs.,0.0,325000.0,jonatan galván,2026-12-31,2026
+218371,Brandon O'Neill,2026-12-31,26/27,11334,970,Perth RedStar,Perth Glory,0.0,150000.0,brandon o'neill,2026-12-31,2026
+229736,Alisson,2026-12-31,26/27,2462,585,Fluminense,São Paulo,0.0,800000.0,alisson,2026-12-31,2026
+244275,Gabriel Barbosa,2026-12-31,26/27,221,609,Santos,Cruzeiro,0.0,3000000.0,gabriel barbosa,2026-12-31,2026
+248352,Brayan Cortés,2026-12-31,26/27,1030,2433,Argentinos Jrs.,Colo-Colo,0.0,2000000.0,brayan cortés,2026-12-31,2026
+255910,Damian Rasak,2026-12-31,26/27,6456,708,GKS Katowice,Újpest FC,0.0,500000.0,damian rasak,2026-12-31,2026
+262999,Cristian Arango,2026-12-31,26/27,8172,218,Atl. Nacional,SJ Earthquakes,0.0,2500000.0,cristian arango,2026-12-31,2026
+266809,Nicolás Freire,2026-12-31,26/27,1234,7633,Independiente,UNAM Pumas,0.0,300000.0,nicolás freire,2026-12-31,2026
+266906,Rodrigo Contreras,2026-12-31,26/27,2350,17222,Millonarios,Antofagasta,0.0,1200000.0,rodrigo contreras,2026-12-31,2026
+271880,Álvaro Madrid,2026-12-31,26/27,2433,7020,Colo-Colo,CD Everton,0.0,600000.0,álvaro madrid,2026-12-31,2026
+282727,Monchu,2026-12-31,25/26,49283,605,FC Juárez,Aris Saloniki,0.0,5000000.0,monchu,2026-12-31,2026
+284342,Conan Ledesma,2026-12-31,26/27,1418,209,Rosario Central,River Plate,0.0,1500000.0,conan ledesma,2026-12-31,2026
+288609,Sebastián Vegas,2026-12-31,26/27,4941,2407,León,Monterrey,0.0,1000000.0,sebastián vegas,2026-12-31,2026
+292985,Álvaro Montero,2026-12-31,26/27,1029,2350,Vélez Sarsfield,Millonarios,0.0,2500000.0,álvaro montero,2026-12-31,2026
+294843,Thiago Cardozo,2026-12-31,26/27,2417,7097,Belgrano,Unión Santa Fe,0.0,3200000.0,thiago cardozo,2026-12-31,2026
+311182,Kevin Ramírez,2026-12-31,26/27,17776,15172,Chapecoense,Atlético-GO,0.0,400000.0,kevin ramírez,2026-12-31,2026
+322190,Lucas Suárez,2026-12-31,26/27,12454,3938,Sarmiento Junin,CA Talleres,0.0,400000.0,lucas suárez,2026-12-31,2026
+323934,Matheus Pereira,2026-12-31,26/27,199,10870,Corinthians,Fortaleza,0.0,2500000.0,matheus pereira,2026-12-31,2026
+333159,Patrick,2026-12-31,26/27,10997,221,Remo,Santos,0.0,600000.0,patrick,2026-12-31,2026
+340840,Benjamín Kuscevic,2026-12-31,26/27,11141,10870,Toronto,Fortaleza,0.0,1800000.0,benjamín kuscevic,2026-12-31,2026
+342149,Gabriel Alanís,2026-12-31,26/27,14602,2063,Estudiantes RC,Huracán,0.0,350000.0,gabriel alanís,2026-12-31,2026
+346065,Keno,2026-12-31,26/27,776,2462,Coritiba FC,Fluminense,0.0,300000.0,keno,2026-12-31,2026
+350342,Fernando Sobral,2026-12-31,26/27,776,28022,Coritiba FC,Cuiabá-MT,0.0,1500000.0,fernando sobral,2026-12-31,2026
+354666,Shamar Nicholson,2026-12-31,26/27,36596,13353,ML Vitebsk,Club Tijuana,0.0,3200000.0,shamar nicholson,2026-12-31,2026
+360412,Jordy Caicedo,2026-12-31,26/27,2063,8590,Huracán,Atlas,0.0,2000000.0,jordy caicedo,2026-12-31,2026
+363173,Carlinhos,2026-12-31,26/27,10997,614,Remo,Flamengo,0.0,900000.0,carlinhos,2026-12-31,2026
+370678,Jhon Fredy Salazar,2026-12-31,26/27,6495,11854,A. Bucaramanga,Junior FC,0.0,350000.0,jhon fredy salazar,2026-12-31,2026
+371996,Alerrandro,2026-12-31,26/27,6600,2410,Internacional,CSKA Moscow,0.0,3000000.0,alerrandro,2026-12-31,2026
+373714,Wuilker Fariñez,2026-12-31,26/27,17425,531,Inter Bogotá,Caracas FC,0.0,800000.0,wuilker fariñez,2026-12-31,2026
+385271,Allan,2026-12-31,26/27,199,614,Corinthians,Flamengo,0.0,2500000.0,allan,2026-12-31,2026
+387611,Lima,2026-12-31,26/27,3631,2462,América,Fluminense,0.0,2000000.0,lima,2026-12-31,2026
+401533,Matheusinho,2026-12-31,26/27,2029,2423,Ceará SC,Santa Clara,0.0,1500000.0,matheusinho,2026-12-31,2026
+401576,David Martínez,2026-12-31,26/27,2402,209,Defensa,River Plate,0.0,900000.0,david martínez,2026-12-31,2026
+401913,Ramiro Macagno,2026-12-31,26/27,12179,2672,Ind. Rivadavia,Levadiakos,0.0,450000.0,ramiro macagno,2026-12-31,2026
+406766,Bruno Rodrigues,2026-12-31,26/27,609,1023,Cruzeiro,Palmeiras,0.0,1200000.0,bruno rodrigues,2026-12-31,2026
+407517,Leonel Mosevich,2026-12-31,26/27,1829,1030,Instituto ACC,Argentinos Jrs.,0.0,750000.0,leonel mosevich,2026-12-31,2026
+409272,Alexis Soto,2026-12-31,26/27,1418,2402,Rosario Central,Defensa,0.0,1200000.0,alexis soto,2026-12-31,2026
+411294,Juan Ibiza,2026-12-31,26/27,2996,25449,Incheon Utd.,Buriram Utd.,0.0,400000.0,juan ibiza,2026-12-31,2026
+413983,Diego Valoyes,2026-12-31,26/27,3938,49283,CA Talleres,FC Juárez,0.0,1500000.0,diego valoyes,2026-12-31,2026
+415550,Joaquín Ardaiz,2026-12-31,26/27,12454,1030,Sarmiento Junin,Argentinos Jrs.,0.0,175000.0,joaquín ardaiz,2026-12-31,2026
+417084,Keiller,2026-12-31,26/27,776,6600,Coritiba FC,Internacional,0.0,500000.0,keiller,2026-12-31,2026
+422801,Matas Vareika,2026-12-31,25/26,602,10301,Zalgiris,Pyunik Yerevan,0.0,300000.0,matas vareika,2026-12-31,2026
+423705,Luciano Gómez,2026-12-31,26/27,12179,1030,Ind. Rivadavia,Argentinos Jrs.,0.0,700000.0,luciano gómez,2026-12-31,2026
+432166,Luan Cândido,2026-12-31,26/27,2125,8793,EC Vitória,RB Bragantino,0.0,3000000.0,luan cândido,2026-12-31,2026
+432953,Raphael Veiga,2026-12-31,26/27,3631,1023,América,Palmeiras,0.0,7000000.0,raphael veiga,2026-12-31,2026
+439072,Matías Viña,2026-12-31,26/27,209,614,River Plate,Flamengo,0.0,3500000.0,matías viña,2026-12-31,2026
+439437,Santiago Rodríguez,2026-12-31,26/27,14687,1030,Gimnasia (M),Argentinos Jrs.,0.0,800000.0,santiago rodríguez,2026-12-31,2026
+439626,Emanuel Reynoso,2026-12-31,26/27,9961,3938,Deportivo Cali,CA Talleres,0.0,900000.0,emanuel reynoso,2026-12-31,2026
+439627,Fernando Juárez,2026-12-31,26/27,31284,928,Central Córdoba,Platense,0.0,600000.0,fernando juárez,2026-12-31,2026
+439629,Nahuel Bustos,2026-12-31,26/27,11648,3938,Indep. Santa Fe,CA Talleres,0.0,1000000.0,nahuel bustos,2026-12-31,2026
+440312,Bryan Reyna,2026-12-31,26/27,6593,2417,Universitario,Belgrano,0.0,700000.0,bryan reyna,2026-12-31,2026
+440658,Artur,2026-12-31,26/27,585,537,São Paulo,Botafogo,0.0,8000000.0,artur,2026-12-31,2026
+440865,Nicolás Talpone,2026-12-31,26/27,14602,1070,Estudiantes RC,Colon,0.0,275000.0,nicolás talpone,2026-12-31,2026
+441385,Gonzalo Maroni,2026-12-31,26/27,25184,189,Barracas C.,Boca Juniors,0.0,2000000.0,gonzalo maroni,2026-12-31,2026
+441422,Maximiliano Lovera,2026-12-31,26/27,11648,1418,Indep. Santa Fe,Rosario Central,0.0,450000.0,maximiliano lovera,2026-12-31,2026
+457218,Norberto Briasco,2026-12-31,26/27,25184,189,Barracas C.,Boca Juniors,0.0,200000.0,norberto briasco,2026-12-31,2026
+457221,Lucas Robertone,2026-12-31,26/27,1029,3302,Vélez Sarsfield,UD Almería,0.0,2000000.0,lucas robertone,2026-12-31,2026
+458251,Everton Galdino,2026-12-31,26/27,3876,6631,Mirassol-SP,FC Tokyo,0.0,1000000.0,everton galdino,2026-12-31,2026
+462977,Benjamín Garré,2026-12-31,26/27,605,978,Aris Saloniki,Vasco da Gama,0.0,3500000.0,benjamín garré,2026-12-31,2026
+466336,Nahuel Ferraresi,2026-12-31,26/27,537,585,Botafogo,São Paulo,0.0,4500000.0,nahuel ferraresi,2026-12-31,2026
+468174,Félix Torres,2026-12-31,26/27,6600,199,Internacional,Corinthians,0.0,1000000.0,félix torres,2026-12-31,2026
+468256,Daniel Penha,2026-12-31,26/27,2035,16655,Avaí FC,Atlético-MG B,0.0,700000.0,daniel penha,2026-12-31,2026
+474589,Carlos Cuesta,2026-12-31,26/27,978,141,Vasco da Gama,Galatasaray,0.0,8000000.0,carlos cuesta,2026-12-31,2026
+477458,Walter Mazzantti,2026-12-31,26/27,1286,1234,Newell's,Independiente,0.0,2200000.0,walter mazzantti,2026-12-31,2026
+480764,Franco Moyano,2026-12-31,26/27,1829,3938,Instituto ACC,CA Talleres,0.0,700000.0,franco moyano,2026-12-31,2026
+486236,Iván López,2026-12-31,26/27,19775,13264,Dep. Riestra,Dep. Armenio,0.0,,iván lópez,2026-12-31,2026
+491535,Thomás Gutiérrez,2026-12-31,26/27,7098,95571,Nacional,CS Ameliano,0.0,500000.0,thomás gutiérrez,2026-12-31,2026
+491603,Blas Armoa,2026-12-31,26/27,14687,11831,Gimnasia (M),Tigre,0.0,350000.0,blas armoa,2026-12-31,2026
+491701,Fausto Vera,2026-12-31,26/27,209,330,River Plate,Atlético-MG,0.0,4500000.0,fausto vera,2026-12-31,2026
+496062,Víctor Griffith,2026-12-31,26/27,4561,2578,CS Emelec,St. Johnstone,0.0,350000.0,víctor griffith,2026-12-31,2026
+498266,Mateo Puerta,2026-12-31,26/27,11648,20590,Indep. Santa Fe,Rionegro Águila,0.0,250000.0,mateo puerta,2026-12-31,2026
+498687,Yeison Guzmán,2026-12-31,26/27,2352,10870,CD América,Fortaleza,0.0,2500000.0,yeison guzmán,2026-12-31,2026
+503348,Lucas Blondel,2026-12-31,26/27,2063,189,Huracán,Boca Juniors,0.0,1500000.0,lucas blondel,2026-12-31,2026
+509390,Miguel Navarro,2026-12-31,26/27,1247,3938,Colorado,CA Talleres,0.0,2000000.0,miguel navarro,2026-12-31,2026
+522131,Jaime Alvarado,2026-12-31,26/27,6984,10093,Once Caldas,Indep. Medellín,0.0,600000.0,jaime alvarado,2026-12-31,2026
+532557,Juan Espínola,2026-12-31,26/27,25184,1286,Barracas C.,Newell's,0.0,700000.0,juan espínola,2026-12-31,2026
+535033,Alejandro Maciel,2026-12-31,26/27,31284,629,Central Córdoba,Olimpia,0.0,350000.0,alejandro maciel,2026-12-31,2026
+535208,Steffan Pino,2026-12-31,26/27,17482,18076,Cobresal,CD Iquique,0.0,400000.0,steffan pino,2026-12-31,2026
+537257,Nicolás Demartini,2026-12-31,25/26,25184,14542,Barracas C.,CA Temperley,0.0,1000000.0,nicolás demartini,2026-12-31,2026
+538367,Leonardo Heredia,2026-12-31,26/27,928,1030,Platense,Argentinos Jrs.,0.0,1200000.0,leonardo heredia,2026-12-31,2026
+541914,Anton Kovalev,2026-12-31,26/27,713,1124,BATE Borisov,Fakel Voronezh,0.0,225000.0,anton kovalev,2026-12-31,2026
+548993,André Gonçalves,2026-12-31,26/27,26459,53646,Veres Rivne,Polissya,0.0,500000.0,andré gonçalves,2026-12-31,2026
+549273,Rodrigo Holgado,2026-12-31,26/27,2352,11004,CD América,Coquimbo Unido,0.0,250000.0,rodrigo holgado,2026-12-31,2026
+552629,Nahuel Arena,2026-12-31,26/27,12179,17426,Ind. Rivadavia,CD Macará,0.0,300000.0,nahuel arena,2026-12-31,2026
+554278,Krzysztof Bąkowski,2026-12-31,26/27,23184,238,KFUM Oslo,Lech Poznan,0.0,350000.0,krzysztof bąkowski,2026-12-31,2026
+562734,Prince Ampem,2026-12-31,26/27,27190,7160,SH Port,Eyüpspor,0.0,1500000.0,prince ampem,2026-12-31,2026
+565001,Miguel Pernía,2026-12-31,26/27,32041,14682,Fortaleza CEIF,Carabobo FC,0.0,200000.0,miguel pernía,2026-12-31,2026
+565981,Martín Barrios,2026-12-31,26/27,928,1444,Platense,Racing Club,0.0,300000.0,martín barrios,2026-12-31,2026
+566410,Elias Hagen,2026-12-31,26/27,5619,76,Aalesunds FK,Vålerenga,0.0,600000.0,elias hagen,2026-12-31,2026
+567737,Junior Marabel,2026-12-31,26/27,12454,7097,Sarmiento Junin,Unión Santa Fe,0.0,2200000.0,junior marabel,2026-12-31,2026
+569205,Tomás Rodríguez,2026-12-31,26/27,4720,1708,Saprissa,San Miguelito,0.0,1000000.0,tomás rodríguez,2026-12-31,2026
+569219,Stiwart Acuña,2026-12-31,26/27,7136,11854,Envigado,Junior FC,0.0,250000.0,stiwart acuña,2026-12-31,2026
+569222,Luis Sandoval,2026-12-31,26/27,10503,10093,Deportes Tolima,Indep. Medellín,0.0,900000.0,luis sandoval,2026-12-31,2026
+575368,Frankie Amaya,2026-12-31,26/27,4078,1804,Montréal,Toluca,0.0,1500000.0,frankie amaya,2026-12-31,2026
+579628,Leonard Owusu,2026-12-31,26/27,3837,669,Fredrikstad FK,Partizan,0.0,800000.0,leonard owusu,2026-12-31,2026
+581109,Odin Thiago Holm,2026-12-31,26/27,76,371,Vålerenga,Celtic,0.0,1000000.0,odin thiago holm,2026-12-31,2026
+581671,Yimy Gómez,2026-12-31,26/27,9811,10093,Pereira,Indep. Medellín,0.0,150000.0,yimy gómez,2026-12-31,2026
+589911,Wendel,2026-12-31,26/27,2029,2423,Ceará SC,Santa Clara,0.0,2000000.0,wendel,2026-12-31,2026
+592346,Gabriel Poveda,2026-12-31,26/27,10997,25558,Remo,Primavera,0.0,500000.0,gabriel poveda,2026-12-31,2026
+592347,Júnior Santos,2026-12-31,26/27,537,330,Botafogo,Atlético-MG,0.0,3000000.0,júnior santos,2026-12-31,2026
+592427,Matías Borgogno,2026-12-31,26/27,928,10511,Platense,San Martín (SJ),0.0,2800000.0,matías borgogno,2026-12-31,2026
+601011,Caio Paulista,2026-12-31,26/27,210,1023,Grêmio,Palmeiras,0.0,2000000.0,caio paulista,2026-12-31,2026
+603122,Cacá,2026-12-31,26/27,2125,199,EC Vitória,Corinthians,0.0,1500000.0,cacá,2026-12-31,2026
+608216,Gabriel Menino,2026-12-31,26/27,221,330,Santos,Atlético-MG,0.0,7000000.0,gabriel menino,2026-12-31,2026
+608943,Lucas Silva,2026-12-31,26/27,2125,6500,EC Vitória,FC Seoul,0.0,700000.0,lucas silva,2026-12-31,2026
+610228,Mateo Bajamich,2026-12-31,26/27,14602,14554,Estudiantes RC,Atl. Tucumán,0.0,600000.0,mateo bajamich,2026-12-31,2026
+612873,Renzo Bacchia,2026-12-31,26/27,14602,14758,Estudiantes RC,Racing Club,0.0,325000.0,renzo bacchia,2026-12-31,2026
+613093,Raúl Lozano,2026-12-31,26/27,14602,1826,Estudiantes RC,Quilmes,0.0,200000.0,raúl lozano,2026-12-31,2026
+613641,Jamerson,2026-12-31,26/27,2125,776,EC Vitória,Coritiba FC,0.0,800000.0,jamerson,2026-12-31,2026
+617687,Matheus Alexandre,2026-12-31,26/27,10997,8718,Remo,Sport Recife,0.0,900000.0,matheus alexandre,2026-12-31,2026
+619303,Nikola Petković,2026-12-31,26/27,9636,78435,Seattle,Charlotte,0.0,1000000.0,nikola petković,2026-12-31,2026
+626179,Matías Succar,2026-12-31,26/27,2729,184,Cienciano,Alianza Lima,0.0,300000.0,matías succar,2026-12-31,2026
+628953,Fabián Cantillo,2026-12-31,26/27,22902,14680,Alianza FC,Unión Magdalena,0.0,350000.0,fabián cantillo,2026-12-31,2026
+628970,Ariel Uribe,2026-12-31,26/27,5622,4321,U. Concepción,Union Española,0.0,600000.0,ariel uribe,2026-12-31,2026
+634023,Luifer Hernández,2026-12-31,26/27,13379,53646,Cúcuta Dep.,Polissya,0.0,400000.0,luifer hernández,2026-12-31,2026
+639245,Young-jun Goh,2026-12-31,26/27,21459,428,Gangwon FC,Górnik Zabrze,0.0,450000.0,young-jun goh,2026-12-31,2026
+639384,Tomás Ortiz,2026-12-31,26/27,14687,2402,Gimnasia (M),Defensa,0.0,125000.0,tomás ortiz,2026-12-31,2026
+643242,Bruno Mota,2026-12-31,25/26,6502,38898,Jeonbuk Hyundai,FC Anyang,0.0,550000.0,bruno mota,2026-12-31,2026
+646677,Riccieli,2026-12-31,26/27,2125,3329,EC Vitória,Famalicão,0.0,1800000.0,riccieli,2026-12-31,2026
+647235,Cade Cowell,2026-12-31,26/27,623,6711,New York,Chivas,0.0,3800000.0,cade cowell,2026-12-31,2026
+648076,Jovanny Bolívar,2026-12-31,26/27,43146,1532,UCV FC,Albacete,0.0,350000.0,jovanny bolívar,2026-12-31,2026
+649330,Steven Rodríguez,2026-12-31,26/27,9961,11854,Deportivo Cali,Junior FC,0.0,800000.0,steven rodríguez,2026-12-31,2026
+652968,Carlos Villalba,2026-12-31,26/27,12454,3938,Sarmiento Junin,CA Talleres,0.0,450000.0,carlos villalba,2026-12-31,2026
+654766,Santiago Moreno,2026-12-31,26/27,8816,2462,Dallas,Fluminense,0.0,3000000.0,santiago moreno,2026-12-31,2026
+657220,Rodrigo Villagra,2026-12-31,26/27,6600,2410,Internacional,CSKA Moscow,0.0,3500000.0,rodrigo villagra,2026-12-31,2026
+657457,Elkhan Astanov,2026-12-31,26/27,16779,22220,Ordabasy,FC Astana,0.0,450000.0,elkhan astanov,2026-12-31,2026
+657746,Cristian Olivera,2026-12-31,26/27,10010,210,EC Bahia,Grêmio,0.0,5000000.0,cristian olivera,2026-12-31,2026
+659264,Juan Sforza,2026-12-31,26/27,3938,978,CA Talleres,Vasco da Gama,0.0,1300000.0,juan sforza,2026-12-31,2026
+661858,José Flores,2026-12-31,26/27,6985,5570,Oriente P.,The Strongest,0.0,200000.0,josé flores,2026-12-31,2026
+662705,Mathías Llontop,2026-12-31,26/27,2730,2734,Sport Boys,FBC Melgar,0.0,500000.0,mathías llontop,2026-12-31,2026
+662742,Alexander Aravena,2026-12-31,26/27,4291,210,Portland,Grêmio,0.0,3500000.0,alexander aravena,2026-12-31,2026
+663186,Juan Patiño,2026-12-31,26/27,6984,866,Once Caldas,Nacional,0.0,500000.0,juan patiño,2026-12-31,2026
+663578,Ramon,2026-12-31,26/27,2125,6600,EC Vitória,Internacional,0.0,2000000.0,ramon,2026-12-31,2026
+665309,Hernán López Muñoz,2026-12-31,26/27,1030,218,Argentinos Jrs.,SJ Earthquakes,0.0,5000000.0,hernán lópez muñoz,2026-12-31,2026
+668265,Kayky,2026-12-31,26/27,6600,10010,Internacional,EC Bahia,0.0,5000000.0,kayky,2026-12-31,2026
+668513,Elías Cabrera,2026-12-31,26/27,11831,1029,Tigre,Vélez Sarsfield,0.0,1800000.0,elías cabrera,2026-12-31,2026
+668549,Brian Aguirre,2026-12-31,26/27,288,189,Estudiantes LP,Boca Juniors,0.0,3500000.0,brian aguirre,2026-12-31,2026
+668550,Luis Sequeira,2026-12-31,26/27,12179,3938,Ind. Rivadavia,CA Talleres,0.0,500000.0,luis sequeira,2026-12-31,2026
+668996,Joaquín Blázquez,2026-12-31,26/27,1234,3938,Independiente,CA Talleres,0.0,150000.0,joaquín blázquez,2026-12-31,2026
+670098,Storm Strand-Kolbjørnsen,2026-12-31,26/27,14761,267,Åsane,IK Start,0.0,100000.0,storm strand-kolbjørnsen,2026-12-31,2026
+671895,Alejandro Cabrera,2026-12-31,26/27,14602,830,Estudiantes RC,Banfield,0.0,250000.0,alejandro cabrera,2026-12-31,2026
+672202,Camilo,2026-12-31,26/27,17776,210,Chapecoense,Grêmio,0.0,2000000.0,camilo,2026-12-31,2026
+672292,João Lucas,2026-12-31,26/27,10997,210,Remo,Grêmio,0.0,1500000.0,joão lucas,2026-12-31,2026
+678402,Fabian Mrozek,2026-12-31,25/26,51772,9252,Cincinnati,Liverpool U21,0.0,,fabian mrozek,2026-12-31,2026
+685179,Mateo Coronel,2026-12-31,26/27,4961,14554,Querétaro FC,Atl. Tucumán,0.0,3000000.0,mateo coronel,2026-12-31,2026
+687674,Alejandro Moralez,2026-12-31,25/26,38628,11648,Llaneros FC,Indep. Santa Fe,0.0,350000.0,alejandro moralez,2026-12-31,2026
+688778,Lucas González,2026-12-31,26/27,31284,2402,Central Córdoba,Defensa,0.0,1300000.0,lucas gonzález,2026-12-31,2026
+689052,Gastón González,2026-12-31,26/27,12454,2402,Sarmiento Junin,Defensa,0.0,900000.0,gastón gonzález,2026-12-31,2026
+690727,Rodrigo Auzmendi,2026-12-31,26/27,1775,830,San Lorenzo,Banfield,0.0,3000000.0,rodrigo auzmendi,2026-12-31,2026
+692612,Agustín Rodríguez,2026-12-31,26/27,8590,17428,Atlas,Juventud,0.0,1000000.0,agustín rodríguez,2026-12-31,2026
+696729,José María Ingratti,2026-12-31,26/27,19775,30038,Dep. Riestra,Mitre (SdE),0.0,,josé maría ingratti,2026-12-31,2026
+697045,Nicolás Watson,2026-12-31,26/27,19775,1829,Dep. Riestra,Instituto ACC,0.0,600000.0,nicolás watson,2026-12-31,2026
+697943,Nikita Korets,2026-12-31,26/27,1186,2698,Torpedo Moscow,Rubin Kazan,0.0,250000.0,nikita korets,2026-12-31,2026
+698551,Agustín Lagos,2026-12-31,26/27,928,1029,Platense,Vélez Sarsfield,0.0,500000.0,agustín lagos,2026-12-31,2026
+699886,Marco Iacobellis,2026-12-31,26/27,31284,12100,Central Córdoba,All Boys,0.0,175000.0,marco iacobellis,2026-12-31,2026
+704592,Murodzhon Khalmatov,2026-12-31,26/27,10540,16779,Irtysh,Ordabasy,0.0,400000.0,murodzhon khalmatov,2026-12-31,2026
+706176,Abdul Awudu,2026-12-31,26/27,63007,6912,LNZ Cherkasy,Vizela,0.0,400000.0,abdul awudu,2026-12-31,2026
+706960,Yong-hak Kim,2026-12-31,26/27,311,7378,Pohang Steelers,Portimonense,0.0,125000.0,yong-hak kim,2026-12-31,2026
+715379,Evgeniy Lukinykh,2026-12-31,26/27,28098,49702,FC Kaluga,Pari NN,0.0,100000.0,evgeniy lukinykh,2026-12-31,2026
+717203,Ivan Losenko,2026-12-31,26/27,4078,660,Montréal,Shakhtar D.,0.0,200000.0,ivan losenko,2026-12-31,2026
+724220,Ulises Sánchez,2026-12-31,26/27,14687,2417,Gimnasia (M),Belgrano,0.0,1800000.0,ulises sánchez,2026-12-31,2026
+728602,Juan Elordi,2026-12-31,26/27,12179,1444,Ind. Rivadavia,Racing Club,0.0,400000.0,juan elordi,2026-12-31,2026
+729356,Alejandro Martínez,2026-12-31,26/27,2063,3938,Huracán,CA Talleres,0.0,600000.0,alejandro martínez,2026-12-31,2026
+731722,Matías Mansilla,2026-12-31,26/27,7097,288,Unión Santa Fe,Estudiantes LP,0.0,2500000.0,matías mansilla,2026-12-31,2026
+732442,Agustín Auzmendi,2026-12-31,26/27,1106,12574,Gimnasia,Godoy Cruz,0.0,1200000.0,agustín auzmendi,2026-12-31,2026
+732443,Rafael Monti,2026-12-31,26/27,10997,25958,Remo,Vinotinto FC,0.0,600000.0,rafael monti,2026-12-31,2026
+737821,Patrick de Paula,2026-12-31,26/27,10997,537,Remo,Botafogo,0.0,2500000.0,patrick de paula,2026-12-31,2026
+737892,Renzo Orihuela,2026-12-31,26/27,12454,37535,Sarmiento Junin,Mvd City Torque,0.0,550000.0,renzo orihuela,2026-12-31,2026
+740085,Ênio,2026-12-31,25/26,17776,10492,Chapecoense,Juventude,0.0,800000.0,ênio,2026-12-31,2026
+740378,Wermeson,2026-12-31,26/27,17776,22925,Chapecoense,Camboriú,0.0,,wermeson,2026-12-31,2026
+740574,Jordán Carrillo,2026-12-31,25/26,7633,1403,UNAM Pumas,Santos Laguna,0.0,8000000.0,jordán carrillo,2026-12-31,2026
+741105,Natanael Guzmán,2026-12-31,26/27,12301,6044,Aldosivi,Plaza Colonia,0.0,175000.0,natanael guzmán,2026-12-31,2026
+745454,Tony Leone,2026-12-31,26/27,7633,2407,UNAM Pumas,Monterrey,0.0,350000.0,tony leone,2026-12-31,2026
+746838,Zach Booth,2026-12-31,26/27,6643,798,Salt Lake,Excelsior,0.0,350000.0,zach booth,2026-12-31,2026
+748601,Gastón Ávila,2026-12-31,26/27,1418,610,Rosario Central,Ajax,0.0,3500000.0,gastón ávila,2026-12-31,2026
+749016,Franco Paredes,2026-12-31,26/27,1030,1234,Argentinos Jrs.,Independiente,0.0,350000.0,franco paredes,2026-12-31,2026
+751474,Syver Skeide,2026-12-31,26/27,21101,501,Kristiansund BK,Bodø/Glimt,0.0,400000.0,syver skeide,2026-12-31,2026
+757175,Maximiliano Zalazar,2026-12-31,26/27,1106,189,Gimnasia,Boca Juniors,0.0,375000.0,maximiliano zalazar,2026-12-31,2026
+762387,Khusrav Toirov,2026-12-31,26/27,34828,660,Istiqlol,Shakhtar D.,0.0,100000.0,khusrav toirov,2026-12-31,2026
+766258,Kaio César,2026-12-31,26/27,199,1114,Corinthians,Al-Hilal,0.0,4000000.0,kaio césar,2026-12-31,2026
+787618,Valentín Carboni,2026-12-31,26/27,1444,46,Racing Club,Inter,0.0,7500000.0,valentín carboni,2026-12-31,2026
+789856,Caio Roque,2026-12-31,26/27,537,10247,Botafogo,Portuguesa,0.0,,caio roque,2026-12-31,2026
+794925,Edson Carioca,2026-12-31,26/27,3876,3197,Mirassol-SP,Goiás,0.0,1500000.0,edson carioca,2026-12-31,2026
+796037,Charles Sagoe Jr,2026-12-31,26/27,3654,9249,Kalmar FF,Arsenal U21,0.0,300000.0,charles sagoe jr,2026-12-31,2026
+797945,Ruben Alte,2026-12-31,26/27,6399,239,Sandefjord,Viking FK,0.0,800000.0,ruben alte,2026-12-31,2026
+802512,Julius Beck,2026-12-31,26/27,1101,122,Elfsborg,Sturm Graz,0.0,500000.0,julius beck,2026-12-31,2026
+814273,Saúl Guarirapa,2026-12-31,26/27,17276,41231,ZJ FC,FK Sochi,0.0,900000.0,saúl guarirapa,2026-12-31,2026
+818499,Cristian Neira,2026-12-31,26/27,27861,184,Atlético Grau,Alianza Lima,0.0,400000.0,cristian neira,2026-12-31,2026
+819183,Javier Dominguez,2026-12-31,26/27,14554,629,Atl. Tucumán,Olimpia,0.0,450000.0,javier dominguez,2026-12-31,2026
+825780,Zé Vitor,2026-12-31,26/27,2125,33003,EC Vitória,Maringá,0.0,,zé vitor,2026-12-31,2026
+827285,Mayer Gil,2026-12-31,26/27,10090,22902,Deportivo Pasto,Alianza FC,0.0,350000.0,mayer gil,2026-12-31,2026
+829967,Federico Vera,2026-12-31,26/27,2063,1234,Huracán,Independiente,0.0,1000000.0,federico vera,2026-12-31,2026
+829968,Imanol Machuca,2026-12-31,26/27,1029,10870,Vélez Sarsfield,Fortaleza,0.0,,imanol machuca,2026-12-31,2026
+831110,Luca Martínez Dupuy,2026-12-31,26/27,49283,12574,FC Juárez,Godoy Cruz,0.0,1000000.0,luca martínez dupuy,2026-12-31,2026
+831162,Gino Infantino,2026-12-31,26/27,1030,430,Argentinos Jrs.,Fiorentina,0.0,350000.0,gino infantino,2026-12-31,2026
+832340,Robert Morales,2026-12-31,26/27,7633,1804,UNAM Pumas,Toluca,0.0,5500000.0,robert morales,2026-12-31,2026
+836253,Siro Rosané,2026-12-31,26/27,14602,25184,Estudiantes RC,Barracas C.,0.0,600000.0,siro rosané,2026-12-31,2026
+836493,Gonzalo Abrego,2026-12-31,26/27,1775,12574,San Lorenzo,Godoy Cruz,0.0,1500000.0,gonzalo abrego,2026-12-31,2026
+836518,Ignacio Miramón,2026-12-31,26/27,1106,1082,Gimnasia,Lille,0.0,1500000.0,ignacio miramón,2026-12-31,2026
+837974,Patricio Tanda,2026-12-31,26/27,11855,1444,Guaraní,Racing Club,0.0,700000.0,patricio tanda,2026-12-31,2026
+838405,Renzo Giampaoli,2026-12-31,26/27,1106,189,Gimnasia,Boca Juniors,0.0,2000000.0,renzo giampaoli,2026-12-31,2026
+840768,Nicolás Goitea,2026-12-31,26/27,1286,30038,Newell's,Mitre (SdE),0.0,300000.0,nicolás goitea,2026-12-31,2026
+840778,Alejo Dramisino,2026-12-31,26/27,19775,8057,Dep. Riestra,Atlanta,0.0,275000.0,alejo dramisino,2026-12-31,2026
+844725,Josué Ovalle,2026-12-31,26/27,82696,26697,Mazatlán FC,Limache,0.0,1500000.0,josué ovalle,2026-12-31,2026
+844791,Ezequiel Cannavo,2026-12-31,26/27,1444,2402,Racing Club,Defensa,0.0,3000000.0,ezequiel cannavo,2026-12-31,2026
+847283,Juan Carlos Gauto,2026-12-31,26/27,928,26,Platense,Basel,0.0,1000000.0,juan carlos gauto,2026-12-31,2026
+853278,Ignacio Maestro Puch,2026-12-31,26/27,5662,1234,Puebla FC,Independiente,0.0,600000.0,ignacio maestro puch,2026-12-31,2026
+860998,Azarías Londoño,2026-12-31,26/27,17584,18820,Uni. Católica,Alianza FC,0.0,1000000.0,azarías londoño,2026-12-31,2026
+863140,Ignacio Galván,2026-12-31,26/27,14554,1444,Atl. Tucumán,Racing Club,0.0,275000.0,ignacio galván,2026-12-31,2026
+864120,James Ampofo,2026-12-31,26/27,267,2817,IK Start,Strømsgodset,0.0,300000.0,james ampofo,2026-12-31,2026
+865442,Facundo Miño,2026-12-31,26/27,19775,12672,Dep. Riestra,Almirante Brown,0.0,800000.0,facundo miño,2026-12-31,2026
+867466,Julián Angulo,2026-12-31,26/27,2350,10093,Millonarios,Indep. Medellín,0.0,500000.0,julián angulo,2026-12-31,2026
+867847,Micael,2026-12-31,26/27,69261,1023,Miami,Palmeiras,0.0,4000000.0,micael,2026-12-31,2026
+868074,Kalazán Suárez,2026-12-31,26/27,17425,17467,Inter Bogotá,Inter Palmira,0.0,300000.0,kalazán suárez,2026-12-31,2026
+868503,Agustín Bravo,2026-12-31,26/27,1829,1418,Instituto ACC,Rosario Central,0.0,50000.0,agustín bravo,2026-12-31,2026
+874307,Thalisson,2026-12-31,26/27,10997,776,Remo,Coritiba FC,0.0,400000.0,thalisson,2026-12-31,2026
+885621,Santiago Moya,2026-12-31,26/27,12301,2063,Aldosivi,Huracán,0.0,300000.0,santiago moya,2026-12-31,2026
+886501,Wiktor Bogacz,2026-12-31,26/27,5689,623,Cracovia,New York,0.0,1500000.0,wiktor bogacz,2026-12-31,2026
+887801,Nathan Mendes,2026-12-31,26/27,2125,8793,EC Vitória,RB Bragantino,0.0,1500000.0,nathan mendes,2026-12-31,2026
+888545,Eros Mancuso,2026-12-31,26/27,288,10870,Estudiantes LP,Fortaleza,0.0,3000000.0,eros mancuso,2026-12-31,2026
+889093,David Ramírez,2026-12-31,26/27,32041,11648,Fortaleza CEIF,Indep. Santa Fe,0.0,150000.0,david ramírez,2026-12-31,2026
+891353,Cuiabano,2026-12-31,26/27,978,703,Vasco da Gama,Nott'm Forest,0.0,10000000.0,cuiabano,2026-12-31,2026
+891681,Tiago Cravero,2026-12-31,26/27,31284,2417,Central Córdoba,Belgrano,0.0,250000.0,tiago cravero,2026-12-31,2026
+893664,Marcos Zambrano,2026-12-31,26/27,626,6643,New England,Salt Lake,0.0,150000.0,marcos zambrano,2026-12-31,2026
+895926,Joaquín Lavega,2026-12-31,26/27,776,2462,Coritiba FC,Fluminense,0.0,4000000.0,joaquín lavega,2026-12-31,2026
+900895,Gonzalo Flores,2026-12-31,26/27,19775,12672,Dep. Riestra,Almirante Brown,0.0,200000.0,gonzalo flores,2026-12-31,2026
+905417,Héctor Bobadilla,2026-12-31,26/27,928,1214,Platense,Cerro Porteño,0.0,450000.0,héctor bobadilla,2026-12-31,2026
+906636,Diego Mendoza,2026-12-31,26/27,9811,11854,Pereira,Junior FC,0.0,100000.0,diego mendoza,2026-12-31,2026
+908102,Esteban Fernández,2026-12-31,26/27,14687,4673,Gimnasia (M),Arsenal Sarandí,0.0,150000.0,esteban fernández,2026-12-31,2026
+908300,Gregorio Rodríguez,2026-12-31,26/27,1775,2734,San Lorenzo,FBC Melgar,0.0,700000.0,gregorio rodríguez,2026-12-31,2026
+909314,Ezequiel Naya,2026-12-31,26/27,31284,288,Central Córdoba,Estudiantes LP,0.0,400000.0,ezequiel naya,2026-12-31,2026
+909475,Sebastián Aranda,2026-12-31,26/27,8606,2730,Auda,Sport Boys,0.0,275000.0,sebastián aranda,2026-12-31,2026
+909735,Rodrigo Márquez,2026-12-31,26/27,12301,1234,Aldosivi,Independiente,0.0,100000.0,rodrigo márquez,2026-12-31,2026
+910331,Luis Marquinez,2026-12-31,26/27,10503,8172,Deportes Tolima,Atl. Nacional,0.0,300000.0,luis marquinez,2026-12-31,2026
+910641,Bruno Leyes,2026-12-31,26/27,11831,12574,Tigre,Godoy Cruz,0.0,2300000.0,bruno leyes,2026-12-31,2026
+911120,Jhildrey Lasso,2026-12-31,26/27,22902,2047,Alianza FC,AC Bellinzona,0.0,300000.0,jhildrey lasso,2026-12-31,2026
+911960,Agustín Lastra,2026-12-31,26/27,14602,189,Estudiantes RC,Boca Juniors,0.0,200000.0,agustín lastra,2026-12-31,2026
+912306,Alessandro Riep,2026-12-31,26/27,12179,6363,Ind. Rivadavia,Audax Italiano,0.0,350000.0,alessandro riep,2026-12-31,2026
+912491,Shota Chikhradze,2026-12-31,26/27,3723,100383,M. Lipetsk,Fakel II,0.0,,shota chikhradze,2026-12-31,2026
+912696,Juan Cardozo,2026-12-31,26/27,31284,1030,Central Córdoba,Argentinos Jrs.,0.0,200000.0,juan cardozo,2026-12-31,2026
+916601,Ryoga Kida,2026-12-31,26/27,1030,1066,Argentinos Jrs.,Nagoya Grampus,0.0,,ryoga kida,2026-12-31,2026
+923459,Facundo Altamira,2026-12-31,26/27,2402,12574,Defensa,Godoy Cruz,0.0,750000.0,facundo altamira,2026-12-31,2026
+926690,Reyniel Perdomo,2026-12-31,26/27,136989,18820,CT United FC,Alianza FC,0.0,250000.0,reyniel perdomo,2026-12-31,2026
+926979,Sebastian Biller,2026-12-31,26/27,8995,1177,Hødd,Silkeborg IF,0.0,100000.0,sebastian biller,2026-12-31,2026
+927271,Konstantin Dorofeev,2026-12-31,26/27,16198,16704,Atyrau,Krasnodar,0.0,250000.0,konstantin dorofeev,2026-12-31,2026
+928648,Anderson Duarte,2026-12-31,26/27,40188,1804,San Luis,Toluca,0.0,2000000.0,anderson duarte,2026-12-31,2026
+929438,Franco Fagúndez,2026-12-31,26/27,11648,1403,Indep. Santa Fe,Santos Laguna,0.0,900000.0,franco fagúndez,2026-12-31,2026
+935978,João Vitor,2026-12-31,26/27,17776,25242,Chapecoense,CSP,0.0,900000.0,joão vitor,2026-12-31,2026
+938123,Nicolás Rodríguez,2026-12-31,26/27,8172,45604,Atl. Nacional,Orlando,0.0,900000.0,nicolás rodríguez,2026-12-31,2026
+941511,Nicolás Meriano,2026-12-31,26/27,830,2417,Banfield,Belgrano,0.0,400000.0,nicolás meriano,2026-12-31,2026
+943969,Agustín Palavecino,2026-12-31,26/27,12301,288,Aldosivi,Estudiantes LP,0.0,250000.0,agustín palavecino,2026-12-31,2026
+945935,Ettson Ayón,2026-12-31,26/27,49283,4941,FC Juárez,León,0.0,1000000.0,ettson ayón,2026-12-31,2026
+946396,Timofey Martynov,2026-12-31,26/27,4394,14589,Dnepr Mogilev,Orenburg,0.0,100000.0,timofey martynov,2026-12-31,2026
+950593,Damián Pizarro,2026-12-31,26/27,1444,410,Racing Club,Udinese,0.0,2000000.0,damián pizarro,2026-12-31,2026
+961786,Santiago Quirós,2026-12-31,26/27,928,1444,Platense,Racing Club,0.0,600000.0,santiago quirós,2026-12-31,2026
+965323,Maximiliano Gutiérrez,2026-12-31,26/27,1234,6368,Independiente,Huachipato,0.0,3000000.0,maximiliano gutiérrez,2026-12-31,2026
+966314,Marcos Portillo,2026-12-31,26/27,928,3938,Platense,CA Talleres,0.0,300000.0,marcos portillo,2026-12-31,2026
+969494,Kento Nishiya,2026-12-31,26/27,311,22177,Pohang Steelers,Sagan Tosu,0.0,500000.0,kento nishiya,2026-12-31,2026
+970765,Seung-won Yeo,2026-12-31,26/27,2996,6499,Incheon Utd.,Daejeon Hana C.,0.0,150000.0,seung-won yeo,2026-12-31,2026
+971529,Gastón Arturia,2026-12-31,26/27,12454,7097,Sarmiento Junin,Unión Santa Fe,0.0,200000.0,gastón arturia,2026-12-31,2026
+972764,Nick Markanich,2026-12-31,26/27,9168,2502,Houston,Castellón,0.0,400000.0,nick markanich,2026-12-31,2026
+974652,Johan Rojas,2026-12-31,26/27,978,2407,Vasco da Gama,Monterrey,0.0,3800000.0,johan rojas,2026-12-31,2026
+975134,Felipe Mosquera,2026-12-31,25/26,9811,2352,Pereira,CD América,0.0,100000.0,felipe mosquera,2026-12-31,2026
+975689,Óscar Cortés,2026-12-31,26/27,2063,124,Huracán,Rangers,0.0,2500000.0,óscar cortés,2026-12-31,2026
+977367,Jhon Largacha,2026-12-31,25/26,9811,2350,Pereira,Millonarios,0.0,350000.0,jhon largacha,2026-12-31,2026
+977739,Luis Palacios,2026-12-31,26/27,11648,6984,Indep. Santa Fe,Once Caldas,0.0,550000.0,luis palacios,2026-12-31,2026
+978480,Breno Herculano,2026-12-31,26/27,38898,11449,FC Anyang,CRB,0.0,850000.0,breno herculano,2026-12-31,2026
+978953,Alberto Higgins,2026-12-31,26/27,20590,18127,Rionegro Águila,Barranquilla FC,0.0,150000.0,alberto higgins,2026-12-31,2026
+978967,Julián Contrera,2026-12-31,26/27,12454,1286,Sarmiento Junin,Newell's,0.0,500000.0,julián contrera,2026-12-31,2026
+981479,Ezequiel Forclaz,2026-12-31,26/27,14602,11831,Estudiantes RC,Tigre,0.0,200000.0,ezequiel forclaz,2026-12-31,2026
+983867,David Zalazar,2026-12-31,26/27,830,3938,Banfield,CA Talleres,0.0,300000.0,david zalazar,2026-12-31,2026
+984053,Julián Fernández,2026-12-31,26/27,1418,40058,Rosario Central,New York City,0.0,3800000.0,julián fernández,2026-12-31,2026
+984079,Kevin Ortiz,2026-12-31,26/27,14554,1418,Atl. Tucumán,Rosario Central,0.0,1300000.0,kevin ortiz,2026-12-31,2026
+984882,Juan Pablo Pignani,2026-12-31,26/27,31284,928,Central Córdoba,Platense,0.0,125000.0,juan pablo pignani,2026-12-31,2026
+985351,Renato Marques,2026-12-31,26/27,776,3876,Coritiba FC,Mirassol-SP,0.0,1000000.0,renato marques,2026-12-31,2026
+987126,Emmanuel Gómez Riga,2026-12-31,26/27,12179,12563,Ind. Rivadavia,CA Alvarado,0.0,100000.0,emmanuel gómez riga,2026-12-31,2026
+987291,Aimar Modelo,2026-12-31,26/27,39815,28218,RBNY II,Independiente,0.0,100000.0,aimar modelo,2026-12-31,2026
+988440,Abraham Villegas,2026-12-31,26/27,4941,13362,León,Tapatío,0.0,100000.0,abraham villegas,2026-12-31,2026
+990202,Lucas Román,2026-12-31,26/27,14554,1234,Atl. Tucumán,Independiente,0.0,200000.0,lucas román,2026-12-31,2026
+990429,Maximiliano Amarfil,2026-12-31,26/27,928,19870,Platense,Cipolletti,0.0,2000000.0,maximiliano amarfil,2026-12-31,2026
+991849,Nicolás Retamar,2026-12-31,26/27,928,4557,Platense,Ferro,0.0,800000.0,nicolás retamar,2026-12-31,2026
+992869,Yeicar Perlaza,2026-12-31,25/26,11648,8172,Indep. Santa Fe,Atl. Nacional,0.0,300000.0,yeicar perlaza,2026-12-31,2026
+993645,Tomás Palacios,2026-12-31,26/27,288,46,Estudiantes LP,Inter,0.0,6000000.0,tomás palacios,2026-12-31,2026
+1000687,Santiago López,2026-12-31,26/27,11831,1234,Tigre,Independiente,0.0,2000000.0,santiago lópez,2026-12-31,2026
+1000691,Bautista Dadín,2026-12-31,26/27,12179,209,Ind. Rivadavia,River Plate,0.0,250000.0,bautista dadín,2026-12-31,2026
+1004336,Sung-hoon Kwak,2026-12-31,26/27,30925,3301,Gwangju FC,Suwon Bluewings,0.0,,sung-hoon kwak,2026-12-31,2026
+1006916,Jonathan Norbye,2026-12-31,26/27,3837,23826,Fredrikstad FK,Leipzig,0.0,700000.0,jonathan norbye,2026-12-31,2026
+1011262,Gonzalo Piñeiro,2026-12-31,26/27,11831,288,Tigre,Estudiantes LP,0.0,225000.0,gonzalo piñeiro,2026-12-31,2026
+1013474,Malachi Molina,2026-12-31,26/27,63966,8816,Nashville,Dallas,0.0,,malachi molina,2026-12-31,2026
+1013913,Alexis Segovia,2026-12-31,26/27,14554,333,Atl. Tucumán,Lanús,0.0,225000.0,alexis segovia,2026-12-31,2026
+1013922,Rodrigo Atencio,2026-12-31,26/27,12179,8718,Ind. Rivadavia,Sport Recife,0.0,2000000.0,rodrigo atencio,2026-12-31,2026
+1015089,Sebastián Rodríguez,2026-12-31,26/27,2407,9168,Monterrey,Houston,0.0,25000.0,sebastián rodríguez,2026-12-31,2026
+1015626,Franco Nicola,2026-12-31,26/27,14554,10663,Atl. Tucumán,Liverpool FC,0.0,500000.0,franco nicola,2026-12-31,2026
+1017261,Amin Chiakha,2026-12-31,26/27,195,190,Rosenborg BK,Copenhagen,0.0,3500000.0,amin chiakha,2026-12-31,2026
+1019928,Aiden Jarvis,2026-12-31,26/27,103649,623,Huntsville City,New York,0.0,,aiden jarvis,2026-12-31,2026
+1020837,Kevin Jappert,2026-12-31,26/27,25184,10233,Barracas C.,Atl. Rafaela,0.0,2300000.0,kevin jappert,2026-12-31,2026
+1020838,Walter Núñez,2026-12-31,26/27,1286,37535,Newell's,Mvd City Torque,0.0,900000.0,walter núñez,2026-12-31,2026
+1027880,Tomás O'Connor,2026-12-31,26/27,14687,1418,Gimnasia (M),Rosario Central,0.0,700000.0,tomás o'connor,2026-12-31,2026
+1029002,Juan Manuel Cabrera,2026-12-31,26/27,12454,1030,Sarmiento Junin,Argentinos Jrs.,0.0,150000.0,juan manuel cabrera,2026-12-31,2026
+1029760,Juan Pablo Goicochea,2026-12-31,26/27,2619,25373,Defensor SC,Platense II,0.0,,juan pablo goicochea,2026-12-31,2026
+1029814,Tobías Cervera,2026-12-31,26/27,14687,1418,Gimnasia (M),Rosario Central,0.0,250000.0,tobías cervera,2026-12-31,2026
+1031575,Sebastián Castillo,2026-12-31,26/27,55686,26468,Metalist 1925,Dep. La Guaira,0.0,700000.0,sebastián castillo,2026-12-31,2026
+1031798,Kilian Toscano,2026-12-31,26/27,11648,8172,Indep. Santa Fe,Atl. Nacional,0.0,400000.0,kilian toscano,2026-12-31,2026
+1044533,Randy Vega,2026-12-31,26/27,83197,2677,Inter,Herediano,0.0,150000.0,randy vega,2026-12-31,2026
+1049404,Thiago Espinosa,2026-12-31,26/27,3631,14758,América,Racing Club,0.0,1500000.0,thiago espinosa,2026-12-31,2026
+1051322,Robert Santos,2026-12-31,26/27,17776,330,Chapecoense,Atlético-MG,0.0,1000000.0,robert santos,2026-12-31,2026
+1055320,Waldo Madrid,2026-12-31,26/27,4961,110451,Querétaro FC,Necaxa U21,0.0,150000.0,waldo madrid,2026-12-31,2026
+1062319,Luciano González,2026-12-31,26/27,2402,861,Defensa,Peñarol,0.0,50000.0,luciano gonzález,2026-12-31,2026
+1064181,Kevin Vázquez,2026-12-31,26/27,12179,1029,Ind. Rivadavia,Vélez Sarsfield,0.0,225000.0,kevin vázquez,2026-12-31,2026
+1064191,Tomás Avilés,2026-12-31,26/27,4078,69261,Montréal,Miami,0.0,2500000.0,tomás avilés,2026-12-31,2026
+1064930,Freitas,2026-12-31,26/27,10997,96207,Remo,Fluminense U23,0.0,50000.0,freitas,2026-12-31,2026
+1064936,Gonzalo Morales,2026-12-31,26/27,25184,189,Barracas C.,Boca Juniors,0.0,900000.0,gonzalo morales,2026-12-31,2026
+1072321,Moises Paniagua,2026-12-31,26/27,6603,42208,Wydad AC,Always Ready,0.0,1000000.0,moises paniagua,2026-12-31,2026
+1074429,Álvaro Rojas,2026-12-31,26/27,99517,6593,Juan Pablo II,Universitario,0.0,400000.0,álvaro rojas,2026-12-31,2026
+1084192,Enzo Monteiro,2026-12-31,26/27,39418,221,Cheongju FC,Santos,0.0,200000.0,enzo monteiro,2026-12-31,2026
+1087316,Juan Pérez,2026-12-31,26/27,1106,9811,Gimnasia,Pereira,0.0,150000.0,juan pérez,2026-12-31,2026
+1089609,Kayky Almeida,2026-12-31,26/27,10997,14702,Remo,Fluminense U20,0.0,800000.0,kayky almeida,2026-12-31,2026
+1089955,JP Chermont,2026-12-31,26/27,776,221,Coritiba FC,Santos,0.0,4000000.0,jp chermont,2026-12-31,2026
+1093864,Gilberto Junior,2026-12-31,26/27,679,14807,Athletico-PR,Palmeiras U20,0.0,2000000.0,gilberto junior,2026-12-31,2026
+1093951,Renê,2026-12-31,26/27,2125,10247,EC Vitória,Portuguesa,0.0,1000000.0,renê,2026-12-31,2026
+1098514,Javier Mena,2026-12-31,26/27,9961,9811,Deportivo Cali,Pereira,0.0,150000.0,javier mena,2026-12-31,2026
+1101761,Giovany Herbert,2026-12-31,26/27,3592,17522,Kryvbas,Árabe Unido,0.0,400000.0,giovany herbert,2026-12-31,2026
+1103406,Diego Barrera,2026-12-31,26/27,31284,3938,Central Córdoba,CA Talleres,0.0,800000.0,diego barrera,2026-12-31,2026
+1103930,Manuel Brondo,2026-12-31,26/27,14554,1030,Atl. Tucumán,Argentinos Jrs.,0.0,25000.0,manuel brondo,2026-12-31,2026
+1103941,Alan Sosa,2026-12-31,26/27,12301,1106,Aldosivi,Gimnasia,0.0,275000.0,alan sosa,2026-12-31,2026
+1105073,Anel Ryce,2026-12-31,26/27,6992,20960,Chornomorets,Plaza Amador,0.0,100000.0,anel ryce,2026-12-31,2026
+1105078,Érick Díaz,2026-12-31,26/27,102400,12371,LAFC 2,Tauro FC,0.0,100000.0,érick díaz,2026-12-31,2026
+1108153,Santiago Salle,2026-12-31,26/27,12454,1234,Sarmiento Junin,Independiente,0.0,900000.0,santiago salle,2026-12-31,2026
+1108415,Luciano Paredes,2026-12-31,26/27,14687,19523,Gimnasia (M),Dep. Maipú,0.0,450000.0,luciano paredes,2026-12-31,2026
+1108681,Andy Batioja,2026-12-31,26/27,32041,8172,Fortaleza CEIF,Atl. Nacional,0.0,50000.0,andy batioja,2026-12-31,2026
+1112486,Jhoan Hernández,2026-12-31,26/27,537,2350,Botafogo,Millonarios,0.0,150000.0,jhoan hernández,2026-12-31,2026
+1116636,João Loiola,2026-12-31,26/27,95334,2462,NYCFC II,Fluminense,0.0,,joão loiola,2026-12-31,2026
+1118712,Joaquín Mosqueira,2026-12-31,26/27,11831,3938,Tigre,CA Talleres,0.0,1200000.0,joaquín mosqueira,2026-12-31,2026
+1119364,Juan Ramirez,2026-12-31,26/27,38628,2350,Llaneros FC,Millonarios,0.0,400000.0,juan ramirez,2026-12-31,2026
+1119752,John Montaño,2026-12-31,26/27,10093,5026,Indep. Medellín,Lommel SK,0.0,900000.0,john montaño,2026-12-31,2026
+1120902,Gonzalo Requena,2026-12-31,26/27,2696,1829,KS Samara,Instituto ACC,0.0,1200000.0,gonzalo requena,2026-12-31,2026
+1126191,Agustín Quiroga,2026-12-31,26/27,31284,1234,Central Córdoba,Independiente,0.0,300000.0,agustín quiroga,2026-12-31,2026
+1126427,Maiken González,2026-12-31,26/27,93338,26468,Rayo Zuliano,Dep. La Guaira,0.0,50000.0,maiken gonzález,2026-12-31,2026
+1126741,Tomás Olmos,2026-12-31,26/27,14602,3938,Estudiantes RC,CA Talleres,0.0,150000.0,tomás olmos,2026-12-31,2026
+1127950,Juan Viveros,2026-12-31,26/27,10093,18265,Indep. Medellín,CBJ Cali,0.0,100000.0,juan viveros,2026-12-31,2026
+1131420,Lucas Lavagnino,2026-12-31,26/27,1234,209,Independiente,River Plate,0.0,,lucas lavagnino,2026-12-31,2026
+1132027,Tenshiro Takasaki,2026-12-31,26/27,12690,23568,Grêmio U20,Machida Zelvia,0.0,,tenshiro takasaki,2026-12-31,2026
+1149569,Julián Ceballos,2026-12-31,26/27,14687,189,Gimnasia (M),Boca Juniors,0.0,450000.0,julián ceballos,2026-12-31,2026
+1151028,Zidane Yáñez,2026-12-31,26/27,103649,40058,Huntsville City,New York City,0.0,,zidane yáñez,2026-12-31,2026
+1152154,Tomás Pérez,2026-12-31,25/26,330,720,Atlético-MG,Porto,0.0,3000000.0,tomás pérez,2026-12-31,2026
+1174943,Jabes Saralegui,2026-12-31,26/27,11831,189,Tigre,Boca Juniors,0.0,3000000.0,jabes saralegui,2026-12-31,2026
+1182161,Valentino Simoni,2026-12-31,26/27,14687,189,Gimnasia (M),Boca Juniors,0.0,350000.0,valentino simoni,2026-12-31,2026
+1190005,Kaiden Moore,2026-12-31,26/27,25467,51663,Philadelphia,Atlanta,0.0,,kaiden moore,2026-12-31,2026
+1197773,Mateo Mendía,2026-12-31,26/27,928,189,Platense,Boca Juniors,0.0,300000.0,mateo mendía,2026-12-31,2026
+1199583,Emilio Aristizábal,2026-12-31,26/27,11141,8172,Toronto,Atl. Nacional,0.0,1200000.0,emilio aristizábal,2026-12-31,2026
+1203744,Tobías Leiva,2026-12-31,26/27,14602,209,Estudiantes RC,River Plate,0.0,350000.0,tobías leiva,2026-12-31,2026
+1203749,Daniel Zabala,2026-12-31,26/27,2063,209,Huracán,River Plate,0.0,100000.0,daniel zabala,2026-12-31,2026
+1203752,Joaquín Flores,2026-12-31,26/27,31284,14837,Central Córdoba,River Plate II,0.0,50000.0,joaquín flores,2026-12-31,2026
+1203753,Alexis González,2026-12-31,26/27,12454,14837,Sarmiento Junin,River Plate II,0.0,50000.0,alexis gonzález,2026-12-31,2026
+1210697,Alejandro Villarreal,2026-12-31,26/27,12301,9540,Aldosivi,Santos U20,0.0,75000.0,alejandro villarreal,2026-12-31,2026
+1220061,Tevis,2026-12-31,26/27,3828,609,Yokohama F. M.,Cruzeiro,0.0,800000.0,tevis,2026-12-31,2026
+1225290,Thiago Santamaría,2026-12-31,26/27,12454,1030,Sarmiento Junin,Argentinos Jrs.,0.0,800000.0,thiago santamaría,2026-12-31,2026
+1225755,Diego Tarzia,2026-12-31,26/27,2125,1234,EC Vitória,Independiente,0.0,2000000.0,diego tarzia,2026-12-31,2026
+1231128,Tiago Serrago,2026-12-31,26/27,11831,209,Tigre,River Plate,0.0,1700000.0,tiago serrago,2026-12-31,2026
+1236679,Santiago Dalmasso,2026-12-31,26/27,928,189,Platense,Boca Juniors,0.0,100000.0,santiago dalmasso,2026-12-31,2026
+1238722,Peter Molinari,2026-12-31,26/27,95334,40058,NYCFC II,New York City,0.0,,peter molinari,2026-12-31,2026
+1240383,Benjamín Bosch,2026-12-31,26/27,928,1029,Platense,Vélez Sarsfield,0.0,25000.0,benjamín bosch,2026-12-31,2026
+1243090,Ilya Vasin,2026-12-31,26/27,72822,1124,Dzerzhinsk,Fakel Voronezh,0.0,50000.0,ilya vasin,2026-12-31,2026
+1244188,Clever Ferreira,2026-12-31,26/27,14554,95571,Atl. Tucumán,CS Ameliano,0.0,1000000.0,clever ferreira,2026-12-31,2026
+1251638,Johan Solstad-Nøis,2026-12-31,26/27,175,1293,Lyn,Tromsø IL,0.0,100000.0,johan solstad-nøis,2026-12-31,2026
+1281969,Santiago Daniele,2026-12-31,26/27,830,2154,Banfield,Chacarita Jrs.,0.0,50000.0,santiago daniele,2026-12-31,2026
+1291055,Tomás Nasif,2026-12-31,26/27,928,209,Platense,River Plate,0.0,1200000.0,tomás nasif,2026-12-31,2026
+1292706,Jean Unjanque,2026-12-31,26/27,4961,83082,Querétaro FC,Cancún FC,0.0,900000.0,jean unjanque,2026-12-31,2026
+1298505,Enzo Taborda,2026-12-31,26/27,25184,1234,Barracas C.,Independiente,0.0,100000.0,enzo taborda,2026-12-31,2026
+1306088,Jeremías Ramponi,2026-12-31,26/27,14602,15953,Estudiantes RC,Tigre II,0.0,,jeremías ramponi,2026-12-31,2026
+1322217,Manuel Fernández,2026-12-31,26/27,11831,1029,Tigre,Vélez Sarsfield,0.0,50000.0,manuel fernández,2026-12-31,2026
+1322290,Alan Daian Laprida,2026-12-31,26/27,31284,15372,Central Córdoba,Indep'te II,0.0,100000.0,alan daian laprida,2026-12-31,2026
+1375675,Patricio Madero,2026-12-31,26/27,19775,45560,Dep. Riestra,UAI Urquiza,0.0,,patricio madero,2026-12-31,2026
+1380618,Hather Cuesta,2026-12-31,26/27,17425,110451,Inter Bogotá,Necaxa U21,0.0,,hather cuesta,2026-12-31,2026
+1383742,Luis Marimón,2026-12-31,26/27,38628,2350,Llaneros FC,Millonarios,0.0,200000.0,luis marimón,2026-12-31,2026
+1447326,Ulices Delgado,2026-12-31,26/27,12454,28609,Sarmiento Junin,CD Capiatá,0.0,,ulices delgado,2026-12-31,2026
+1514701,Mario Gomes,2026-12-31,26/27,76,139763,Vålerenga,Bissau Stars,0.0,,mario gomes,2026-12-31,2026
+417084,Keiller,2027-01-01,26/27,6600,515,Internacional,Without Club,,500000.0,keiller,2027-01-01,2027
+910309,Kosuke Matsumura,2027-01-01,26/27,23896,3828,Hosei Univ.,Yokohama F. M.,0.0,,kosuke matsumura,2027-01-01,2027
+936342,Hikaru Takahashi,2027-01-01,26/27,41027,3828,Toyo Univ.,Yokohama F. M.,0.0,,hikaru takahashi,2027-01-01,2027
+1225755,Diego Tarzia,2027-01-01,26/27,1234,2125,Independiente,EC Vitória,2300000.0,2000000.0,diego tarzia,2027-01-01,2027
+1291255,Ryuki Oiso,2027-01-01,26/27,50376,1066,Tokai Gakuen,Nagoya Grampus,0.0,,ryuki oiso,2027-01-01,2027
+1411562,Shusuke Furuya,2027-01-01,26/27,41362,6632,Tokyo Int Univ.,Kashiwa Reysol,0.0,,shusuke furuya,2027-01-01,2027
+1412713,Ryosuke Irie,2027-01-01,26/27,23897,3958,Juntendo Univ.,Vissel Kobe,0.0,,ryosuke irie,2027-01-01,2027
+1495310,Yuhi Sakai,2027-01-01,26/27,26644,9597,Fukuoka Univ.,Avispa Fukuoka,0.0,,yuhi sakai,2027-01-01,2027
+1517172,Kanade Tsuneto,2027-01-01,26/27,25248,6632,Chuo University,Kashiwa Reysol,0.0,,kanade tsuneto,2027-01-01,2027
+1527143,Shunji Saito,2027-01-01,26/27,24113,672,JEF United U18,JEF Utd. Chiba,,,shunji saito,2027-01-01,2027
+1233166,Wisdom Aondowase Sule,2027-01-16,26/27,24575,433,HNK Gorica,FC Koper,0.0,250000.0,wisdom aondowase sule,2027-01-16,2027
+1043003,Yasin Özcan,2027-01-27,26/27,114,405,Besiktas,Aston Villa,0.0,5000000.0,yasin özcan,2027-01-27,2027
+402151,Sang-heon Lee,2027-05-16,26/27,6505,21459,Gimcheon Sangmu,Gangwon FC,0.0,650000.0,sang-heon lee,2027-05-16,2027
+639040,Yun-sang Hong,2027-05-16,26/27,6505,311,Gimcheon Sangmu,Pohang Steelers,0.0,550000.0,yun-sang hong,2027-05-16,2027
+765944,Si-hoo Hong,2027-05-16,26/27,6505,2996,Gimcheon Sangmu,Incheon Utd.,0.0,150000.0,si-hoo hong,2027-05-16,2027
+777484,Min-geu Kang,2027-05-16,26/27,6505,78388,Gimcheon Sangmu,Chungnam Asan,0.0,275000.0,min-geu kang,2027-05-16,2027
+875804,Seo-jin Kim,2027-05-16,26/27,6505,311,Gimcheon Sangmu,Pohang Steelers,0.0,100000.0,seo-jin kim,2027-05-16,2027
+876295,Ma-ho Chung,2027-05-16,26/27,6505,78388,Gimcheon Sangmu,Chungnam Asan,0.0,225000.0,ma-ho chung,2027-05-16,2027
+1004326,Ju-hyeok Kang,2027-05-16,26/27,6505,6500,Gimcheon Sangmu,FC Seoul,0.0,100000.0,ju-hyeok kang,2027-05-16,2027
+739277,Yannick Nkurunziza,2027-05-30,26/27,42055,589,Genclik Gücü,Antalyaspor,0.0,,yannick nkurunziza,2027-05-30,2027
+567148,Harry Stone,2027-05-31,26/27,1192,43,Ayr United,Heart of Midl.,0.0,50000.0,harry stone,2027-05-31,2027
+654693,Min-seo Park,2027-06-14,26/27,6505,3535,Gimcheon Sangmu,Ulsan HD,0.0,350000.0,min-seo park,2027-06-14,2027
+677477,Jae-min Jung,2027-06-14,26/27,6505,46292,Gimcheon Sangmu,Seoul E-Land,0.0,175000.0,jae-min jung,2027-06-14,2027
+709742,Man-ho Park,2027-06-14,26/27,6505,6504,Gimcheon Sangmu,Daegu FC,0.0,100000.0,man-ho park,2027-06-14,2027
+842229,Kyung-ho Roh,2027-06-14,26/27,6505,31622,Gimcheon Sangmu,Suwon FC,0.0,225000.0,kyung-ho roh,2027-06-14,2027
+992530,Yong-hui Park,2027-06-14,26/27,6505,31622,Gimcheon Sangmu,Suwon FC,0.0,100000.0,yong-hui park,2027-06-14,2027
+1219185,Jae-seok Yoon,2027-06-14,26/27,6505,3535,Gimcheon Sangmu,Ulsan HD,0.0,275000.0,jae-seok yoon,2027-06-14,2027
+422281,Muhammed Cham,2027-06-30,26/27,159,449,Red Star,Trabzonspor,0.0,3500000.0,muhammed cham,2027-06-30,2027
+426781,Ekanit Panya,2027-06-30,26/27,35387,25444,Ratchaburi FC,BG Pathum Utd.,0.0,400000.0,ekanit panya,2027-06-30,2027
+622722,Colin Kleine-Bekel,2027-06-30,26/27,257,80,FC St. Gallen,VfL Bochum,0.0,800000.0,colin kleine-bekel,2027-06-30,2027
+641765,Denis Hrezdac,2027-06-30,26/27,41061,952,Corvinul,UTA Arad,0.0,350000.0,denis hrezdac,2027-06-30,2027
+659352,Dion Kacuri,2027-06-30,26/27,541,26,A. Lustenau,Basel,0.0,600000.0,dion kacuri,2027-06-30,2027
+726526,Stefan Mitrović,2027-06-30,26/27,448,276,Vojvodina,Hellas Verona,0.0,800000.0,stefan mitrović,2027-06-30,2027
+803933,Luca Pazourek,2027-06-30,26/27,4467,14,TSV Hartberg,Austria Vienna,0.0,500000.0,luca pazourek,2027-06-30,2027
+842479,Kenneth Vargas,2027-06-30,26/27,9,43,Kalamata,Heart of Midl.,0.0,700000.0,kenneth vargas,2027-06-30,2027
+863745,Emmanuel Essiam,2027-06-30,26/27,242,26,FC Winterthur,Basel,0.0,200000.0,emmanuel essiam,2027-06-30,2027
+995045,Nikita Vasiljev,2027-06-30,26/27,3733,2698,Neftekhimik,Rubin Kazan,0.0,200000.0,nikita vasiljev,2027-06-30,2027
+1045344,Artem Stepanov,2027-06-30,26/27,200,15,Utrecht,Leverkusen,0.0,5000000.0,artem stepanov,2027-06-30,2027
+1052439,Kendry Páez,2027-06-30,26/27,209,631,River Plate,Chelsea,0.0,8000000.0,kendry páez,2027-06-30,2027
+1061045,Ruben Salchli,2027-06-30,26/27,2074,452,SC Kriens,Young Boys,0.0,,ruben salchli,2027-06-30,2027
+1072837,Jan Harustak,2027-06-30,26/27,5546,377,Mlada Boleslav,Banik Ostrava,0.0,175000.0,jan harustak,2027-06-30,2027
+1077560,Stavros Pnevmonidis,2027-06-30,26/27,3060,683,Atromitos,Olympiacos,0.0,1200000.0,stavros pnevmonidis,2027-06-30,2027
+1154876,Kasey Bos,2027-06-30,26/27,798,39,Excelsior,Mainz,0.0,450000.0,kasey bos,2027-06-30,2027
+1216111,Alex Sola,2027-06-30,26/27,6028,2431,Kiryat Shmona,Estrela Amadora,0.0,300000.0,alex sola,2027-06-30,2027
+63463,Daniel Wass,2027-07-01,27/28,206,123,Bröndby IF,Retired,,400000.0,daniel wass,2027-07-01,2027
+402135,Jun-su Ahn,2027-07-04,27/28,6505,515,Gimcheon Sangmu,Without Club,,300000.0,jun-su ahn,2027-07-04,2027
+716435,Kang-hyun Lee,2027-07-04,27/28,6505,515,Gimcheon Sangmu,Without Club,,300000.0,kang-hyun lee,2027-07-04,2027
+784335,Jun-soo Byeon,2027-07-18,27/28,6505,6502,Gimcheon Sangmu,Jeonbuk Hyundai,0.0,450000.0,jun-soo byeon,2027-07-18,2027
+645842,Chan-gi An,2028-02-02,27/28,6505,19684,Gimcheon Sangmu,Jeju SK,0.0,150000.0,chan-gi an,2028-02-02,2028
+677470,Yool Heo,2028-02-02,27/28,6505,3535,Gimcheon Sangmu,Ulsan HD,0.0,400000.0,yool heo,2028-02-02,2028
+709155,Jae-hyeok Oh,2028-02-02,27/28,6505,19684,Gimcheon Sangmu,Jeju SK,0.0,325000.0,jae-hyeok oh,2028-02-02,2028
+728133,Sang-hyeok Lee,2028-02-02,27/28,6505,35759,Gimcheon Sangmu,Bucheon FC,0.0,175000.0,sang-hyeok lee,2028-02-02,2028
+730364,Gyu-hyeon Choe,2028-02-02,27/28,6505,38898,Gimcheon Sangmu,FC Anyang,0.0,150000.0,gyu-hyeon choe,2028-02-02,2028
+746780,Young-hun Kang,2028-02-02,27/28,6505,2996,Gimcheon Sangmu,Incheon Utd.,0.0,125000.0,young-hun kang,2028-02-02,2028
+755355,Jin-ho Kim,2028-02-02,27/28,6505,30925,Gimcheon Sangmu,Gwangju FC,0.0,350000.0,jin-ho kim,2028-02-02,2028
+862094,Jun-seok Song,2028-02-02,27/28,6505,21459,Gimcheon Sangmu,Gangwon FC,0.0,400000.0,jun-seok song,2028-02-02,2028
+929007,Jun-ha Kim,2028-02-02,27/28,6505,19684,Gimcheon Sangmu,Jeju SK,0.0,350000.0,jun-ha kim,2028-02-02,2028
+467994,Luca Belardinelli,2030-06-30,25/26,5621,749,Reggiana,FC Empoli,0.0,700000.0,luca belardinelli,2030-06-30,2030
