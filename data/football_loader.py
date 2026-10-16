@@ -113,3 +113,11 @@ class FootballDataLoader:
         print(df.columns.tolist())
 
         return df
+    
+    def build_ability_model_dataset(self):
+        df = self.build_global_scouting_dataset()
+
+        # Import here to avoid a circular dependency.
+        from features.ability_feature_builder import prepare_ability_features
+
+        return prepare_ability_features(df)

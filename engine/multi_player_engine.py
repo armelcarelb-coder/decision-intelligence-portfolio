@@ -13,11 +13,20 @@ class MultiPlayerEngine:
     def build_complete_profile(self, res):
 
         return {
-
             # =========================================
             # IDENTITÉ
             # =========================================
             "player": res.get("player", "Unknown"),
+
+            # =========================================
+            # POSITION
+            # =========================================
+            "position": res.get("position", "UNKNOWN"),
+
+            "position_group": res.get(
+                "position_group",
+                res.get("position", "UNKNOWN")
+            ),
 
             # =========================================
             # PERFORMANCE CORE
@@ -85,7 +94,6 @@ class MultiPlayerEngine:
                 0
             )
         }
-
     # =====================================================
     # ANALYZE MULTIPLE PLAYERS
     # =====================================================

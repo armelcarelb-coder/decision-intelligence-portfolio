@@ -80,6 +80,73 @@ Bayesian modelling can express uncertainty through posterior distributions and, 
 - **Development direction:** Extend uncertainty reporting to additional ability-specific models as they are implemented, showing uncertainty alongside profiles and comparisons rather than hiding it inside a single score.
 - **Validation objective:** Verify convergence and sampling quality, examine sensitivity to priors and sample size, and assess calibration or predictive performance where a meaningful observed outcome is available. A credible interval describes uncertainty under the model; it is not a guarantee of future performance or transfer success.
 
+### Model Diagnostics
+
+The Bayesian player-ability model is assessed through standard MCMC
+diagnostics before posterior estimates are interpreted.
+
+#### Role-Aware Ability Model
+
+The Bayesian player-ability model estimates separate, role-relevant ability
+dimensions rather than reducing player quality to a single goalscoring score.
+
+Initial modelled dimensions include:
+
+- Finishing: goals relative to expected goals (xG).
+- Chance creation: assists relative to expected assisted goals (xAG).
+- Dribbling: successful take-ons relative to attempted take-ons.
+- Ball progression: progressive passes and carries per 90 minutes.
+- Passing security: completed passes relative to attempted passes.
+- Crossing: crosses per 90 minutes.
+- Defensive impact: tackles and interceptions per 90 minutes.
+- Pressing impact: pressures per 90 minutes.
+- Aerial and ground duel ability: duels won relative to duels attempted.
+- Goalkeeper shot stopping, penalty stopping, and distribution.
+
+Ability dimensions are activated according to the player’s position group.
+For example, dribbling and crossing are relevant for wingers and full-backs,
+while shot stopping and penalty stopping are relevant for goalkeepers.
+
+Physical-output dimensions such as distance covered, sprint volume, and
+acceleration require a tracking or GPS source. They are not treated as current
+capabilities unless such a source is integrated and validated.
+
+#### Transfer Simulator Evolution
+
+The Bayesian Transfer Simulator is evolving from a feature-independent Naive
+Bayes structure to a hierarchical Bayesian logistic-regression model.
+
+The logistic model estimates the joint effect of tactical fit, market context,
+age, injury risk, and salary on transfer success. It produces posterior
+predictive probabilities and credible intervals, rather than relying on an
+approximate normal interval.
+
+With limited historical transfer data, the model remains a simulation and
+research tool. It does not produce recruitment decisions, and its calibration
+and predictive performance must be evaluated on a sufficiently large and
+representative historical dataset.
+
+
+Diagnostics include:
+
+- **R-hat:** checked to assess between-chain convergence.
+- **Effective Sample Size:** `ess_bulk` and `ess_tail` are checked to assess
+  sampling quality.
+- **Trace plots:** generated for visual inspection of chain mixing and
+  posterior stability.
+- **Posterior distributions:** inspected for each modelled ability dimension.
+- **Credible intervals:** 94% Highest Density Intervals (HDIs) are reported
+  for each ability estimate.
+
+A player profile therefore reports ability-specific estimates and uncertainty,
+rather than a single universal talent score. A strong finishing estimate does
+not imply strong chance creation, progression, or defensive impact.
+
+The Bayesian Transfer Simulator uses conjugate Beta updates rather than MCMC
+sampling. It reports an approximate uncertainty interval, not an MCMC-based
+HDI.
+
+
 ## 7. RECRUITMENT DECISION SUPPORT
 
 ### Problem
@@ -115,6 +182,21 @@ The repository is organized around data handling, player analysis, probabilistic
 - **Current implementation:** The codebase includes data-loader components, player-analysis and profiling modules, comparison and tactical-fit components, and a Bayesian football use case. Integration and operational readiness can differ by module; the repository is not presented as a fully validated end-to-end product.
 - **Development direction:** Refactor the Bayesian component into a reusable engine for ability-specific models, then connect its outputs to player profiles, comparisons, tactical-fit analysis, and recruitment decisions through clear interfaces.
 - **Validation objective:** Test components individually and as an integrated pipeline; document inputs, outputs, assumptions, failure cases, and data provenance. Ensure downstream decisions use only outputs that are actually produced and checked.
+
+The role-aware Bayesian Talent Engine is implemented as a dedicated engine
+module. It receives structured player-performance features, estimates
+role-relevant ability dimensions, and returns posterior ability profiles with
+uncertainty.
+
+The intended workflow is:
+
+1. `FootballDataLoader` retrieves and combines FBref and Transfermarkt data.
+2. The ability-feature layer prepares role-relevant metrics and per-90
+   normalised inputs.
+3. `RoleAwareBayesianTalentEngine` estimates ability-specific posterior
+   distributions.
+4. Player profiles, comparisons, tactical-fit analysis, and recruitment
+   decision-support components consume these outputs.
 
 ## 10. DATA SOURCES
 
