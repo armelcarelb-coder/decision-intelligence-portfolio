@@ -1,0 +1,6 @@
+validation,status,details
+UNIQUE_COMPETITION_SEASON,PASS,"0 doublon(s) sur (competition_id, season)"
+VALID_SEASON_BOUNDS,PASS,0 borne(s) manquante(s) ou inversée(s)
+POSITIVE_GAME_COUNT,PASS,0 édition(s) sans match KEEP
+NO_UNKEYED_KEEP_USED,PASS,0 match(s) KEEP sans clés/dates ; exclus des bornes
+NO_REVIEW_MATCH_AS_BOUNDARY,PASS,0 identifiant(s) REVIEW utilisé(s) comme borne : []

@@ -1,0 +1,3 @@
+competition_id,season,performance_rows,competition_name,current_start_min,current_start_max,current_end_min,current_end_max,game_count,game_start,game_end,distinct_date_years,join_status,game_duration_days,game_start_year,game_end_year,start_year_minus_season,end_year_minus_season,game_start_outside_current_bounds,game_end_outside_current_bounds
+CDR,2019,467,copa-del-rey,2019-06-25,2019-06-25,2021-04-03,2021-04-03,126,2019-11-13,2021-04-03,3,MATCHED_TO_GAMES,507,2019,2021,0,2,False,False
+SFA,2019,291,scottish-fa-cup,2019-06-25,2019-06-25,2021-04-03,2021-04-03,95,2019-08-10,2020-12-20,2,MATCHED_TO_GAMES,498,2019,2020,0,1,False,False

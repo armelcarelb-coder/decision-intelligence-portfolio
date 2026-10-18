@@ -1,0 +1,1041 @@
+game_id,competition_id,season,date,round,home_club_name,away_club_name,home_club_goals,away_club_goals,expected_season_by_rule,review_reason
+4582069,BRA1,2024,2025-03-29,1. Matchday,Esporte Clube Juventude,Esporte Clube Vitória,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582063,BRA1,2024,2025-03-29,1. Matchday,São Paulo Futebol Clube,Sport Club do Recife,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582065,BRA1,2024,2025-03-29,1. Matchday,Cruzeiro Esporte Clube,Mirasol Futebol Clube,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582066,BRA1,2024,2025-03-29,1. Matchday,Grêmio Foot-Ball Porto Alegrense,Clube Atlético Mineiro,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582068,BRA1,2024,2025-03-29,1. Matchday,Fortaleza Esporte Clube,Fluminense Football Club,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582060,BRA1,2024,2025-03-30,1. Matchday,Clube de Regatas do Flamengo,Sport Club Internacional,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582062,BRA1,2024,2025-03-30,1. Matchday,Sociedade Esportiva Palmeiras,S. A. F. Botafogo,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582061,BRA1,2024,2025-03-30,1. Matchday,Club de Regatas Vasco da Gama,Santos Futebol Clube,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582067,BRA1,2024,2025-03-31,1. Matchday,Esporte Clube Bahia,Sport Club Corinthians Paulista,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582064,BRA1,2024,2025-04-01,1. Matchday,Red Bull Bragantino,Ceará Sporting Club,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582138,BRA1,2024,2025-04-05,2. Matchday,Ceará Sporting Club,Grêmio Foot-Ball Porto Alegrense,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582132,BRA1,2024,2025-04-05,2. Matchday,Sport Club Corinthians Paulista,Club de Regatas Vasco da Gama,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582135,BRA1,2024,2025-04-06,2. Matchday,Clube Atlético Mineiro,São Paulo Futebol Clube,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582136,BRA1,2024,2025-04-06,2. Matchday,Sport Club Internacional,Cruzeiro Esporte Clube,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582137,BRA1,2024,2025-04-06,2. Matchday,Esporte Clube Vitória,Clube de Regatas do Flamengo,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582130,BRA1,2024,2025-04-06,2. Matchday,Fluminense Football Club,Red Bull Bragantino,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582131,BRA1,2024,2025-04-06,2. Matchday,S. A. F. Botafogo,Esporte Clube Juventude,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582139,BRA1,2024,2025-04-06,2. Matchday,Sport Club do Recife,Sociedade Esportiva Palmeiras,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582134,BRA1,2024,2025-04-06,2. Matchday,Mirasol Futebol Clube,Fortaleza Esporte Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582133,BRA1,2024,2025-04-07,2. Matchday,Santos Futebol Clube,Esporte Clube Bahia,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582034,BRA1,2024,2025-04-12,3. Matchday,Red Bull Bragantino,S. A. F. Botafogo,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582032,BRA1,2024,2025-04-12,3. Matchday,Sociedade Esportiva Palmeiras,Sport Club Corinthians Paulista,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582039,BRA1,2024,2025-04-12,3. Matchday,Esporte Clube Juventude,Ceará Sporting Club,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582031,BRA1,2024,2025-04-13,3. Matchday,Club de Regatas Vasco da Gama,Sport Club do Recife,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582033,BRA1,2024,2025-04-13,3. Matchday,São Paulo Futebol Clube,Cruzeiro Esporte Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582030,BRA1,2024,2025-04-13,3. Matchday,Fluminense Football Club,Santos Futebol Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582037,BRA1,2024,2025-04-13,3. Matchday,Esporte Clube Bahia,Mirasol Futebol Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582036,BRA1,2024,2025-04-13,3. Matchday,Grêmio Foot-Ball Porto Alegrense,Clube de Regatas do Flamengo,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582038,BRA1,2024,2025-04-14,3. Matchday,Fortaleza Esporte Clube,Sport Club Internacional,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582035,BRA1,2024,2025-04-14,3. Matchday,Clube Atlético Mineiro,Esporte Clube Vitória,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582082,BRA1,2024,2025-04-16,4. Matchday,Sport Club Corinthians Paulista,Fluminense Football Club,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582084,BRA1,2024,2025-04-16,4. Matchday,Mirasol Futebol Clube,Grêmio Foot-Ball Porto Alegrense,4,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582086,BRA1,2024,2025-04-16,4. Matchday,Sport Club Internacional,Sociedade Esportiva Palmeiras,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582088,BRA1,2024,2025-04-16,4. Matchday,Ceará Sporting Club,Club de Regatas Vasco da Gama,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582089,BRA1,2024,2025-04-16,4. Matchday,Sport Club do Recife,Red Bull Bragantino,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582081,BRA1,2024,2025-04-16,4. Matchday,S. A. F. Botafogo,São Paulo Futebol Clube,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582087,BRA1,2024,2025-04-17,4. Matchday,Esporte Clube Vitória,Fortaleza Esporte Clube,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582080,BRA1,2024,2025-04-17,4. Matchday,Clube de Regatas do Flamengo,Esporte Clube Juventude,6,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582083,BRA1,2024,2025-04-17,4. Matchday,Santos Futebol Clube,Clube Atlético Mineiro,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582085,BRA1,2024,2025-04-18,4. Matchday,Cruzeiro Esporte Clube,Esporte Clube Bahia,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582141,BRA1,2024,2025-04-19,5. Matchday,Club de Regatas Vasco da Gama,Clube de Regatas do Flamengo,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582142,BRA1,2024,2025-04-19,5. Matchday,Sport Club Corinthians Paulista,Sport Club do Recife,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582140,BRA1,2024,2025-04-20,5. Matchday,Fluminense Football Club,Esporte Clube Vitória,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582143,BRA1,2024,2025-04-20,5. Matchday,São Paulo Futebol Clube,Santos Futebol Clube,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582145,BRA1,2024,2025-04-20,5. Matchday,Clube Atlético Mineiro,S. A. F. Botafogo,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582146,BRA1,2024,2025-04-20,5. Matchday,Grêmio Foot-Ball Porto Alegrense,Sport Club Internacional,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582148,BRA1,2024,2025-04-20,5. Matchday,Fortaleza Esporte Clube,Sociedade Esportiva Palmeiras,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582149,BRA1,2024,2025-04-20,5. Matchday,Esporte Clube Juventude,Mirasol Futebol Clube,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582144,BRA1,2024,2025-04-21,5. Matchday,Red Bull Bragantino,Cruzeiro Esporte Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582147,BRA1,2024,2025-04-22,5. Matchday,Esporte Clube Bahia,Ceará Sporting Club,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582166,BRA1,2024,2025-04-26,6. Matchday,Sport Club Internacional,Esporte Clube Juventude,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582164,BRA1,2024,2025-04-26,6. Matchday,Mirasol Futebol Clube,Clube Atlético Mineiro,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582168,BRA1,2024,2025-04-26,6. Matchday,Ceará Sporting Club,São Paulo Futebol Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582162,BRA1,2024,2025-04-27,6. Matchday,Sociedade Esportiva Palmeiras,Esporte Clube Bahia,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582169,BRA1,2024,2025-04-27,6. Matchday,Sport Club do Recife,Fortaleza Esporte Clube,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582160,BRA1,2024,2025-04-27,6. Matchday,Clube de Regatas do Flamengo,Sport Club Corinthians Paulista,4,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582161,BRA1,2024,2025-04-27,6. Matchday,S. A. F. Botafogo,Fluminense Football Club,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582165,BRA1,2024,2025-04-27,6. Matchday,Cruzeiro Esporte Clube,Club de Regatas Vasco da Gama,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582167,BRA1,2024,2025-04-27,6. Matchday,Esporte Clube Vitória,Grêmio Foot-Ball Porto Alegrense,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582163,BRA1,2024,2025-04-28,6. Matchday,Santos Futebol Clube,Red Bull Bragantino,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582090,BRA1,2024,2025-05-03,7. Matchday,Fluminense Football Club,Sport Club do Recife,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582092,BRA1,2024,2025-05-03,7. Matchday,Sport Club Corinthians Paulista,Sport Club Internacional,4,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582093,BRA1,2024,2025-05-03,7. Matchday,São Paulo Futebol Clube,Fortaleza Esporte Clube,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582098,BRA1,2024,2025-05-03,7. Matchday,Ceará Sporting Club,Esporte Clube Vitória,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582091,BRA1,2024,2025-05-04,7. Matchday,Club de Regatas Vasco da Gama,Sociedade Esportiva Palmeiras,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582095,BRA1,2024,2025-05-04,7. Matchday,Cruzeiro Esporte Clube,Clube de Regatas do Flamengo,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582096,BRA1,2024,2025-05-04,7. Matchday,Grêmio Foot-Ball Porto Alegrense,Santos Futebol Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582097,BRA1,2024,2025-05-04,7. Matchday,Esporte Clube Bahia,S. A. F. Botafogo,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582094,BRA1,2024,2025-05-05,7. Matchday,Red Bull Bragantino,Mirasol Futebol Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582099,BRA1,2024,2025-05-06,7. Matchday,Esporte Clube Juventude,Clube Atlético Mineiro,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582058,BRA1,2024,2025-05-10,8. Matchday,Fortaleza Esporte Clube,Esporte Clube Juventude,5,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582054,BRA1,2024,2025-05-10,8. Matchday,Mirasol Futebol Clube,Sport Club Corinthians Paulista,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582056,BRA1,2024,2025-05-10,8. Matchday,Grêmio Foot-Ball Porto Alegrense,Red Bull Bragantino,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582057,BRA1,2024,2025-05-10,8. Matchday,Esporte Clube Vitória,Club de Regatas Vasco da Gama,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582050,BRA1,2024,2025-05-11,8. Matchday,Clube de Regatas do Flamengo,Esporte Clube Bahia,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582052,BRA1,2024,2025-05-11,8. Matchday,Sociedade Esportiva Palmeiras,São Paulo Futebol Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582055,BRA1,2024,2025-05-11,8. Matchday,Clube Atlético Mineiro,Fluminense Football Club,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582059,BRA1,2024,2025-05-11,8. Matchday,Sport Club do Recife,Cruzeiro Esporte Clube,0,4,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582051,BRA1,2024,2025-05-12,8. Matchday,S. A. F. Botafogo,Sport Club Internacional,4,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582053,BRA1,2024,2025-05-13,8. Matchday,Santos Futebol Clube,Ceará Sporting Club,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582078,BRA1,2024,2025-05-17,9. Matchday,Ceará Sporting Club,Sport Club do Recife,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582071,BRA1,2024,2025-05-17,9. Matchday,Club de Regatas Vasco da Gama,Fortaleza Esporte Clube,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582079,BRA1,2024,2025-05-18,9. Matchday,Esporte Clube Juventude,Fluminense Football Club,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582077,BRA1,2024,2025-05-18,9. Matchday,Esporte Clube Bahia,Esporte Clube Vitória,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582074,BRA1,2024,2025-05-18,9. Matchday,Red Bull Bragantino,Sociedade Esportiva Palmeiras,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582073,BRA1,2024,2025-05-18,9. Matchday,São Paulo Futebol Clube,Grêmio Foot-Ball Porto Alegrense,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582072,BRA1,2024,2025-05-18,9. Matchday,Sport Club Corinthians Paulista,Santos Futebol Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582070,BRA1,2024,2025-05-18,9. Matchday,Clube de Regatas do Flamengo,S. A. F. Botafogo,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582076,BRA1,2024,2025-05-19,9. Matchday,Sport Club Internacional,Mirasol Futebol Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582075,BRA1,2024,2025-05-19,9. Matchday,Cruzeiro Esporte Clube,Clube Atlético Mineiro,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582180,BRA1,2024,2025-05-24,10. Matchday,Fluminense Football Club,Club de Regatas Vasco da Gama,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582183,BRA1,2024,2025-05-24,10. Matchday,São Paulo Futebol Clube,Mirasol Futebol Clube,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582189,BRA1,2024,2025-05-25,10. Matchday,Sport Club do Recife,Sport Club Internacional,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582188,BRA1,2024,2025-05-25,10. Matchday,Fortaleza Esporte Clube,Cruzeiro Esporte Clube,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582187,BRA1,2024,2025-05-25,10. Matchday,Esporte Clube Vitória,Santos Futebol Clube,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582186,BRA1,2024,2025-05-25,10. Matchday,Grêmio Foot-Ball Porto Alegrense,Esporte Clube Bahia,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582185,BRA1,2024,2025-05-25,10. Matchday,Clube Atlético Mineiro,Sport Club Corinthians Paulista,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582182,BRA1,2024,2025-05-25,10. Matchday,Sociedade Esportiva Palmeiras,Clube de Regatas do Flamengo,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582184,BRA1,2024,2025-05-26,10. Matchday,Red Bull Bragantino,Esporte Clube Juventude,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582157,BRA1,2024,2025-05-31,11. Matchday,Esporte Clube Bahia,São Paulo Futebol Clube,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582152,BRA1,2024,2025-06-01,11. Matchday,Sport Club Corinthians Paulista,Esporte Clube Vitória,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582151,BRA1,2024,2025-06-01,11. Matchday,Club de Regatas Vasco da Gama,Red Bull Bragantino,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582159,BRA1,2024,2025-06-01,11. Matchday,Esporte Clube Juventude,Grêmio Foot-Ball Porto Alegrense,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582158,BRA1,2024,2025-06-01,11. Matchday,Ceará Sporting Club,Clube Atlético Mineiro,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582150,BRA1,2024,2025-06-01,11. Matchday,Clube de Regatas do Flamengo,Fortaleza Esporte Clube,5,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582155,BRA1,2024,2025-06-01,11. Matchday,Cruzeiro Esporte Clube,Sociedade Esportiva Palmeiras,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582153,BRA1,2024,2025-06-01,11. Matchday,Santos Futebol Clube,S. A. F. Botafogo,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582154,BRA1,2024,2025-06-01,11. Matchday,Mirasol Futebol Clube,Sport Club do Recife,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582156,BRA1,2024,2025-06-02,11. Matchday,Sport Club Internacional,Fluminense Football Club,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582181,BRA1,2024,2025-06-05,10. Matchday,S. A. F. Botafogo,Ceará Sporting Club,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582117,BRA1,2024,2025-06-12,12. Matchday,Esporte Clube Vitória,Cruzeiro Esporte Clube,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582118,BRA1,2024,2025-06-12,12. Matchday,Fortaleza Esporte Clube,Santos Futebol Clube,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582114,BRA1,2024,2025-06-12,12. Matchday,Red Bull Bragantino,Esporte Clube Bahia,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582116,BRA1,2024,2025-06-13,12. Matchday,Grêmio Foot-Ball Porto Alegrense,Sport Club Corinthians Paulista,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582115,BRA1,2024,2025-06-13,12. Matchday,Clube Atlético Mineiro,Sport Club Internacional,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582113,BRA1,2024,2025-06-13,12. Matchday,São Paulo Futebol Clube,Club de Regatas Vasco da Gama,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582201,BRA1,2024,2025-07-12,13. Matchday,Club de Regatas Vasco da Gama,S. A. F. Botafogo,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582206,BRA1,2024,2025-07-12,13. Matchday,Sport Club Internacional,Esporte Clube Vitória,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582200,BRA1,2024,2025-07-12,13. Matchday,Clube de Regatas do Flamengo,São Paulo Futebol Clube,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582202,BRA1,2024,2025-07-13,13. Matchday,Sport Club Corinthians Paulista,Red Bull Bragantino,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582207,BRA1,2024,2025-07-13,13. Matchday,Esporte Clube Bahia,Clube Atlético Mineiro,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582208,BRA1,2024,2025-07-14,13. Matchday,Fortaleza Esporte Clube,Ceará Sporting Club,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582205,BRA1,2024,2025-07-14,13. Matchday,Cruzeiro Esporte Clube,Grêmio Foot-Ball Porto Alegrense,4,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582209,BRA1,2024,2025-07-15,13. Matchday,Esporte Clube Juventude,Sport Club do Recife,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582172,BRA1,2024,2025-07-16,14. Matchday,Sociedade Esportiva Palmeiras,Mirasol Futebol Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582178,BRA1,2024,2025-07-16,14. Matchday,Ceará Sporting Club,Sport Club Corinthians Paulista,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582174,BRA1,2024,2025-07-17,14. Matchday,Red Bull Bragantino,São Paulo Futebol Clube,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582170,BRA1,2024,2025-07-17,14. Matchday,Fluminense Football Club,Cruzeiro Esporte Clube,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582171,BRA1,2024,2025-07-17,14. Matchday,S. A. F. Botafogo,Esporte Clube Vitória,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582173,BRA1,2024,2025-07-17,14. Matchday,Santos Futebol Clube,Clube de Regatas do Flamengo,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582108,BRA1,2024,2025-07-19,15. Matchday,Fortaleza Esporte Clube,Esporte Clube Bahia,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582104,BRA1,2024,2025-07-19,15. Matchday,Mirasol Futebol Clube,Santos Futebol Clube,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582101,BRA1,2024,2025-07-19,15. Matchday,Club de Regatas Vasco da Gama,Grêmio Foot-Ball Porto Alegrense,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582109,BRA1,2024,2025-07-20,15. Matchday,Sport Club do Recife,S. A. F. Botafogo,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582102,BRA1,2024,2025-07-20,15. Matchday,Sociedade Esportiva Palmeiras,Clube Atlético Mineiro,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582100,BRA1,2024,2025-07-20,15. Matchday,Clube de Regatas do Flamengo,Fluminense Football Club,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582107,BRA1,2024,2025-07-20,15. Matchday,Esporte Clube Vitória,Red Bull Bragantino,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582106,BRA1,2024,2025-07-20,15. Matchday,Sport Club Internacional,Ceará Sporting Club,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582105,BRA1,2024,2025-07-20,15. Matchday,Cruzeiro Esporte Clube,Esporte Clube Juventude,4,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582103,BRA1,2024,2025-07-20,15. Matchday,São Paulo Futebol Clube,Sport Club Corinthians Paulista,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582222,BRA1,2024,2025-07-23,16. Matchday,Sport Club Corinthians Paulista,Cruzeiro Esporte Clube,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582220,BRA1,2024,2025-07-23,16. Matchday,Fluminense Football Club,Sociedade Esportiva Palmeiras,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582228,BRA1,2024,2025-07-23,16. Matchday,Ceará Sporting Club,Mirasol Futebol Clube,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582224,BRA1,2024,2025-07-24,16. Matchday,Red Bull Bragantino,Clube de Regatas do Flamengo,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582223,BRA1,2024,2025-07-24,16. Matchday,Santos Futebol Clube,Sport Club Internacional,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582229,BRA1,2024,2025-07-24,16. Matchday,Esporte Clube Juventude,São Paulo Futebol Clube,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582227,BRA1,2024,2025-07-24,16. Matchday,Esporte Clube Vitória,Sport Club do Recife,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582214,BRA1,2024,2025-07-26,17. Matchday,Mirasol Futebol Clube,Esporte Clube Vitória,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582218,BRA1,2024,2025-07-26,17. Matchday,Fortaleza Esporte Clube,Red Bull Bragantino,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582219,BRA1,2024,2025-07-26,17. Matchday,Sport Club do Recife,Santos Futebol Clube,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582211,BRA1,2024,2025-07-26,17. Matchday,S. A. F. Botafogo,Sport Club Corinthians Paulista,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582215,BRA1,2024,2025-07-27,17. Matchday,Cruzeiro Esporte Clube,Ceará Sporting Club,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582216,BRA1,2024,2025-07-27,17. Matchday,Sport Club Internacional,Club de Regatas Vasco da Gama,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582213,BRA1,2024,2025-07-27,17. Matchday,São Paulo Futebol Clube,Fluminense Football Club,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582212,BRA1,2024,2025-07-27,17. Matchday,Sociedade Esportiva Palmeiras,Grêmio Foot-Ball Porto Alegrense,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582217,BRA1,2024,2025-07-27,17. Matchday,Esporte Clube Bahia,Esporte Clube Juventude,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582210,BRA1,2024,2025-07-28,17. Matchday,Clube de Regatas do Flamengo,Clube Atlético Mineiro,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582176,BRA1,2024,2025-07-30,14. Matchday,Grêmio Foot-Ball Porto Alegrense,Fortaleza Esporte Clube,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582275,BRA1,2024,2025-08-02,18. Matchday,Mirasol Futebol Clube,Club de Regatas Vasco da Gama,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582305,BRA1,2024,2025-08-02,18. Matchday,Sport Club do Recife,Esporte Clube Bahia,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582264,BRA1,2024,2025-08-03,18. Matchday,S. A. F. Botafogo,Cruzeiro Esporte Clube,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582261,BRA1,2024,2025-08-03,18. Matchday,Fluminense Football Club,Grêmio Foot-Ball Porto Alegrense,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582299,BRA1,2024,2025-08-03,18. Matchday,Ceará Sporting Club,Clube de Regatas do Flamengo,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582267,BRA1,2024,2025-08-03,18. Matchday,Sport Club Corinthians Paulista,Fortaleza Esporte Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582291,BRA1,2024,2025-08-03,18. Matchday,Esporte Clube Vitória,Sociedade Esportiva Palmeiras,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582281,BRA1,2024,2025-08-03,18. Matchday,Clube Atlético Mineiro,Red Bull Bragantino,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582285,BRA1,2024,2025-08-04,18. Matchday,Sport Club Internacional,São Paulo Futebol Clube,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582270,BRA1,2024,2025-08-05,18. Matchday,Santos Futebol Clube,Esporte Clube Juventude,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582124,BRA1,2024,2025-08-09,19. Matchday,Red Bull Bragantino,Sport Club Internacional,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582123,BRA1,2024,2025-08-09,19. Matchday,São Paulo Futebol Clube,Esporte Clube Vitória,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582120,BRA1,2024,2025-08-09,19. Matchday,Clube de Regatas do Flamengo,Mirasol Futebol Clube,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582128,BRA1,2024,2025-08-10,19. Matchday,Fortaleza Esporte Clube,S. A. F. Botafogo,0,5,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582127,BRA1,2024,2025-08-10,19. Matchday,Esporte Clube Bahia,Fluminense Football Club,3,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582125,BRA1,2024,2025-08-10,19. Matchday,Cruzeiro Esporte Clube,Santos Futebol Clube,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582122,BRA1,2024,2025-08-10,19. Matchday,Sociedade Esportiva Palmeiras,Ceará Sporting Club,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582121,BRA1,2024,2025-08-10,19. Matchday,Club de Regatas Vasco da Gama,Clube Atlético Mineiro,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582126,BRA1,2024,2025-08-11,19. Matchday,Grêmio Foot-Ball Porto Alegrense,Sport Club do Recife,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582129,BRA1,2024,2025-08-12,19. Matchday,Esporte Clube Juventude,Sport Club Corinthians Paulista,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582320,BRA1,2024,2025-08-16,20. Matchday,Esporte Clube Vitória,Esporte Clube Juventude,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582332,BRA1,2024,2025-08-16,20. Matchday,Sport Club do Recife,São Paulo Futebol Clube,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582325,BRA1,2024,2025-08-16,20. Matchday,Ceará Sporting Club,Red Bull Bragantino,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582271,BRA1,2024,2025-08-16,20. Matchday,Fluminense Football Club,Fortaleza Esporte Clube,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582282,BRA1,2024,2025-08-17,20. Matchday,Sport Club Corinthians Paulista,Esporte Clube Bahia,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582306,BRA1,2024,2025-08-17,20. Matchday,Clube Atlético Mineiro,Grêmio Foot-Ball Porto Alegrense,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582290,BRA1,2024,2025-08-17,20. Matchday,Santos Futebol Clube,Club de Regatas Vasco da Gama,0,6,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582312,BRA1,2024,2025-08-17,20. Matchday,Sport Club Internacional,Clube de Regatas do Flamengo,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582277,BRA1,2024,2025-08-18,20. Matchday,S. A. F. Botafogo,Sociedade Esportiva Palmeiras,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582297,BRA1,2024,2025-08-19,20. Matchday,Mirasol Futebol Clube,Cruzeiro Esporte Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582179,BRA1,2024,2025-08-20,14. Matchday,Esporte Clube Juventude,Club de Regatas Vasco da Gama,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582044,BRA1,2024,2025-08-23,21. Matchday,Red Bull Bragantino,Fluminense Football Club,4,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582045,BRA1,2024,2025-08-23,21. Matchday,Cruzeiro Esporte Clube,Sport Club Internacional,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582049,BRA1,2024,2025-08-24,21. Matchday,Esporte Clube Juventude,S. A. F. Botafogo,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582047,BRA1,2024,2025-08-24,21. Matchday,Esporte Clube Bahia,Santos Futebol Clube,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582046,BRA1,2024,2025-08-24,21. Matchday,Grêmio Foot-Ball Porto Alegrense,Ceará Sporting Club,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582041,BRA1,2024,2025-08-24,21. Matchday,Club de Regatas Vasco da Gama,Sport Club Corinthians Paulista,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582048,BRA1,2024,2025-08-24,21. Matchday,Fortaleza Esporte Clube,Mirasol Futebol Clube,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582043,BRA1,2024,2025-08-25,21. Matchday,São Paulo Futebol Clube,Clube Atlético Mineiro,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582042,BRA1,2024,2025-08-25,21. Matchday,Sociedade Esportiva Palmeiras,Sport Club do Recife,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582040,BRA1,2024,2025-08-26,21. Matchday,Clube de Regatas do Flamengo,Esporte Clube Vitória,8,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582321,BRA1,2024,2025-08-30,22. Matchday,Ceará Sporting Club,Esporte Clube Juventude,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582269,BRA1,2024,2025-08-30,22. Matchday,S. A. F. Botafogo,Red Bull Bragantino,4,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582295,BRA1,2024,2025-08-31,22. Matchday,Mirasol Futebol Clube,Esporte Clube Bahia,5,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582316,BRA1,2024,2025-08-31,22. Matchday,Esporte Clube Vitória,Clube Atlético Mineiro,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582288,BRA1,2024,2025-08-31,22. Matchday,Santos Futebol Clube,Fluminense Football Club,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582276,BRA1,2024,2025-08-31,22. Matchday,Sport Club Corinthians Paulista,Sociedade Esportiva Palmeiras,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582302,BRA1,2024,2025-08-31,22. Matchday,Cruzeiro Esporte Clube,São Paulo Futebol Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582265,BRA1,2024,2025-08-31,22. Matchday,Clube de Regatas do Flamengo,Grêmio Foot-Ball Porto Alegrense,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582310,BRA1,2024,2025-09-01,22. Matchday,Sport Club Internacional,Fortaleza Esporte Clube,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582328,BRA1,2024,2025-09-01,22. Matchday,Sport Club do Recife,Club de Regatas Vasco da Gama,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582196,BRA1,2024,2025-09-13,23. Matchday,Grêmio Foot-Ball Porto Alegrense,Mirasol Futebol Clube,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582192,BRA1,2024,2025-09-13,23. Matchday,Sociedade Esportiva Palmeiras,Sport Club Internacional,4,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582198,BRA1,2024,2025-09-13,23. Matchday,Fortaleza Esporte Clube,Esporte Clube Vitória,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582193,BRA1,2024,2025-09-14,23. Matchday,São Paulo Futebol Clube,S. A. F. Botafogo,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582194,BRA1,2024,2025-09-14,23. Matchday,Red Bull Bragantino,Sport Club do Recife,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582190,BRA1,2024,2025-09-14,23. Matchday,Fluminense Football Club,Sport Club Corinthians Paulista,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582199,BRA1,2024,2025-09-14,23. Matchday,Esporte Clube Juventude,Clube de Regatas do Flamengo,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582195,BRA1,2024,2025-09-14,23. Matchday,Clube Atlético Mineiro,Santos Futebol Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582191,BRA1,2024,2025-09-15,23. Matchday,Club de Regatas Vasco da Gama,Ceará Sporting Club,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582197,BRA1,2024,2025-09-16,23. Matchday,Esporte Clube Bahia,Cruzeiro Esporte Clube,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582111,BRA1,2024,2025-09-17,12. Matchday,S. A. F. Botafogo,Mirasol Futebol Clube,3,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582347,BRA1,2024,2025-09-20,24. Matchday,Esporte Clube Vitória,Fluminense Football Club,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582286,BRA1,2024,2025-09-20,24. Matchday,S. A. F. Botafogo,Clube Atlético Mineiro,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582348,BRA1,2024,2025-09-20,24. Matchday,Ceará Sporting Club,Esporte Clube Bahia,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582274,BRA1,2024,2025-09-21,24. Matchday,Clube de Regatas do Flamengo,Club de Regatas Vasco da Gama,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582294,BRA1,2024,2025-09-21,24. Matchday,Sociedade Esportiva Palmeiras,Fortaleza Esporte Clube,4,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582329,BRA1,2024,2025-09-21,24. Matchday,Sport Club Internacional,Grêmio Foot-Ball Porto Alegrense,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582349,BRA1,2024,2025-09-21,24. Matchday,Sport Club do Recife,Sport Club Corinthians Paulista,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582314,BRA1,2024,2025-09-21,24. Matchday,Mirasol Futebol Clube,Esporte Clube Juventude,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582307,BRA1,2024,2025-09-22,24. Matchday,Santos Futebol Clube,São Paulo Futebol Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582323,BRA1,2024,2025-09-22,24. Matchday,Cruzeiro Esporte Clube,Red Bull Bragantino,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582226,BRA1,2024,2025-09-24,16. Matchday,Grêmio Foot-Ball Porto Alegrense,S. A. F. Botafogo,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582221,BRA1,2024,2025-09-24,16. Matchday,Club de Regatas Vasco da Gama,Esporte Clube Bahia,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582249,BRA1,2024,2025-09-27,25. Matchday,Esporte Clube Juventude,Sport Club Internacional,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582248,BRA1,2024,2025-09-27,25. Matchday,Fortaleza Esporte Clube,Sport Club do Recife,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582241,BRA1,2024,2025-09-27,25. Matchday,Club de Regatas Vasco da Gama,Cruzeiro Esporte Clube,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582246,BRA1,2024,2025-09-28,25. Matchday,Grêmio Foot-Ball Porto Alegrense,Esporte Clube Vitória,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582245,BRA1,2024,2025-09-28,25. Matchday,Clube Atlético Mineiro,Mirasol Futebol Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582244,BRA1,2024,2025-09-28,25. Matchday,Red Bull Bragantino,Santos Futebol Clube,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582240,BRA1,2024,2025-09-28,25. Matchday,Fluminense Football Club,S. A. F. Botafogo,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582247,BRA1,2024,2025-09-28,25. Matchday,Esporte Clube Bahia,Sociedade Esportiva Palmeiras,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582242,BRA1,2024,2025-09-29,25. Matchday,Sport Club Corinthians Paulista,Clube de Regatas do Flamengo,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582243,BRA1,2024,2025-09-30,25. Matchday,São Paulo Futebol Clube,Ceará Sporting Club,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582259,BRA1,2024,2025-10-01,26. Matchday,Sport Club do Recife,Fluminense Football Club,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582255,BRA1,2024,2025-10-01,26. Matchday,Clube Atlético Mineiro,Esporte Clube Juventude,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582256,BRA1,2024,2025-10-01,26. Matchday,Sport Club Internacional,Sport Club Corinthians Paulista,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582252,BRA1,2024,2025-10-01,26. Matchday,Sociedade Esportiva Palmeiras,Club de Regatas Vasco da Gama,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582254,BRA1,2024,2025-10-01,26. Matchday,Mirasol Futebol Clube,Red Bull Bragantino,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582257,BRA1,2024,2025-10-02,26. Matchday,Esporte Clube Vitória,Ceará Sporting Club,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582258,BRA1,2024,2025-10-02,26. Matchday,Fortaleza Esporte Clube,São Paulo Futebol Clube,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582253,BRA1,2024,2025-10-02,26. Matchday,Santos Futebol Clube,Grêmio Foot-Ball Porto Alegrense,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582251,BRA1,2024,2025-10-02,26. Matchday,S. A. F. Botafogo,Esporte Clube Bahia,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582250,BRA1,2024,2025-10-03,26. Matchday,Clube de Regatas do Flamengo,Cruzeiro Esporte Clube,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582280,BRA1,2024,2025-10-04,27. Matchday,Fluminense Football Club,Clube Atlético Mineiro,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582313,BRA1,2024,2025-10-04,27. Matchday,Red Bull Bragantino,Grêmio Foot-Ball Porto Alegrense,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582331,BRA1,2024,2025-10-04,27. Matchday,Sport Club Internacional,S. A. F. Botafogo,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582289,BRA1,2024,2025-10-05,27. Matchday,Club de Regatas Vasco da Gama,Esporte Clube Vitória,4,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582335,BRA1,2024,2025-10-05,27. Matchday,Esporte Clube Bahia,Clube de Regatas do Flamengo,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582296,BRA1,2024,2025-10-05,27. Matchday,Sport Club Corinthians Paulista,Mirasol Futebol Clube,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582341,BRA1,2024,2025-10-05,27. Matchday,Esporte Clube Juventude,Fortaleza Esporte Clube,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582304,BRA1,2024,2025-10-05,27. Matchday,São Paulo Futebol Clube,Sociedade Esportiva Palmeiras,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582324,BRA1,2024,2025-10-06,27. Matchday,Cruzeiro Esporte Clube,Sport Club do Recife,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582338,BRA1,2024,2025-10-06,27. Matchday,Ceará Sporting Club,Santos Futebol Clube,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582175,BRA1,2024,2025-10-08,14. Matchday,Clube Atlético Mineiro,Sport Club do Recife,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582204,BRA1,2024,2025-10-09,13. Matchday,Mirasol Futebol Clube,Fluminense Football Club,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582112,BRA1,2024,2025-10-11,12. Matchday,Sociedade Esportiva Palmeiras,Esporte Clube Juventude,4,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582266,BRA1,2024,2025-10-15,28. Matchday,Sociedade Esportiva Palmeiras,Red Bull Bragantino,5,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582262,BRA1,2024,2025-10-15,28. Matchday,S. A. F. Botafogo,Clube de Regatas do Flamengo,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582308,BRA1,2024,2025-10-16,28. Matchday,Fortaleza Esporte Clube,Club de Regatas Vasco da Gama,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582292,BRA1,2024,2025-10-16,28. Matchday,Grêmio Foot-Ball Porto Alegrense,São Paulo Futebol Clube,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582284,BRA1,2024,2025-10-16,28. Matchday,Clube Atlético Mineiro,Cruzeiro Esporte Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582278,BRA1,2024,2025-10-16,28. Matchday,Mirasol Futebol Clube,Sport Club Internacional,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582272,BRA1,2024,2025-10-16,28. Matchday,Santos Futebol Clube,Sport Club Corinthians Paulista,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582315,BRA1,2024,2025-10-16,28. Matchday,Sport Club do Recife,Ceará Sporting Club,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582301,BRA1,2024,2025-10-17,28. Matchday,Esporte Clube Vitória,Esporte Clube Bahia,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582260,BRA1,2024,2025-10-17,28. Matchday,Fluminense Football Club,Esporte Clube Juventude,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582273,BRA1,2024,2025-10-18,29. Matchday,Sport Club Corinthians Paulista,Clube Atlético Mineiro,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582263,BRA1,2024,2025-10-19,29. Matchday,Clube de Regatas do Flamengo,Sociedade Esportiva Palmeiras,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582293,BRA1,2024,2025-10-19,29. Matchday,Cruzeiro Esporte Clube,Fortaleza Esporte Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582303,BRA1,2024,2025-10-19,29. Matchday,Sport Club Internacional,Sport Club do Recife,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582283,BRA1,2024,2025-10-19,29. Matchday,Mirasol Futebol Clube,São Paulo Futebol Clube,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582318,BRA1,2024,2025-10-19,29. Matchday,Ceará Sporting Club,S. A. F. Botafogo,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582326,BRA1,2024,2025-10-20,29. Matchday,Esporte Clube Juventude,Red Bull Bragantino,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582311,BRA1,2024,2025-10-20,29. Matchday,Esporte Clube Bahia,Grêmio Foot-Ball Porto Alegrense,4,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582268,BRA1,2024,2025-10-20,29. Matchday,Club de Regatas Vasco da Gama,Fluminense Football Club,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582279,BRA1,2024,2025-10-21,29. Matchday,Santos Futebol Clube,Esporte Clube Vitória,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582177,BRA1,2024,2025-10-22,14. Matchday,Esporte Clube Bahia,Sport Club Internacional,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582333,BRA1,2024,2025-10-25,30. Matchday,Clube Atlético Mineiro,Ceará Sporting Club,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582287,BRA1,2024,2025-10-25,30. Matchday,Fluminense Football Club,Sport Club Internacional,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582319,BRA1,2024,2025-10-25,30. Matchday,Fortaleza Esporte Clube,Clube de Regatas do Flamengo,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582345,BRA1,2024,2025-10-25,30. Matchday,Sport Club do Recife,Mirasol Futebol Clube,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582340,BRA1,2024,2025-10-25,30. Matchday,Esporte Clube Vitória,Sport Club Corinthians Paulista,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582343,BRA1,2024,2025-10-26,30. Matchday,São Paulo Futebol Clube,Esporte Clube Bahia,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582309,BRA1,2024,2025-10-26,30. Matchday,Sociedade Esportiva Palmeiras,Cruzeiro Esporte Clube,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582337,BRA1,2024,2025-10-26,30. Matchday,Grêmio Foot-Ball Porto Alegrense,Esporte Clube Juventude,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582298,BRA1,2024,2025-10-26,30. Matchday,S. A. F. Botafogo,Santos Futebol Clube,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582327,BRA1,2024,2025-10-26,30. Matchday,Red Bull Bragantino,Club de Regatas Vasco da Gama,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582110,BRA1,2024,2025-10-29,12. Matchday,Fluminense Football Club,Ceará Sporting Club,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582235,BRA1,2024,2025-11-01,31. Matchday,Cruzeiro Esporte Clube,Esporte Clube Vitória,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582234,BRA1,2024,2025-11-01,31. Matchday,Mirasol Futebol Clube,S. A. F. Botafogo,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582233,BRA1,2024,2025-11-01,31. Matchday,Santos Futebol Clube,Fortaleza Esporte Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582237,BRA1,2024,2025-11-02,31. Matchday,Esporte Clube Bahia,Red Bull Bragantino,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582236,BRA1,2024,2025-11-02,31. Matchday,Sport Club Internacional,Clube Atlético Mineiro,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582232,BRA1,2024,2025-11-02,31. Matchday,Sport Club Corinthians Paulista,Grêmio Foot-Ball Porto Alegrense,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582231,BRA1,2024,2025-11-02,31. Matchday,Club de Regatas Vasco da Gama,São Paulo Futebol Clube,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582239,BRA1,2024,2025-11-02,31. Matchday,Esporte Clube Juventude,Sociedade Esportiva Palmeiras,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582230,BRA1,2024,2025-11-02,31. Matchday,Clube de Regatas do Flamengo,Sport Club do Recife,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582238,BRA1,2024,2025-11-02,31. Matchday,Ceará Sporting Club,Fluminense Football Club,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582334,BRA1,2024,2025-11-05,32. Matchday,Red Bull Bragantino,Sport Club Corinthians Paulista,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582336,BRA1,2024,2025-11-05,32. Matchday,Clube Atlético Mineiro,Esporte Clube Bahia,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582339,BRA1,2024,2025-11-05,32. Matchday,Grêmio Foot-Ball Porto Alegrense,Cruzeiro Esporte Clube,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582342,BRA1,2024,2025-11-05,32. Matchday,Esporte Clube Vitória,Sport Club Internacional,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582317,BRA1,2024,2025-11-05,32. Matchday,S. A. F. Botafogo,Club de Regatas Vasco da Gama,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582346,BRA1,2024,2025-11-05,32. Matchday,Sport Club do Recife,Esporte Clube Juventude,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582330,BRA1,2024,2025-11-06,32. Matchday,São Paulo Futebol Clube,Clube de Regatas do Flamengo,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582344,BRA1,2024,2025-11-06,32. Matchday,Ceará Sporting Club,Fortaleza Esporte Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582300,BRA1,2024,2025-11-06,32. Matchday,Fluminense Football Club,Mirasol Futebol Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582322,BRA1,2024,2025-11-07,32. Matchday,Sociedade Esportiva Palmeiras,Santos Futebol Clube,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726122,BRA1,2024,2025-11-08,33. Matchday,Sport Club do Recife,Clube Atlético Mineiro,2,4,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726119,BRA1,2024,2025-11-08,33. Matchday,Sport Club Internacional,Esporte Clube Bahia,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726114,BRA1,2024,2025-11-08,33. Matchday,Club de Regatas Vasco da Gama,Esporte Clube Juventude,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726121,BRA1,2024,2025-11-09,33. Matchday,Fortaleza Esporte Clube,Grêmio Foot-Ball Porto Alegrense,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726115,BRA1,2024,2025-11-09,33. Matchday,Sport Club Corinthians Paulista,Ceará Sporting Club,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726116,BRA1,2024,2025-11-09,33. Matchday,São Paulo Futebol Clube,Red Bull Bragantino,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726117,BRA1,2024,2025-11-09,33. Matchday,Mirasol Futebol Clube,Sociedade Esportiva Palmeiras,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726118,BRA1,2024,2025-11-09,33. Matchday,Cruzeiro Esporte Clube,Fluminense Football Club,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726120,BRA1,2024,2025-11-09,33. Matchday,Esporte Clube Vitória,S. A. F. Botafogo,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726113,BRA1,2024,2025-11-09,33. Matchday,Clube de Regatas do Flamengo,Santos Futebol Clube,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582225,BRA1,2024,2025-11-12,16. Matchday,Clube Atlético Mineiro,Fortaleza Esporte Clube,3,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582119,BRA1,2024,2025-11-15,12. Matchday,Sport Club do Recife,Clube de Regatas do Flamengo,1,5,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726157,BRA1,2024,2025-11-16,37. Matchday,Red Bull Bragantino,Clube Atlético Mineiro,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4582203,BRA1,2024,2025-11-16,13. Matchday,Santos Futebol Clube,Sociedade Esportiva Palmeiras,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726124,BRA1,2024,2025-11-18,34. Matchday,S. A. F. Botafogo,Sport Club do Recife,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726155,BRA1,2024,2025-11-19,37. Matchday,Sociedade Esportiva Palmeiras,Esporte Clube Vitória,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726126,BRA1,2024,2025-11-20,34. Matchday,Santos Futebol Clube,Mirasol Futebol Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726125,BRA1,2024,2025-11-20,34. Matchday,Sport Club Corinthians Paulista,São Paulo Futebol Clube,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726123,BRA1,2024,2025-11-20,34. Matchday,Fluminense Football Club,Clube de Regatas do Flamengo,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726129,BRA1,2024,2025-11-20,34. Matchday,Grêmio Foot-Ball Porto Alegrense,Club de Regatas Vasco da Gama,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726130,BRA1,2024,2025-11-20,34. Matchday,Esporte Clube Bahia,Fortaleza Esporte Clube,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726132,BRA1,2024,2025-11-20,34. Matchday,Esporte Clube Juventude,Cruzeiro Esporte Clube,3,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726131,BRA1,2024,2025-11-21,34. Matchday,Ceará Sporting Club,Sport Club Internacional,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726134,BRA1,2024,2025-11-22,35. Matchday,S. A. F. Botafogo,Grêmio Foot-Ball Porto Alegrense,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726133,BRA1,2024,2025-11-23,35. Matchday,Clube de Regatas do Flamengo,Red Bull Bragantino,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726135,BRA1,2024,2025-11-23,35. Matchday,Sociedade Esportiva Palmeiras,Fluminense Football Club,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726136,BRA1,2024,2025-11-23,35. Matchday,São Paulo Futebol Clube,Esporte Clube Juventude,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726138,BRA1,2024,2025-11-23,35. Matchday,Cruzeiro Esporte Clube,Sport Club Corinthians Paulista,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726140,BRA1,2024,2025-11-23,35. Matchday,Esporte Clube Bahia,Club de Regatas Vasco da Gama,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726142,BRA1,2024,2025-11-23,35. Matchday,Sport Club do Recife,Esporte Clube Vitória,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726137,BRA1,2024,2025-11-24,35. Matchday,Mirasol Futebol Clube,Ceará Sporting Club,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726139,BRA1,2024,2025-11-25,35. Matchday,Sport Club Internacional,Santos Futebol Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726148,BRA1,2024,2025-11-26,36. Matchday,Clube Atlético Mineiro,Clube de Regatas do Flamengo,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726147,BRA1,2024,2025-11-26,36. Matchday,Red Bull Bragantino,Fortaleza Esporte Clube,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726149,BRA1,2024,2025-11-26,36. Matchday,Grêmio Foot-Ball Porto Alegrense,Sociedade Esportiva Palmeiras,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726143,BRA1,2024,2025-11-27,36. Matchday,Fluminense Football Club,São Paulo Futebol Clube,6,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726144,BRA1,2024,2025-11-28,36. Matchday,Club de Regatas Vasco da Gama,Sport Club Internacional,5,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726152,BRA1,2024,2025-11-28,36. Matchday,Esporte Clube Juventude,Esporte Clube Bahia,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726146,BRA1,2024,2025-11-29,36. Matchday,Santos Futebol Clube,Sport Club do Recife,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726150,BRA1,2024,2025-11-29,36. Matchday,Esporte Clube Vitória,Mirasol Futebol Clube,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726145,BRA1,2024,2025-11-30,36. Matchday,Sport Club Corinthians Paulista,S. A. F. Botafogo,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726151,BRA1,2024,2025-11-30,36. Matchday,Ceará Sporting Club,Cruzeiro Esporte Clube,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726141,BRA1,2024,2025-11-30,35. Matchday,Fortaleza Esporte Clube,Clube Atlético Mineiro,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726154,BRA1,2024,2025-12-02,37. Matchday,Club de Regatas Vasco da Gama,Mirasol Futebol Clube,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726162,BRA1,2024,2025-12-03,37. Matchday,Esporte Clube Juventude,Santos Futebol Clube,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726156,BRA1,2024,2025-12-03,37. Matchday,São Paulo Futebol Clube,Sport Club Internacional,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726127,BRA1,2024,2025-12-03,34. Matchday,Red Bull Bragantino,Esporte Clube Vitória,4,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726159,BRA1,2024,2025-12-03,37. Matchday,Grêmio Foot-Ball Porto Alegrense,Fluminense Football Club,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726160,BRA1,2024,2025-12-03,37. Matchday,Esporte Clube Bahia,Sport Club do Recife,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726161,BRA1,2024,2025-12-03,37. Matchday,Fortaleza Esporte Clube,Sport Club Corinthians Paulista,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726158,BRA1,2024,2025-12-04,37. Matchday,Cruzeiro Esporte Clube,S. A. F. Botafogo,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726128,BRA1,2024,2025-12-04,34. Matchday,Clube Atlético Mineiro,Sociedade Esportiva Palmeiras,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726153,BRA1,2024,2025-12-04,37. Matchday,Clube de Regatas do Flamengo,Ceará Sporting Club,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726167,BRA1,2024,2025-12-06,38. Matchday,Mirasol Futebol Clube,Clube de Regatas do Flamengo,3,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726168,BRA1,2024,2025-12-07,38. Matchday,Clube Atlético Mineiro,Club de Regatas Vasco da Gama,5,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726165,BRA1,2024,2025-12-07,38. Matchday,Sport Club Corinthians Paulista,Esporte Clube Juventude,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726166,BRA1,2024,2025-12-07,38. Matchday,Santos Futebol Clube,Cruzeiro Esporte Clube,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726164,BRA1,2024,2025-12-07,38. Matchday,S. A. F. Botafogo,Fortaleza Esporte Clube,4,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726163,BRA1,2024,2025-12-07,38. Matchday,Fluminense Football Club,Esporte Clube Bahia,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726169,BRA1,2024,2025-12-07,38. Matchday,Sport Club Internacional,Red Bull Bragantino,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726170,BRA1,2024,2025-12-07,38. Matchday,Esporte Clube Vitória,São Paulo Futebol Clube,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726171,BRA1,2024,2025-12-07,38. Matchday,Ceará Sporting Club,Sociedade Esportiva Palmeiras,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4726172,BRA1,2024,2025-12-07,38. Matchday,Sport Club do Recife,Grêmio Foot-Ball Porto Alegrense,0,4,2025,SEASON_DIFFERS_FROM_CONVENTION
+4811046,BRA1,2025,2026-01-28,1. Matchday,Associação Chapecoense de Futebol,Santos Futebol Clube,4,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811045,BRA1,2025,2026-01-28,1. Matchday,Esporte Clube Vitória,Clube do Remo,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811044,BRA1,2025,2026-01-28,1. Matchday,Coritiba Foot Ball Club,Red Bull Bragantino,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811043,BRA1,2025,2026-01-28,1. Matchday,Sport Club Internacional,Clube Atlético Paranaense,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811042,BRA1,2025,2026-01-28,1. Matchday,Clube Atlético Mineiro,Sociedade Esportiva Palmeiras,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811040,BRA1,2025,2026-01-28,1. Matchday,Sport Club Corinthians Paulista,Esporte Clube Bahia,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811037,BRA1,2025,2026-01-28,1. Matchday,Fluminense Football Club,Grêmio Foot-Ball Porto Alegrense,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811041,BRA1,2025,2026-01-29,1. Matchday,Mirasol Futebol Clube,Club de Regatas Vasco da Gama,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811039,BRA1,2025,2026-01-29,1. Matchday,São Paulo Futebol Clube,Clube de Regatas do Flamengo,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811038,BRA1,2025,2026-01-30,1. Matchday,S. A. F. Botafogo,Cruzeiro Esporte Clube,4,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811036,BRA1,2025,2026-02-04,2. Matchday,Clube do Remo,Mirasol Futebol Clube,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811031,BRA1,2025,2026-02-04,2. Matchday,Red Bull Bragantino,Clube Atlético Mineiro,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811029,BRA1,2025,2026-02-04,2. Matchday,Santos Futebol Clube,São Paulo Futebol Clube,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811027,BRA1,2025,2026-02-04,2. Matchday,Clube de Regatas do Flamengo,Sport Club Internacional,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811035,BRA1,2025,2026-02-05,2. Matchday,Esporte Clube Bahia,Fluminense Football Club,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811033,BRA1,2025,2026-02-05,2. Matchday,Grêmio Foot-Ball Porto Alegrense,S. A. F. Botafogo,5,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811028,BRA1,2025,2026-02-05,2. Matchday,Club de Regatas Vasco da Gama,Associação Chapecoense de Futebol,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811030,BRA1,2025,2026-02-05,2. Matchday,Sociedade Esportiva Palmeiras,Esporte Clube Vitória,5,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811032,BRA1,2025,2026-02-06,2. Matchday,Cruzeiro Esporte Clube,Coritiba Foot Ball Club,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811026,BRA1,2025,2026-02-11,3. Matchday,Associação Chapecoense de Futebol,Coritiba Foot Ball Club,3,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811025,BRA1,2025,2026-02-11,3. Matchday,Esporte Clube Vitória,Clube de Regatas do Flamengo,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811022,BRA1,2025,2026-02-11,3. Matchday,Clube Atlético Mineiro,Clube do Remo,3,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811021,BRA1,2025,2026-02-11,3. Matchday,Mirasol Futebol Clube,Cruzeiro Esporte Clube,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811018,BRA1,2025,2026-02-12,3. Matchday,Club de Regatas Vasco da Gama,Esporte Clube Bahia,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811017,BRA1,2025,2026-02-12,3. Matchday,Fluminense Football Club,S. A. F. Botafogo,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811024,BRA1,2025,2026-02-12,3. Matchday,Clube Atlético Paranaense,Santos Futebol Clube,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811020,BRA1,2025,2026-02-12,3. Matchday,Sport Club Corinthians Paulista,Red Bull Bragantino,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811019,BRA1,2025,2026-02-12,3. Matchday,São Paulo Futebol Clube,Grêmio Foot-Ball Porto Alegrense,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811023,BRA1,2025,2026-02-13,3. Matchday,Sport Club Internacional,Sociedade Esportiva Palmeiras,1,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811034,BRA1,2025,2026-02-19,2. Matchday,Clube Atlético Paranaense,Sport Club Corinthians Paulista,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811016,BRA1,2025,2026-02-25,4. Matchday,Clube do Remo,Sport Club Internacional,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811012,BRA1,2025,2026-02-25,4. Matchday,Cruzeiro Esporte Clube,Sport Club Corinthians Paulista,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811011,BRA1,2025,2026-02-25,4. Matchday,Red Bull Bragantino,Clube Atlético Paranaense,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811014,BRA1,2025,2026-02-25,4. Matchday,Coritiba Foot Ball Club,São Paulo Futebol Clube,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811009,BRA1,2025,2026-02-26,4. Matchday,Santos Futebol Clube,Club de Regatas Vasco da Gama,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811010,BRA1,2025,2026-02-26,4. Matchday,Sociedade Esportiva Palmeiras,Fluminense Football Club,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811013,BRA1,2025,2026-02-26,4. Matchday,Grêmio Foot-Ball Porto Alegrense,Clube Atlético Mineiro,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811002,BRA1,2025,2026-03-11,5. Matchday,Clube Atlético Mineiro,Sport Club Internacional,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811001,BRA1,2025,2026-03-11,5. Matchday,Mirasol Futebol Clube,Santos Futebol Clube,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811005,BRA1,2025,2026-03-11,5. Matchday,Esporte Clube Bahia,Esporte Clube Vitória,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811006,BRA1,2025,2026-03-12,5. Matchday,Clube do Remo,Fluminense Football Club,0,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811000,BRA1,2025,2026-03-12,5. Matchday,Sport Club Corinthians Paulista,Coritiba Foot Ball Club,0,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810999,BRA1,2025,2026-03-12,5. Matchday,São Paulo Futebol Clube,Associação Chapecoense de Futebol,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810998,BRA1,2025,2026-03-12,5. Matchday,Club de Regatas Vasco da Gama,Sociedade Esportiva Palmeiras,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810997,BRA1,2025,2026-03-12,5. Matchday,Clube de Regatas do Flamengo,Cruzeiro Esporte Clube,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811003,BRA1,2025,2026-03-13,5. Matchday,Grêmio Foot-Ball Porto Alegrense,Red Bull Bragantino,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810988,BRA1,2025,2026-03-14,6. Matchday,S. A. F. Botafogo,Clube de Regatas do Flamengo,0,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810995,BRA1,2025,2026-03-14,6. Matchday,Esporte Clube Vitória,Clube Atlético Mineiro,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810989,BRA1,2025,2026-03-15,6. Matchday,Santos Futebol Clube,Sport Club Corinthians Paulista,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810993,BRA1,2025,2026-03-15,6. Matchday,Sport Club Internacional,Esporte Clube Bahia,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810992,BRA1,2025,2026-03-15,6. Matchday,Cruzeiro Esporte Clube,Club de Regatas Vasco da Gama,3,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810991,BRA1,2025,2026-03-15,6. Matchday,Red Bull Bragantino,São Paulo Futebol Clube,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810990,BRA1,2025,2026-03-15,6. Matchday,Sociedade Esportiva Palmeiras,Mirasol Futebol Clube,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810994,BRA1,2025,2026-03-15,6. Matchday,Coritiba Foot Ball Club,Clube do Remo,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810987,BRA1,2025,2026-03-15,6. Matchday,Fluminense Football Club,Clube Atlético Paranaense,3,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810996,BRA1,2025,2026-03-16,6. Matchday,Associação Chapecoense de Futebol,Grêmio Foot-Ball Porto Alegrense,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810985,BRA1,2025,2026-03-18,7. Matchday,Esporte Clube Bahia,Red Bull Bragantino,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810984,BRA1,2025,2026-03-18,7. Matchday,Clube Atlético Paranaense,Cruzeiro Esporte Clube,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810982,BRA1,2025,2026-03-18,7. Matchday,Clube Atlético Mineiro,São Paulo Futebol Clube,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810981,BRA1,2025,2026-03-18,7. Matchday,Mirasol Futebol Clube,Coritiba Foot Ball Club,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810980,BRA1,2025,2026-03-18,7. Matchday,Sociedade Esportiva Palmeiras,S. A. F. Botafogo,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810983,BRA1,2025,2026-03-19,7. Matchday,Grêmio Foot-Ball Porto Alegrense,Esporte Clube Vitória,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810979,BRA1,2025,2026-03-19,7. Matchday,Santos Futebol Clube,Sport Club Internacional,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810978,BRA1,2025,2026-03-19,7. Matchday,Club de Regatas Vasco da Gama,Fluminense Football Club,3,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810977,BRA1,2025,2026-03-19,7. Matchday,Clube de Regatas do Flamengo,Clube do Remo,3,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810986,BRA1,2025,2026-03-20,7. Matchday,Associação Chapecoense de Futebol,Sport Club Corinthians Paulista,0,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810967,BRA1,2025,2026-03-21,8. Matchday,Fluminense Football Club,Clube Atlético Mineiro,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810971,BRA1,2025,2026-03-21,8. Matchday,Red Bull Bragantino,S. A. F. Botafogo,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810975,BRA1,2025,2026-03-22,8. Matchday,Esporte Clube Vitória,Mirasol Futebol Clube,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810976,BRA1,2025,2026-03-22,8. Matchday,Clube do Remo,Esporte Clube Bahia,4,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810974,BRA1,2025,2026-03-22,8. Matchday,Clube Atlético Paranaense,Coritiba Foot Ball Club,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810973,BRA1,2025,2026-03-22,8. Matchday,Sport Club Internacional,Associação Chapecoense de Futebol,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810972,BRA1,2025,2026-03-22,8. Matchday,Cruzeiro Esporte Clube,Santos Futebol Clube,0,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810970,BRA1,2025,2026-03-22,8. Matchday,Sport Club Corinthians Paulista,Clube de Regatas do Flamengo,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810969,BRA1,2025,2026-03-22,8. Matchday,São Paulo Futebol Clube,Sociedade Esportiva Palmeiras,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810968,BRA1,2025,2026-03-22,8. Matchday,Club de Regatas Vasco da Gama,Grêmio Foot-Ball Porto Alegrense,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811004,BRA1,2025,2026-03-29,5. Matchday,Clube Atlético Paranaense,S. A. F. Botafogo,4,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810958,BRA1,2025,2026-04-01,9. Matchday,S. A. F. Botafogo,Mirasol Futebol Clube,3,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810963,BRA1,2025,2026-04-01,9. Matchday,Sport Club Internacional,São Paulo Futebol Clube,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810957,BRA1,2025,2026-04-02,9. Matchday,Fluminense Football Club,Sport Club Corinthians Paulista,3,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810959,BRA1,2025,2026-04-02,9. Matchday,Santos Futebol Clube,Clube do Remo,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810962,BRA1,2025,2026-04-02,9. Matchday,Cruzeiro Esporte Clube,Esporte Clube Vitória,3,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810964,BRA1,2025,2026-04-02,9. Matchday,Coritiba Foot Ball Club,Club de Regatas Vasco da Gama,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810965,BRA1,2025,2026-04-02,9. Matchday,Esporte Clube Bahia,Clube Atlético Paranaense,3,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810966,BRA1,2025,2026-04-02,9. Matchday,Associação Chapecoense de Futebol,Clube Atlético Mineiro,0,4,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810960,BRA1,2025,2026-04-03,9. Matchday,Sociedade Esportiva Palmeiras,Grêmio Foot-Ball Porto Alegrense,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810961,BRA1,2025,2026-04-03,9. Matchday,Red Bull Bragantino,Clube de Regatas do Flamengo,3,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810949,BRA1,2025,2026-04-04,10. Matchday,São Paulo Futebol Clube,Cruzeiro Esporte Clube,4,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810947,BRA1,2025,2026-04-05,10. Matchday,Clube de Regatas do Flamengo,Santos Futebol Clube,3,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810955,BRA1,2025,2026-04-05,10. Matchday,Esporte Clube Bahia,Sociedade Esportiva Palmeiras,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810956,BRA1,2025,2026-04-05,10. Matchday,Associação Chapecoense de Futebol,Esporte Clube Vitória,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810954,BRA1,2025,2026-04-05,10. Matchday,Coritiba Foot Ball Club,Fluminense Football Club,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810952,BRA1,2025,2026-04-05,10. Matchday,Clube Atlético Mineiro,Clube Atlético Paranaense,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810950,BRA1,2025,2026-04-05,10. Matchday,Sport Club Corinthians Paulista,Sport Club Internacional,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810948,BRA1,2025,2026-04-05,10. Matchday,Club de Regatas Vasco da Gama,S. A. F. Botafogo,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810953,BRA1,2025,2026-04-06,10. Matchday,Grêmio Foot-Ball Porto Alegrense,Clube do Remo,0,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810951,BRA1,2025,2026-04-06,10. Matchday,Mirasol Futebol Clube,Red Bull Bragantino,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810941,BRA1,2025,2026-04-11,11. Matchday,Mirasol Futebol Clube,Esporte Clube Bahia,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810946,BRA1,2025,2026-04-11,11. Matchday,Clube do Remo,Club de Regatas Vasco da Gama,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810945,BRA1,2025,2026-04-11,11. Matchday,Esporte Clube Vitória,São Paulo Futebol Clube,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810944,BRA1,2025,2026-04-12,11. Matchday,Clube Atlético Paranaense,Associação Chapecoense de Futebol,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810942,BRA1,2025,2026-04-12,11. Matchday,Cruzeiro Esporte Clube,Red Bull Bragantino,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810940,BRA1,2025,2026-04-12,11. Matchday,Sport Club Corinthians Paulista,Sociedade Esportiva Palmeiras,0,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810939,BRA1,2025,2026-04-12,11. Matchday,Santos Futebol Clube,Clube Atlético Mineiro,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810938,BRA1,2025,2026-04-12,11. Matchday,S. A. F. Botafogo,Coritiba Foot Ball Club,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810937,BRA1,2025,2026-04-12,11. Matchday,Fluminense Football Club,Clube de Regatas do Flamengo,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810943,BRA1,2025,2026-04-12,11. Matchday,Sport Club Internacional,Grêmio Foot-Ball Porto Alegrense,0,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810928,BRA1,2025,2026-04-18,12. Matchday,Club de Regatas Vasco da Gama,São Paulo Futebol Clube,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810936,BRA1,2025,2026-04-18,12. Matchday,Associação Chapecoense de Futebol,S. A. F. Botafogo,1,4,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810930,BRA1,2025,2026-04-19,12. Matchday,Sociedade Esportiva Palmeiras,Clube Atlético Paranaense,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810933,BRA1,2025,2026-04-19,12. Matchday,Sport Club Internacional,Mirasol Futebol Clube,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810932,BRA1,2025,2026-04-19,12. Matchday,Cruzeiro Esporte Clube,Grêmio Foot-Ball Porto Alegrense,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810934,BRA1,2025,2026-04-19,12. Matchday,Coritiba Foot Ball Club,Clube Atlético Mineiro,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810935,BRA1,2025,2026-04-19,12. Matchday,Esporte Clube Vitória,Sport Club Corinthians Paulista,0,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810929,BRA1,2025,2026-04-19,12. Matchday,Santos Futebol Clube,Fluminense Football Club,2,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810927,BRA1,2025,2026-04-19,12. Matchday,Clube de Regatas do Flamengo,Esporte Clube Bahia,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810931,BRA1,2025,2026-04-19,12. Matchday,Red Bull Bragantino,Clube do Remo,4,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810918,BRA1,2025,2026-04-25,13. Matchday,S. A. F. Botafogo,Sport Club Internacional,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810926,BRA1,2025,2026-04-25,13. Matchday,Clube do Remo,Cruzeiro Esporte Clube,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810925,BRA1,2025,2026-04-25,13. Matchday,Esporte Clube Bahia,Santos Futebol Clube,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810924,BRA1,2025,2026-04-26,13. Matchday,Clube Atlético Paranaense,Esporte Clube Vitória,3,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810923,BRA1,2025,2026-04-26,13. Matchday,Grêmio Foot-Ball Porto Alegrense,Coritiba Foot Ball Club,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810921,BRA1,2025,2026-04-26,13. Matchday,Red Bull Bragantino,Sociedade Esportiva Palmeiras,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810920,BRA1,2025,2026-04-26,13. Matchday,Sport Club Corinthians Paulista,Club de Regatas Vasco da Gama,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810919,BRA1,2025,2026-04-26,13. Matchday,São Paulo Futebol Clube,Mirasol Futebol Clube,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810922,BRA1,2025,2026-04-27,13. Matchday,Clube Atlético Mineiro,Clube de Regatas do Flamengo,0,4,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810917,BRA1,2025,2026-04-27,13. Matchday,Fluminense Football Club,Associação Chapecoense de Futebol,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810910,BRA1,2025,2026-05-02,14. Matchday,Sociedade Esportiva Palmeiras,Santos Futebol Clube,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810915,BRA1,2025,2026-05-02,14. Matchday,Esporte Clube Vitória,Coritiba Foot Ball Club,4,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810908,BRA1,2025,2026-05-02,14. Matchday,S. A. F. Botafogo,Clube do Remo,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810916,BRA1,2025,2026-05-03,14. Matchday,Associação Chapecoense de Futebol,Red Bull Bragantino,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810914,BRA1,2025,2026-05-03,14. Matchday,Clube Atlético Paranaense,Grêmio Foot-Ball Porto Alegrense,0,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810913,BRA1,2025,2026-05-03,14. Matchday,Sport Club Internacional,Fluminense Football Club,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810912,BRA1,2025,2026-05-03,14. Matchday,Cruzeiro Esporte Clube,Clube Atlético Mineiro,1,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810909,BRA1,2025,2026-05-03,14. Matchday,São Paulo Futebol Clube,Esporte Clube Bahia,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810907,BRA1,2025,2026-05-03,14. Matchday,Clube de Regatas do Flamengo,Club de Regatas Vasco da Gama,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810911,BRA1,2025,2026-05-04,14. Matchday,Mirasol Futebol Clube,Sport Club Corinthians Paulista,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811047,BRA1,2025,2026-05-09,15. Matchday,Fluminense Football Club,Esporte Clube Vitória,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811054,BRA1,2025,2026-05-09,15. Matchday,Coritiba Foot Ball Club,Sport Club Internacional,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811055,BRA1,2025,2026-05-10,15. Matchday,Esporte Clube Bahia,Cruzeiro Esporte Clube,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811049,BRA1,2025,2026-05-10,15. Matchday,Santos Futebol Clube,Red Bull Bragantino,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811050,BRA1,2025,2026-05-10,15. Matchday,Sport Club Corinthians Paulista,São Paulo Futebol Clube,3,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811051,BRA1,2025,2026-05-10,15. Matchday,Mirasol Futebol Clube,Associação Chapecoense de Futebol,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811052,BRA1,2025,2026-05-10,15. Matchday,Clube Atlético Mineiro,S. A. F. Botafogo,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811053,BRA1,2025,2026-05-10,15. Matchday,Grêmio Foot-Ball Porto Alegrense,Clube de Regatas do Flamengo,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811056,BRA1,2025,2026-05-10,15. Matchday,Clube do Remo,Sociedade Esportiva Palmeiras,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4811048,BRA1,2025,2026-05-11,15. Matchday,Club de Regatas Vasco da Gama,Clube Atlético Paranaense,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810897,BRA1,2025,2026-05-16,16. Matchday,Fluminense Football Club,São Paulo Futebol Clube,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810902,BRA1,2025,2026-05-16,16. Matchday,Clube Atlético Mineiro,Mirasol Futebol Clube,3,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810903,BRA1,2025,2026-05-16,16. Matchday,Sport Club Internacional,Club de Regatas Vasco da Gama,4,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810898,BRA1,2025,2026-05-17,16. Matchday,S. A. F. Botafogo,Sport Club Corinthians Paulista,3,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810905,BRA1,2025,2026-05-17,16. Matchday,Esporte Clube Bahia,Grêmio Foot-Ball Porto Alegrense,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810899,BRA1,2025,2026-05-17,16. Matchday,Santos Futebol Clube,Coritiba Foot Ball Club,0,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810901,BRA1,2025,2026-05-17,16. Matchday,Red Bull Bragantino,Esporte Clube Vitória,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810904,BRA1,2025,2026-05-17,16. Matchday,Clube Atlético Paranaense,Clube de Regatas do Flamengo,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810906,BRA1,2025,2026-05-17,16. Matchday,Associação Chapecoense de Futebol,Clube do Remo,2,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810900,BRA1,2025,2026-05-17,16. Matchday,Sociedade Esportiva Palmeiras,Cruzeiro Esporte Clube,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810895,BRA1,2025,2026-05-23,17. Matchday,Esporte Clube Vitória,Sport Club Internacional,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810893,BRA1,2025,2026-05-23,17. Matchday,Grêmio Foot-Ball Porto Alegrense,Santos Futebol Clube,3,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810891,BRA1,2025,2026-05-23,17. Matchday,Mirasol Futebol Clube,Fluminense Football Club,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810889,BRA1,2025,2026-05-23,17. Matchday,São Paulo Futebol Clube,S. A. F. Botafogo,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810892,BRA1,2025,2026-05-24,17. Matchday,Cruzeiro Esporte Clube,Associação Chapecoense de Futebol,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810887,BRA1,2025,2026-05-24,17. Matchday,Clube de Regatas do Flamengo,Sociedade Esportiva Palmeiras,0,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810890,BRA1,2025,2026-05-24,17. Matchday,Sport Club Corinthians Paulista,Clube Atlético Mineiro,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810896,BRA1,2025,2026-05-24,17. Matchday,Clube do Remo,Clube Atlético Paranaense,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810888,BRA1,2025,2026-05-25,17. Matchday,Club de Regatas Vasco da Gama,Red Bull Bragantino,0,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810894,BRA1,2025,2026-05-26,17. Matchday,Coritiba Foot Ball Club,Esporte Clube Bahia,3,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810882,BRA1,2025,2026-05-30,18. Matchday,Clube de Regatas do Flamengo,Coritiba Foot Ball Club,3,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810879,BRA1,2025,2026-05-30,18. Matchday,Esporte Clube Bahia,S. A. F. Botafogo,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810877,BRA1,2025,2026-05-30,18. Matchday,Grêmio Foot-Ball Porto Alegrense,Sport Club Corinthians Paulista,1,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810878,BRA1,2025,2026-05-30,18. Matchday,Clube Atlético Paranaense,Mirasol Futebol Clube,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810881,BRA1,2025,2026-05-31,18. Matchday,Red Bull Bragantino,Sport Club Internacional,3,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810883,BRA1,2025,2026-05-31,18. Matchday,Club de Regatas Vasco da Gama,Clube Atlético Mineiro,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810884,BRA1,2025,2026-05-31,18. Matchday,Santos Futebol Clube,Esporte Clube Vitória,3,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810885,BRA1,2025,2026-05-31,18. Matchday,Sociedade Esportiva Palmeiras,Associação Chapecoense de Futebol,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810880,BRA1,2025,2026-06-01,18. Matchday,Clube do Remo,São Paulo Futebol Clube,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4810886,BRA1,2025,2026-06-01,18. Matchday,Cruzeiro Esporte Clube,Fluminense Football Club,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+3476206,CDR,2019,2021-04-03,Final,Athletic Bilbao,Real Sociedad,0,1,2020,KNOWN_DELAYED_2019_2020_COPA_FINAL
+4097138,CGB,2022,2023-08-08,First Round,Sunderland AFC,Crewe Alexandra,4,6,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097130,CGB,2022,2023-08-08,First Round,Plymouth Argyle,Leyton Orient,2,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097110,CGB,2022,2023-08-08,First Round,Barnsley FC,Tranmere Rovers,8,9,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097111,CGB,2022,2023-08-08,First Round,Blackburn Rovers,Walsall FC,4,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097112,CGB,2022,2023-08-08,First Round,Bolton Wanderers,Barrow AFC,1,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097141,CGB,2022,2023-08-08,First Round,Wrexham AFC,Wigan Athletic,4,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097140,CGB,2022,2023-08-08,First Round,Swansea City,Northampton Town,3,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097115,CGB,2022,2023-08-08,First Round,Cheltenham Town,Birmingham City,0,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097109,CGB,2022,2023-08-08,First Round,Accrington Stanley,Bradford City,2,5,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097117,CGB,2022,2023-08-08,First Round,Exeter City,Crawley Town,2,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097118,CGB,2022,2023-08-08,First Round,Forest Green Rovers ,Portsmouth FC,1,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097119,CGB,2022,2023-08-08,First Round,Gillingham FC,Southampton FC,3,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097120,CGB,2022,2023-08-08,First Round,Harrogate Town,Carlisle United,1,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097121,CGB,2022,2023-08-08,First Round,Huddersfield Town,Middlesbrough FC,2,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097122,CGB,2022,2023-08-08,First Round,Hull City,Doncaster Rovers,1,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097139,CGB,2022,2023-08-08,First Round,Sutton United,Cambridge United,8,7,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097124,CGB,2022,2023-08-08,First Round,Milton Keynes Dons,Wycombe Wanderers,0,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097125,CGB,2022,2023-08-08,First Round,Mansfield Town,Grimsby Town,2,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097126,CGB,2022,2023-08-08,First Round,Millwall FC,Reading FC,0,4,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097127,CGB,2022,2023-08-08,First Round,Newport County,Charlton Athletic,3,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097128,CGB,2022,2023-08-08,First Round,Notts County,Lincoln City,0,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097129,CGB,2022,2023-08-08,First Round,Peterborough United,Swindon Town,5,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097137,CGB,2022,2023-08-08,First Round,Stoke City,West Bromwich Albion,2,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097131,CGB,2022,2023-08-08,First Round,Port Vale FC,Fleetwood Town,3,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097132,CGB,2022,2023-08-08,First Round,Preston North End,Salford City,4,6,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097134,CGB,2022,2023-08-08,First Round,Rotherham United,Morecambe FC,5,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097135,CGB,2022,2023-08-08,First Round,Sheffield Wednesday,Stockport County,5,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097136,CGB,2022,2023-08-08,First Round,Stevenage FC,Watford FC,5,4,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097116,CGB,2022,2023-08-08,First Round,Derby County,Blackpool FC,0,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097108,CGB,2022,2023-08-09,First Round,AFC Wimbledon,Coventry City,2,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097114,CGB,2022,2023-08-09,First Round,Cardiff City,Colchester United,5,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097123,CGB,2022,2023-08-09,First Round,Leeds United,Shrewsbury Town,2,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097113,CGB,2022,2023-08-09,First Round,Bristol City,Oxford United,5,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097142,CGB,2022,2023-08-09,First Round,Burton Albion,Leicester City,0,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4150139,CGB,2022,2023-08-09,First Round,Ipswich Town,Bristol Rovers,2,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4097133,CGB,2022,2023-08-16,First Round,Queens Park Rangers,Norwich City,0,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164098,CGB,2022,2023-08-29,Second Round,Bolton Wanderers,Middlesbrough FC,1,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164099,CGB,2022,2023-08-29,Second Round,Port Vale FC,Crewe Alexandra,2,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164100,CGB,2022,2023-08-29,Second Round,Sheffield Wednesday,Mansfield Town,5,6,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164101,CGB,2022,2023-08-29,Second Round,Stoke City,Rotherham United,6,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164102,CGB,2022,2023-08-29,Second Round,Tranmere Rovers,Leicester City,0,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164103,CGB,2022,2023-08-29,Second Round,Wolverhampton Wanderers,Blackpool FC,5,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164104,CGB,2022,2023-08-29,Second Round,Wrexham AFC,Bradford City,4,5,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164105,CGB,2022,2023-08-29,Second Round,Salford City,Leeds United,10,9,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164106,CGB,2022,2023-08-29,Second Round,Birmingham City,Cardiff City,1,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164107,CGB,2022,2023-08-29,Second Round,Bristol City,Norwich City,0,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164108,CGB,2022,2023-08-29,Second Round,Exeter City,Stevenage FC,6,4,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164109,CGB,2022,2023-08-29,Second Round,Fulham FC,Tottenham Hotspur,6,4,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164110,CGB,2022,2023-08-29,Second Round,Luton Town,Gillingham FC,3,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164111,CGB,2022,2023-08-29,Second Round,Newport County,Brentford FC,1,4,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164112,CGB,2022,2023-08-29,Second Round,Plymouth Argyle,Crystal Palace,2,4,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164113,CGB,2022,2023-08-29,Second Round,Portsmouth FC,Peterborough United,5,6,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164114,CGB,2022,2023-08-29,Second Round,Swansea City,AFC Bournemouth,2,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164115,CGB,2022,2023-08-29,Second Round,Wycombe Wanderers,Sutton United,0,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164116,CGB,2022,2023-08-29,Second Round,Reading FC,Ipswich Town,3,5,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164117,CGB,2022,2023-08-30,Second Round,Harrogate Town,Blackburn Rovers,0,8,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164118,CGB,2022,2023-08-30,Second Round,Nottingham Forest,Burnley FC,0,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164119,CGB,2022,2023-08-30,Second Round,Sheffield United,Lincoln City,2,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164120,CGB,2022,2023-08-30,Second Round,Doncaster Rovers,Everton FC,1,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4164121,CGB,2022,2023-08-30,Second Round,Chelsea FC,AFC Wimbledon,2,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188439,CGB,2022,2023-09-26,Third Round,Bradford City,Middlesbrough FC,0,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188440,CGB,2022,2023-09-26,Third Round,Exeter City,Luton Town,1,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188441,CGB,2022,2023-09-26,Third Round,Ipswich Town,Wolverhampton Wanderers,3,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188442,CGB,2022,2023-09-26,Third Round,Mansfield Town,Peterborough United,5,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188443,CGB,2022,2023-09-26,Third Round,Port Vale FC,Sutton United,2,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188444,CGB,2022,2023-09-26,Third Round,Salford City,Burnley FC,0,4,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188445,CGB,2022,2023-09-26,Third Round,Manchester United,Crystal Palace,3,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188446,CGB,2022,2023-09-27,Third Round,Aston Villa,Everton FC,1,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188447,CGB,2022,2023-09-27,Third Round,Blackburn Rovers,Cardiff City,5,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188448,CGB,2022,2023-09-27,Third Round,AFC Bournemouth,Stoke City,2,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188449,CGB,2022,2023-09-27,Third Round,Brentford FC,Arsenal FC,0,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188450,CGB,2022,2023-09-27,Third Round,Chelsea FC,Brighton & Hove Albion,1,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188451,CGB,2022,2023-09-27,Third Round,Fulham FC,Norwich City,2,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188452,CGB,2022,2023-09-27,Third Round,Lincoln City,West Ham United,0,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188453,CGB,2022,2023-09-27,Third Round,Liverpool FC,Leicester City,3,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4188454,CGB,2022,2023-09-27,Third Round,Newcastle United,Manchester City,1,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4220936,CGB,2022,2023-10-31,Fourth Round,Mansfield Town,Port Vale FC,0,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4220937,CGB,2022,2023-10-31,Fourth Round,Exeter City,Middlesbrough FC,2,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4220938,CGB,2022,2023-11-01,Fourth Round,West Ham United,Arsenal FC,3,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4220939,CGB,2022,2023-11-01,Fourth Round,Chelsea FC,Blackburn Rovers,2,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4220940,CGB,2022,2023-11-01,Fourth Round,AFC Bournemouth,Liverpool FC,1,2,2023,SEASON_DIFFERS_FROM_CONVENTION
+4220941,CGB,2022,2023-11-01,Fourth Round,Everton FC,Burnley FC,3,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4220942,CGB,2022,2023-11-01,Fourth Round,Ipswich Town,Fulham FC,1,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4220943,CGB,2022,2023-11-01,Fourth Round,Manchester United,Newcastle United,0,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4221834,CGB,2022,2023-12-19,Quarter-Finals,Everton FC,Fulham FC,7,8,2023,SEASON_DIFFERS_FROM_CONVENTION
+4221835,CGB,2022,2023-12-19,Quarter-Finals,Chelsea FC,Newcastle United,5,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4221836,CGB,2022,2023-12-19,Quarter-Finals,Port Vale FC,Middlesbrough FC,0,3,2023,SEASON_DIFFERS_FROM_CONVENTION
+4221837,CGB,2022,2023-12-20,Quarter-Finals,Liverpool FC,West Ham United,5,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4246517,CGB,2022,2024-01-09,Semi-Finals 1st Leg,Middlesbrough FC,Chelsea FC,1,0,2023,SEASON_DIFFERS_FROM_CONVENTION
+4246516,CGB,2022,2024-01-10,Semi-Finals 1st Leg,Liverpool FC,Fulham FC,2,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4246519,CGB,2022,2024-01-23,Semi-Finals 2nd Leg,Chelsea FC,Middlesbrough FC,6,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4246518,CGB,2022,2024-01-24,Semi-Finals 2nd Leg,Fulham FC,Liverpool FC,1,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4273822,CGB,2022,2024-02-25,Final,Chelsea FC,Liverpool FC,0,1,2023,SEASON_DIFFERS_FROM_CONVENTION
+4428856,CGB,2023,2024-08-13,First Round,Fleetwood Town,West Bromwich Albion,2,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428860,CGB,2023,2024-08-13,First Round,Preston North End,Sunderland AFC,2,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428863,CGB,2023,2024-08-13,First Round,Shrewsbury Town,Notts County,7,6,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428884,CGB,2023,2024-08-13,First Round,Watford FC,Milton Keynes Dons,5,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428883,CGB,2023,2024-08-13,First Round,Walsall FC,Exeter City,5,4,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428882,CGB,2023,2024-08-13,First Round,Swansea City,Gillingham FC,3,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428881,CGB,2023,2024-08-13,First Round,Portsmouth FC,Millwall FC,0,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428880,CGB,2023,2024-08-13,First Round,Oxford United,Peterborough United,2,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428873,CGB,2023,2024-08-13,First Round,Cambridge United,Queens Park Rangers,1,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428878,CGB,2023,2024-08-13,First Round,Northampton Town,Wycombe Wanderers,0,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428877,CGB,2023,2024-08-13,First Round,Crawley Town,Swindon Town,4,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428876,CGB,2023,2024-08-13,First Round,Colchester United,Reading FC,6,5,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428875,CGB,2023,2024-08-13,First Round,Charlton Athletic,Birmingham City,0,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428874,CGB,2023,2024-08-13,First Round,Cardiff City,Bristol Rovers,2,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428871,CGB,2023,2024-08-13,First Round,Bristol City,Coventry City,0,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428872,CGB,2023,2024-08-13,First Round,Bromley FC,AFC Wimbledon,1,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428870,CGB,2023,2024-08-13,First Round,Leyton Orient,Newport County,4,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428858,CGB,2023,2024-08-13,First Round,Huddersfield Town,Morecambe FC,3,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428859,CGB,2023,2024-08-13,First Round,Lincoln City,Harrogate Town,1,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428866,CGB,2023,2024-08-13,First Round,Sheffield United,Wrexham AFC,4,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428865,CGB,2023,2024-08-13,First Round,Wigan Athletic,Barnsley FC,3,5,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428864,CGB,2023,2024-08-13,First Round,Tranmere Rovers,Accrington Stanley,3,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428857,CGB,2023,2024-08-13,First Round,Grimsby Town,Bradford City,10,9,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428862,CGB,2023,2024-08-13,First Round,Salford City,Doncaster Rovers,0,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428861,CGB,2023,2024-08-13,First Round,Rotherham United,Crewe Alexandra,2,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428879,CGB,2023,2024-08-13,First Round,Norwich City,Stevenage FC,4,3,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428853,CGB,2023,2024-08-13,First Round,Bolton Wanderers,Mansfield Town,5,4,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428854,CGB,2023,2024-08-13,First Round,Burton Albion,Blackpool FC,0,4,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428855,CGB,2023,2024-08-13,First Round,Derby County,Chesterfield FC,2,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428851,CGB,2023,2024-08-13,First Round,Stockport County,Blackburn Rovers,1,6,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428852,CGB,2023,2024-08-13,First Round,Barrow AFC,Port Vale FC,3,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428850,CGB,2023,2024-08-13,First Round,Carlisle United,Stoke City,0,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428867,CGB,2023,2024-08-14,First Round,Hull City,Sheffield Wednesday,1,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428868,CGB,2023,2024-08-14,First Round,Leeds United,Middlesbrough FC,0,3,2024,SEASON_DIFFERS_FROM_CONVENTION
+4428885,CGB,2023,2024-08-14,First Round,Plymouth Argyle,Cheltenham Town,3,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436222,CGB,2023,2024-08-27,Second Round,Barnsley FC,Sheffield United,1,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436238,CGB,2023,2024-08-27,Second Round,Fleetwood Town,Rotherham United,2,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436244,CGB,2023,2024-08-27,Second Round,Walsall FC,Huddersfield Town,3,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436243,CGB,2023,2024-08-27,Second Round,Harrogate Town,Preston North End,0,5,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436224,CGB,2023,2024-08-27,Second Round,Coventry City,Oxford United,1,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436242,CGB,2023,2024-08-27,Second Round,Middlesbrough FC,Stoke City,0,5,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436227,CGB,2023,2024-08-27,Second Round,Birmingham City,Fulham FC,0,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436228,CGB,2023,2024-08-27,Second Round,Watford FC,Plymouth Argyle,2,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436241,CGB,2023,2024-08-27,Second Round,Leicester City,Tranmere Rovers,4,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436230,CGB,2023,2024-08-27,Second Round,Queens Park Rangers,Luton Town,5,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436231,CGB,2023,2024-08-27,Second Round,Brighton & Hove Albion,Crawley Town,4,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436232,CGB,2023,2024-08-27,Second Round,Crystal Palace,Norwich City,4,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436239,CGB,2023,2024-08-27,Second Round,Shrewsbury Town,Bolton Wanderers,0,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436234,CGB,2023,2024-08-27,Second Round,Millwall FC,Leyton Orient,0,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436246,CGB,2023,2024-08-27,Second Round,Blackburn Rovers,Blackpool FC,1,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436236,CGB,2023,2024-08-27,Second Round,Grimsby Town,Sheffield Wednesday,1,5,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436223,CGB,2023,2024-08-27,Second Round,Barrow AFC,Derby County,3,2,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436237,CGB,2023,2024-08-27,Second Round,Everton FC,Doncaster Rovers,3,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436235,CGB,2023,2024-08-28,Second Round,Colchester United,Brentford FC,0,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436240,CGB,2023,2024-08-28,Second Round,Nottingham Forest,Newcastle United,4,5,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436233,CGB,2023,2024-08-28,Second Round,Cardiff City,Southampton FC,3,5,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436229,CGB,2023,2024-08-28,Second Round,West Ham United,AFC Bournemouth,1,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436226,CGB,2023,2024-08-28,Second Round,AFC Wimbledon,Ipswich Town,6,4,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436245,CGB,2023,2024-08-28,Second Round,Wolverhampton Wanderers,Burnley FC,2,0,2024,SEASON_DIFFERS_FROM_CONVENTION
+4436225,CGB,2023,2024-08-28,Second Round,Swansea City,Wycombe Wanderers,0,1,2024,SEASON_DIFFERS_FROM_CONVENTION
+4523460,SE1,2024,2025-03-29,1. Matchday,BK Häcken,Idrottsföreningen  Brommapojkarna,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4523456,SE1,2024,2025-03-29,1. Matchday,Djurgårdens Idrottsförening,Malmö Fotbollförening,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4523457,SE1,2024,2025-03-30,1. Matchday,Hammarby IF,Idrottsföreningen Kamraterna Göteborg,4,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4523458,SE1,2024,2025-03-30,1. Matchday,Idrottsföreningen Elfsborg,Mjällby Almänna Idrottsförening,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4523461,SE1,2024,2025-03-30,1. Matchday,IFK Norrköping,Östers IF,4,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4523462,SE1,2024,2025-03-30,1. Matchday,Halmstads BK,Degerfors IF,0,5,2025,SEASON_DIFFERS_FROM_CONVENTION
+4523459,SE1,2024,2025-03-31,1. Matchday,Göteborgs Atlet- och Idrottssällskap,Allmänna Idrottsklubben,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4523463,SE1,2024,2025-03-31,1. Matchday,IFK Värnamo,IK Sirius,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525688,SE1,2024,2025-04-05,2. Matchday,IK Sirius,Djurgårdens Idrottsförening,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525684,SE1,2024,2025-04-05,2. Matchday,Idrottsföreningen Kamraterna Göteborg,Halmstads BK,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525685,SE1,2024,2025-04-05,2. Matchday,Östers IF,BK Häcken,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525689,SE1,2024,2025-04-06,2. Matchday,Degerfors IF,IFK Värnamo,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525687,SE1,2024,2025-04-06,2. Matchday,Mjällby Almänna Idrottsförening,Göteborgs Atlet- och Idrottssällskap,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525682,SE1,2024,2025-04-06,2. Matchday,Allmänna Idrottsklubben,IFK Norrköping,4,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525683,SE1,2024,2025-04-06,2. Matchday,Idrottsföreningen  Brommapojkarna,Hammarby IF,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525686,SE1,2024,2025-04-07,2. Matchday,Malmö Fotbollförening,Idrottsföreningen Elfsborg,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525716,SE1,2024,2025-04-12,3. Matchday,Idrottsföreningen Elfsborg,IFK Norrköping,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525718,SE1,2024,2025-04-12,3. Matchday,BK Häcken,Mjällby Almänna Idrottsförening,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525721,SE1,2024,2025-04-13,3. Matchday,IFK Värnamo,Idrottsföreningen Kamraterna Göteborg,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525719,SE1,2024,2025-04-13,3. Matchday,IK Sirius,Idrottsföreningen  Brommapojkarna,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525717,SE1,2024,2025-04-13,3. Matchday,Göteborgs Atlet- och Idrottssällskap,Degerfors IF,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525715,SE1,2024,2025-04-13,3. Matchday,Hammarby IF,Djurgårdens Idrottsförening,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525714,SE1,2024,2025-04-14,3. Matchday,Allmänna Idrottsklubben,Malmö Fotbollförening,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525720,SE1,2024,2025-04-14,3. Matchday,Halmstads BK,Östers IF,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525702,SE1,2024,2025-04-18,4. Matchday,Malmö Fotbollförening,IK Sirius,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525703,SE1,2024,2025-04-18,4. Matchday,Mjällby Almänna Idrottsförening,Hammarby IF,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525705,SE1,2024,2025-04-19,4. Matchday,Degerfors IF,Idrottsföreningen Elfsborg,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525704,SE1,2024,2025-04-19,4. Matchday,IFK Norrköping,Halmstads BK,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525699,SE1,2024,2025-04-20,4. Matchday,Idrottsföreningen  Brommapojkarna,IFK Värnamo,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525700,SE1,2024,2025-04-20,4. Matchday,Idrottsföreningen Kamraterna Göteborg,BK Häcken,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525701,SE1,2024,2025-04-20,4. Matchday,Östers IF,Allmänna Idrottsklubben,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525698,SE1,2024,2025-04-21,4. Matchday,Djurgårdens Idrottsförening,Göteborgs Atlet- och Idrottssällskap,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525678,SE1,2024,2025-04-23,5. Matchday,BK Häcken,Degerfors IF,3,4,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525680,SE1,2024,2025-04-23,5. Matchday,Halmstads BK,Mjällby Almänna Idrottsförening,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525675,SE1,2024,2025-04-23,5. Matchday,Hammarby IF,Malmö Fotbollförening,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525676,SE1,2024,2025-04-23,5. Matchday,Idrottsföreningen Elfsborg,IK Sirius,4,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525674,SE1,2024,2025-04-24,5. Matchday,Djurgårdens Idrottsförening,Östers IF,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525677,SE1,2024,2025-04-24,5. Matchday,Göteborgs Atlet- och Idrottssällskap,Idrottsföreningen  Brommapojkarna,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525679,SE1,2024,2025-04-24,5. Matchday,IFK Norrköping,Idrottsföreningen Kamraterna Göteborg,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525681,SE1,2024,2025-04-24,5. Matchday,IFK Värnamo,Allmänna Idrottsklubben,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525690,SE1,2024,2025-04-27,6. Matchday,Allmänna Idrottsklubben,Idrottsföreningen Elfsborg,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525697,SE1,2024,2025-04-27,6. Matchday,IFK Värnamo,IFK Norrköping,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525696,SE1,2024,2025-04-27,6. Matchday,IK Sirius,Halmstads BK,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525695,SE1,2024,2025-04-27,6. Matchday,Mjällby Almänna Idrottsförening,Degerfors IF,4,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525693,SE1,2024,2025-04-27,6. Matchday,BK Häcken,Hammarby IF,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525692,SE1,2024,2025-04-28,6. Matchday,Idrottsföreningen Kamraterna Göteborg,Göteborgs Atlet- och Idrottssällskap,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525694,SE1,2024,2025-04-29,6. Matchday,Malmö Fotbollförening,Östers IF,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525713,SE1,2024,2025-05-03,7. Matchday,Degerfors IF,IK Sirius,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525712,SE1,2024,2025-05-03,7. Matchday,Halmstads BK,IFK Värnamo,4,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525708,SE1,2024,2025-05-04,7. Matchday,Östers IF,Hammarby IF,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525711,SE1,2024,2025-05-04,7. Matchday,IFK Norrköping,BK Häcken,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525710,SE1,2024,2025-05-04,7. Matchday,Mjällby Almänna Idrottsförening,Idrottsföreningen Kamraterna Göteborg,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525706,SE1,2024,2025-05-04,7. Matchday,Djurgårdens Idrottsförening,Allmänna Idrottsklubben,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525707,SE1,2024,2025-05-05,7. Matchday,Idrottsföreningen Elfsborg,Göteborgs Atlet- och Idrottssällskap,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525709,SE1,2024,2025-05-05,7. Matchday,Malmö Fotbollförening,Idrottsföreningen  Brommapojkarna,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525724,SE1,2024,2025-05-10,8. Matchday,Idrottsföreningen  Brommapojkarna,Halmstads BK,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525725,SE1,2024,2025-05-10,8. Matchday,Göteborgs Atlet- och Idrottssällskap,IFK Värnamo,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525728,SE1,2024,2025-05-10,8. Matchday,IK Sirius,BK Häcken,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525722,SE1,2024,2025-05-11,8. Matchday,Allmänna Idrottsklubben,Mjällby Almänna Idrottsförening,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525723,SE1,2024,2025-05-11,8. Matchday,Hammarby IF,IFK Norrköping,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525727,SE1,2024,2025-05-11,8. Matchday,Östers IF,Idrottsföreningen Elfsborg,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525729,SE1,2024,2025-05-11,8. Matchday,Degerfors IF,Malmö Fotbollförening,1,4,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525726,SE1,2024,2025-05-12,8. Matchday,Idrottsföreningen Kamraterna Göteborg,Djurgårdens Idrottsförening,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525755,SE1,2024,2025-05-14,9. Matchday,Hammarby IF,IK Sirius,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525760,SE1,2024,2025-05-14,9. Matchday,Halmstads BK,Göteborgs Atlet- och Idrottssällskap,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525758,SE1,2024,2025-05-14,9. Matchday,BK Häcken,Allmänna Idrottsklubben,3,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525757,SE1,2024,2025-05-15,9. Matchday,Idrottsföreningen Kamraterna Göteborg,Östers IF,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525754,SE1,2024,2025-05-15,9. Matchday,Djurgårdens Idrottsförening,Mjällby Almänna Idrottsförening,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525761,SE1,2024,2025-05-15,9. Matchday,IFK Värnamo,Malmö Fotbollförening,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525759,SE1,2024,2025-05-15,9. Matchday,IFK Norrköping,Degerfors IF,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525756,SE1,2024,2025-05-15,9. Matchday,Idrottsföreningen Elfsborg,Idrottsföreningen  Brommapojkarna,4,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525650,SE1,2024,2025-05-18,10. Matchday,Allmänna Idrottsklubben,Hammarby IF,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525654,SE1,2024,2025-05-18,10. Matchday,Malmö Fotbollförening,Halmstads BK,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525653,SE1,2024,2025-05-18,10. Matchday,Östers IF,Göteborgs Atlet- och Idrottssällskap,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525652,SE1,2024,2025-05-18,10. Matchday,BK Häcken,IFK Värnamo,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525651,SE1,2024,2025-05-19,10. Matchday,Idrottsföreningen Elfsborg,Djurgårdens Idrottsförening,4,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525657,SE1,2024,2025-05-19,10. Matchday,Degerfors IF,Idrottsföreningen Kamraterna Göteborg,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525656,SE1,2024,2025-05-19,10. Matchday,IK Sirius,IFK Norrköping,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525655,SE1,2024,2025-05-19,10. Matchday,Mjällby Almänna Idrottsförening,Idrottsföreningen  Brommapojkarna,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525731,SE1,2024,2025-05-22,18. Matchday,Hammarby IF,Mjällby Almänna Idrottsförening,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525735,SE1,2024,2025-05-22,18. Matchday,Malmö Fotbollförening,Allmänna Idrottsklubben,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525793,SE1,2024,2025-05-24,11. Matchday,IFK Värnamo,Östers IF,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525789,SE1,2024,2025-05-24,11. Matchday,Göteborgs Atlet- och Idrottssällskap,IK Sirius,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525792,SE1,2024,2025-05-25,11. Matchday,Halmstads BK,Idrottsföreningen Elfsborg,1,4,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525790,SE1,2024,2025-05-25,11. Matchday,Idrottsföreningen Kamraterna Göteborg,Malmö Fotbollförening,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525786,SE1,2024,2025-05-25,11. Matchday,Djurgårdens Idrottsförening,BK Häcken,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525788,SE1,2024,2025-05-25,11. Matchday,Idrottsföreningen  Brommapojkarna,Allmänna Idrottsklubben,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525791,SE1,2024,2025-05-26,11. Matchday,IFK Norrköping,Mjällby Almänna Idrottsförening,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525787,SE1,2024,2025-05-26,11. Matchday,Hammarby IF,Degerfors IF,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525691,SE1,2024,2025-05-29,6. Matchday,Idrottsföreningen  Brommapojkarna,Djurgårdens Idrottsförening,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525739,SE1,2024,2025-05-31,12. Matchday,Idrottsföreningen Elfsborg,Hammarby IF,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525745,SE1,2024,2025-05-31,12. Matchday,Degerfors IF,Östers IF,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525742,SE1,2024,2025-05-31,12. Matchday,IFK Norrköping,Göteborgs Atlet- och Idrottssällskap,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525738,SE1,2024,2025-06-01,12. Matchday,Idrottsföreningen  Brommapojkarna,Idrottsföreningen Kamraterna Göteborg,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525744,SE1,2024,2025-06-01,12. Matchday,Halmstads BK,Djurgårdens Idrottsförening,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525743,SE1,2024,2025-06-01,12. Matchday,IK Sirius,Allmänna Idrottsklubben,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525741,SE1,2024,2025-06-01,12. Matchday,Mjällby Almänna Idrottsförening,IFK Värnamo,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525740,SE1,2024,2025-06-01,12. Matchday,Malmö Fotbollförening,BK Häcken,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525612,SE1,2024,2025-06-28,13. Matchday,Hammarby IF,Halmstads BK,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525614,SE1,2024,2025-06-28,13. Matchday,Östers IF,IK Sirius,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525616,SE1,2024,2025-06-29,13. Matchday,Degerfors IF,Idrottsföreningen  Brommapojkarna,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525610,SE1,2024,2025-06-29,13. Matchday,Allmänna Idrottsklubben,Idrottsföreningen Kamraterna Göteborg,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525613,SE1,2024,2025-06-29,13. Matchday,BK Häcken,Göteborgs Atlet- och Idrottssällskap,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525617,SE1,2024,2025-06-29,13. Matchday,IFK Värnamo,Idrottsföreningen Elfsborg,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525611,SE1,2024,2025-06-30,13. Matchday,Djurgårdens Idrottsförening,IFK Norrköping,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525615,SE1,2024,2025-06-30,13. Matchday,Mjällby Almänna Idrottsförening,Malmö Fotbollförening,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525603,SE1,2024,2025-07-05,14. Matchday,Hammarby IF,IFK Värnamo,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525605,SE1,2024,2025-07-05,14. Matchday,Göteborgs Atlet- och Idrottssällskap,Malmö Fotbollförening,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525607,SE1,2024,2025-07-05,14. Matchday,Östers IF,Mjällby Almänna Idrottsförening,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525606,SE1,2024,2025-07-06,14. Matchday,Idrottsföreningen Kamraterna Göteborg,IK Sirius,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525609,SE1,2024,2025-07-06,14. Matchday,Halmstads BK,Allmänna Idrottsklubben,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525604,SE1,2024,2025-07-06,14. Matchday,Idrottsföreningen Elfsborg,BK Häcken,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525602,SE1,2024,2025-07-06,14. Matchday,Djurgårdens Idrottsförening,Degerfors IF,5,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525608,SE1,2024,2025-07-07,14. Matchday,IFK Norrköping,Idrottsföreningen  Brommapojkarna,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525773,SE1,2024,2025-07-12,15. Matchday,Idrottsföreningen Kamraterna Göteborg,Idrottsföreningen Elfsborg,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525775,SE1,2024,2025-07-12,15. Matchday,Malmö Fotbollförening,IFK Norrköping,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525777,SE1,2024,2025-07-13,15. Matchday,IFK Värnamo,Djurgårdens Idrottsförening,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525774,SE1,2024,2025-07-13,15. Matchday,BK Häcken,Halmstads BK,4,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525772,SE1,2024,2025-07-13,15. Matchday,Göteborgs Atlet- och Idrottssällskap,Hammarby IF,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525771,SE1,2024,2025-07-13,15. Matchday,Idrottsföreningen  Brommapojkarna,Östers IF,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525770,SE1,2024,2025-07-13,15. Matchday,Allmänna Idrottsklubben,Degerfors IF,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525776,SE1,2024,2025-07-14,15. Matchday,IK Sirius,Mjällby Almänna Idrottsförening,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525753,SE1,2024,2025-07-19,16. Matchday,Degerfors IF,Göteborgs Atlet- och Idrottssällskap,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525748,SE1,2024,2025-07-19,16. Matchday,Östers IF,Malmö Fotbollförening,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525746,SE1,2024,2025-07-19,16. Matchday,Djurgårdens Idrottsförening,Idrottsföreningen Elfsborg,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525752,SE1,2024,2025-07-20,16. Matchday,Halmstads BK,BK Häcken,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525751,SE1,2024,2025-07-20,16. Matchday,IK Sirius,Idrottsföreningen Kamraterna Göteborg,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525749,SE1,2024,2025-07-20,16. Matchday,Mjällby Almänna Idrottsförening,Allmänna Idrottsklubben,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525747,SE1,2024,2025-07-20,16. Matchday,Hammarby IF,Idrottsföreningen  Brommapojkarna,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525750,SE1,2024,2025-07-21,16. Matchday,IFK Norrköping,IFK Värnamo,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525779,SE1,2024,2025-07-26,17. Matchday,Idrottsföreningen  Brommapojkarna,Malmö Fotbollförening,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525781,SE1,2024,2025-07-26,17. Matchday,Göteborgs Atlet- och Idrottssällskap,Halmstads BK,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525784,SE1,2024,2025-07-26,17. Matchday,Degerfors IF,IFK Norrköping,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525778,SE1,2024,2025-07-27,17. Matchday,Allmänna Idrottsklubben,Östers IF,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525782,SE1,2024,2025-07-27,17. Matchday,BK Häcken,Djurgårdens Idrottsförening,1,6,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525783,SE1,2024,2025-07-27,17. Matchday,Mjällby Almänna Idrottsförening,IK Sirius,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525785,SE1,2024,2025-07-27,17. Matchday,IFK Värnamo,Hammarby IF,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525780,SE1,2024,2025-07-28,17. Matchday,Idrottsföreningen Elfsborg,Idrottsföreningen Kamraterna Göteborg,4,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525732,SE1,2024,2025-08-02,18. Matchday,Idrottsföreningen  Brommapojkarna,IFK Norrköping,6,4,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525737,SE1,2024,2025-08-02,18. Matchday,IFK Värnamo,Göteborgs Atlet- och Idrottssällskap,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525734,SE1,2024,2025-08-03,18. Matchday,BK Häcken,Idrottsföreningen Elfsborg,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525736,SE1,2024,2025-08-03,18. Matchday,IK Sirius,Östers IF,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525730,SE1,2024,2025-08-03,18. Matchday,Djurgårdens Idrottsförening,Halmstads BK,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525733,SE1,2024,2025-08-04,18. Matchday,Idrottsföreningen Kamraterna Göteborg,Degerfors IF,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525768,SE1,2024,2025-08-09,19. Matchday,Halmstads BK,IK Sirius,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525766,SE1,2024,2025-08-09,19. Matchday,Malmö Fotbollförening,Mjällby Almänna Idrottsförening,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525769,SE1,2024,2025-08-10,19. Matchday,Degerfors IF,BK Häcken,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525767,SE1,2024,2025-08-10,19. Matchday,IFK Norrköping,Hammarby IF,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525765,SE1,2024,2025-08-10,19. Matchday,Östers IF,Idrottsföreningen  Brommapojkarna,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525762,SE1,2024,2025-08-10,19. Matchday,Allmänna Idrottsklubben,Djurgårdens Idrottsförening,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525764,SE1,2024,2025-08-11,19. Matchday,Göteborgs Atlet- och Idrottssällskap,Idrottsföreningen Kamraterna Göteborg,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525763,SE1,2024,2025-08-11,19. Matchday,Idrottsföreningen Elfsborg,IFK Värnamo,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525648,SE1,2024,2025-08-16,20. Matchday,Halmstads BK,Malmö Fotbollförening,0,4,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525647,SE1,2024,2025-08-16,20. Matchday,IFK Norrköping,Idrottsföreningen Elfsborg,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525642,SE1,2024,2025-08-17,20. Matchday,Hammarby IF,Göteborgs Atlet- och Idrottssällskap,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525643,SE1,2024,2025-08-17,20. Matchday,Idrottsföreningen  Brommapojkarna,IK Sirius,2,4,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525644,SE1,2024,2025-08-17,20. Matchday,Idrottsföreningen Kamraterna Göteborg,Allmänna Idrottsklubben,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525645,SE1,2024,2025-08-17,20. Matchday,BK Häcken,Östers IF,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525646,SE1,2024,2025-08-17,20. Matchday,Mjällby Almänna Idrottsförening,Djurgårdens Idrottsförening,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525649,SE1,2024,2025-08-18,20. Matchday,IFK Värnamo,Degerfors IF,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525666,SE1,2024,2025-08-24,21. Matchday,Djurgårdens Idrottsförening,Idrottsföreningen  Brommapojkarna,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525673,SE1,2024,2025-08-24,21. Matchday,IFK Värnamo,BK Häcken,1,5,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525672,SE1,2024,2025-08-24,21. Matchday,Degerfors IF,Allmänna Idrottsklubben,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525671,SE1,2024,2025-08-24,21. Matchday,IK Sirius,Hammarby IF,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525670,SE1,2024,2025-08-24,21. Matchday,Malmö Fotbollförening,Idrottsföreningen Kamraterna Göteborg,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525667,SE1,2024,2025-08-24,21. Matchday,Idrottsföreningen Elfsborg,Halmstads BK,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525669,SE1,2024,2025-08-25,21. Matchday,Östers IF,IFK Norrköping,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525668,SE1,2024,2025-08-25,21. Matchday,Göteborgs Atlet- och Idrottssällskap,Mjällby Almänna Idrottsförening,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525636,SE1,2024,2025-08-30,22. Matchday,Idrottsföreningen  Brommapojkarna,Idrottsföreningen Elfsborg,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525640,SE1,2024,2025-08-30,22. Matchday,Mjällby Almänna Idrottsförening,Halmstads BK,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525638,SE1,2024,2025-08-30,22. Matchday,Idrottsföreningen Kamraterna Göteborg,IFK Värnamo,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525637,SE1,2024,2025-08-31,22. Matchday,Göteborgs Atlet- och Idrottssällskap,BK Häcken,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525635,SE1,2024,2025-08-31,22. Matchday,Hammarby IF,Östers IF,4,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525641,SE1,2024,2025-08-31,22. Matchday,IFK Norrköping,Djurgårdens Idrottsförening,0,4,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525634,SE1,2024,2025-08-31,22. Matchday,Allmänna Idrottsklubben,IK Sirius,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525639,SE1,2024,2025-08-31,22. Matchday,Malmö Fotbollförening,Degerfors IF,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525624,SE1,2024,2025-09-13,23. Matchday,Halmstads BK,IFK Norrköping,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525625,SE1,2024,2025-09-13,23. Matchday,Degerfors IF,Mjällby Almänna Idrottsförening,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525620,SE1,2024,2025-09-14,23. Matchday,Idrottsföreningen Elfsborg,Malmö Fotbollförening,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525622,SE1,2024,2025-09-14,23. Matchday,Östers IF,IFK Värnamo,4,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525623,SE1,2024,2025-09-14,23. Matchday,IK Sirius,Göteborgs Atlet- och Idrottssällskap,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525619,SE1,2024,2025-09-14,23. Matchday,Djurgårdens Idrottsförening,Hammarby IF,3,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525618,SE1,2024,2025-09-15,23. Matchday,Allmänna Idrottsklubben,Idrottsföreningen  Brommapojkarna,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525621,SE1,2024,2025-09-15,23. Matchday,BK Häcken,Idrottsföreningen Kamraterna Göteborg,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525661,SE1,2024,2025-09-20,24. Matchday,Malmö Fotbollförening,Djurgårdens Idrottsförening,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525659,SE1,2024,2025-09-20,24. Matchday,Göteborgs Atlet- och Idrottssällskap,Idrottsföreningen Elfsborg,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525662,SE1,2024,2025-09-20,24. Matchday,Mjällby Almänna Idrottsförening,Östers IF,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525658,SE1,2024,2025-09-21,24. Matchday,Hammarby IF,BK Häcken,4,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525660,SE1,2024,2025-09-21,24. Matchday,Idrottsföreningen Kamraterna Göteborg,Idrottsföreningen  Brommapojkarna,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525664,SE1,2024,2025-09-21,24. Matchday,IK Sirius,Degerfors IF,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525665,SE1,2024,2025-09-22,24. Matchday,IFK Värnamo,Halmstads BK,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525663,SE1,2024,2025-09-22,24. Matchday,IFK Norrköping,Allmänna Idrottsklubben,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525629,SE1,2024,2025-09-27,25. Matchday,Idrottsföreningen Elfsborg,Degerfors IF,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525630,SE1,2024,2025-09-27,25. Matchday,BK Häcken,IFK Norrköping,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525626,SE1,2024,2025-09-28,25. Matchday,Allmänna Idrottsklubben,Göteborgs Atlet- och Idrottssällskap,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525628,SE1,2024,2025-09-28,25. Matchday,Idrottsföreningen  Brommapojkarna,Mjällby Almänna Idrottsförening,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525632,SE1,2024,2025-09-28,25. Matchday,Malmö Fotbollförening,IFK Värnamo,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525633,SE1,2024,2025-09-28,25. Matchday,Halmstads BK,Hammarby IF,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525627,SE1,2024,2025-09-29,25. Matchday,Djurgårdens Idrottsförening,IK Sirius,8,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4525631,SE1,2024,2025-09-29,25. Matchday,Östers IF,Idrottsföreningen Kamraterna Göteborg,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550389,SE1,2024,2025-10-04,26. Matchday,Göteborgs Atlet- och Idrottssällskap,IFK Norrköping,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550391,SE1,2024,2025-10-04,26. Matchday,Östers IF,Halmstads BK,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550392,SE1,2024,2025-10-04,26. Matchday,Mjällby Almänna Idrottsförening,Idrottsföreningen Elfsborg,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550394,SE1,2024,2025-10-04,26. Matchday,Degerfors IF,Djurgårdens Idrottsförening,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550387,SE1,2024,2025-10-05,26. Matchday,Allmänna Idrottsklubben,IFK Värnamo,2,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550388,SE1,2024,2025-10-05,26. Matchday,Idrottsföreningen  Brommapojkarna,BK Häcken,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550390,SE1,2024,2025-10-05,26. Matchday,Idrottsföreningen Kamraterna Göteborg,Hammarby IF,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550393,SE1,2024,2025-10-05,26. Matchday,IK Sirius,Malmö Fotbollförening,5,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550400,SE1,2024,2025-10-18,27. Matchday,IFK Norrköping,Malmö Fotbollförening,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550399,SE1,2024,2025-10-18,27. Matchday,BK Häcken,IK Sirius,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550397,SE1,2024,2025-10-19,27. Matchday,Göteborgs Atlet- och Idrottssällskap,Djurgårdens Idrottsförening,3,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550395,SE1,2024,2025-10-19,27. Matchday,Hammarby IF,Allmänna Idrottsklubben,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550402,SE1,2024,2025-10-19,27. Matchday,IFK Värnamo,Idrottsföreningen  Brommapojkarna,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550396,SE1,2024,2025-10-19,27. Matchday,Idrottsföreningen Elfsborg,Östers IF,5,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550398,SE1,2024,2025-10-20,27. Matchday,Idrottsföreningen Kamraterna Göteborg,Mjällby Almänna Idrottsförening,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550401,SE1,2024,2025-10-20,27. Matchday,Degerfors IF,Halmstads BK,0,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550404,SE1,2024,2025-10-25,28. Matchday,Djurgårdens Idrottsförening,IFK Värnamo,6,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550406,SE1,2024,2025-10-25,28. Matchday,Östers IF,Degerfors IF,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550403,SE1,2024,2025-10-26,28. Matchday,Allmänna Idrottsklubben,BK Häcken,2,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550408,SE1,2024,2025-10-26,28. Matchday,Mjällby Almänna Idrottsförening,IFK Norrköping,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550409,SE1,2024,2025-10-26,28. Matchday,IK Sirius,Idrottsföreningen Elfsborg,4,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550410,SE1,2024,2025-10-26,28. Matchday,Halmstads BK,Idrottsföreningen Kamraterna Göteborg,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550405,SE1,2024,2025-10-27,28. Matchday,Idrottsföreningen  Brommapojkarna,Göteborgs Atlet- och Idrottssällskap,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550407,SE1,2024,2025-10-27,28. Matchday,Malmö Fotbollförening,Hammarby IF,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550414,SE1,2024,2025-11-01,29. Matchday,BK Häcken,Malmö Fotbollförening,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550415,SE1,2024,2025-11-01,29. Matchday,IFK Norrköping,IK Sirius,1,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550412,SE1,2024,2025-11-02,29. Matchday,Idrottsföreningen Elfsborg,Allmänna Idrottsklubben,0,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550413,SE1,2024,2025-11-02,29. Matchday,Göteborgs Atlet- och Idrottssällskap,Östers IF,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550411,SE1,2024,2025-11-02,29. Matchday,Djurgårdens Idrottsförening,Idrottsföreningen Kamraterna Göteborg,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550416,SE1,2024,2025-11-02,29. Matchday,Halmstads BK,Idrottsföreningen  Brommapojkarna,0,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550417,SE1,2024,2025-11-03,29. Matchday,Degerfors IF,Hammarby IF,1,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550418,SE1,2024,2025-11-03,29. Matchday,IFK Värnamo,Mjällby Almänna Idrottsförening,0,5,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550419,SE1,2024,2025-11-09,30. Matchday,Allmänna Idrottsklubben,Halmstads BK,0,2,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550420,SE1,2024,2025-11-09,30. Matchday,Hammarby IF,Idrottsföreningen Elfsborg,3,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550421,SE1,2024,2025-11-09,30. Matchday,Idrottsföreningen  Brommapojkarna,Degerfors IF,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550422,SE1,2024,2025-11-09,30. Matchday,Idrottsföreningen Kamraterna Göteborg,IFK Norrköping,2,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550423,SE1,2024,2025-11-09,30. Matchday,Östers IF,Djurgårdens Idrottsförening,1,3,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550424,SE1,2024,2025-11-09,30. Matchday,Malmö Fotbollförening,Göteborgs Atlet- och Idrottssällskap,2,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550425,SE1,2024,2025-11-09,30. Matchday,Mjällby Almänna Idrottsförening,BK Häcken,1,0,2025,SEASON_DIFFERS_FROM_CONVENTION
+4550426,SE1,2024,2025-11-09,30. Matchday,IK Sirius,IFK Värnamo,3,1,2025,SEASON_DIFFERS_FROM_CONVENTION
+4802674,SE1,2025,2026-04-04,1. Matchday,Degerfors IF,IK Sirius,0,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802669,SE1,2025,2026-04-04,1. Matchday,Hammarby IF,Mjällby Almänna Idrottsförening,3,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802668,SE1,2025,2026-04-05,1. Matchday,Allmänna Idrottsklubben,Halmstads BK,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802675,SE1,2025,2026-04-05,1. Matchday,Kalmar Fotbollförening,Västerås Sportklubb FK,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802671,SE1,2025,2026-04-05,1. Matchday,Örgryte IS,Malmö Fotbollförening,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802673,SE1,2025,2026-04-06,1. Matchday,Idrottsföreningen Elfsborg,Idrottsföreningen Kamraterna Göteborg,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802672,SE1,2025,2026-04-06,1. Matchday,BK Häcken,Idrottsföreningen  Brommapojkarna,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802670,SE1,2025,2026-04-06,1. Matchday,Göteborgs Atlet- och Idrottssällskap,Djurgårdens Idrottsförening,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802653,SE1,2025,2026-04-11,2. Matchday,Idrottsföreningen Kamraterna Göteborg,BK Häcken,0,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802658,SE1,2025,2026-04-11,2. Matchday,Västerås Sportklubb FK,Idrottsföreningen Elfsborg,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802654,SE1,2025,2026-04-11,2. Matchday,Mjällby Almänna Idrottsförening,Örgryte IS,0,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802655,SE1,2025,2026-04-12,2. Matchday,Malmö Fotbollförening,Göteborgs Atlet- och Idrottssällskap,3,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802659,SE1,2025,2026-04-12,2. Matchday,Halmstads BK,Degerfors IF,0,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802652,SE1,2025,2026-04-12,2. Matchday,Djurgårdens Idrottsförening,Kalmar Fotbollförening,3,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802657,SE1,2025,2026-04-13,2. Matchday,IK Sirius,Hammarby IF,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802656,SE1,2025,2026-04-13,2. Matchday,Idrottsföreningen  Brommapojkarna,Allmänna Idrottsklubben,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802681,SE1,2025,2026-04-17,3. Matchday,Degerfors IF,Idrottsföreningen Elfsborg,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802677,SE1,2025,2026-04-17,3. Matchday,Djurgårdens Idrottsförening,Malmö Fotbollförening,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802683,SE1,2025,2026-04-18,3. Matchday,Halmstads BK,Idrottsföreningen Kamraterna Göteborg,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802682,SE1,2025,2026-04-18,3. Matchday,IK Sirius,Västerås Sportklubb FK,4,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802680,SE1,2025,2026-04-18,3. Matchday,Mjällby Almänna Idrottsförening,Idrottsföreningen  Brommapojkarna,3,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802678,SE1,2025,2026-04-18,3. Matchday,Hammarby IF,Örgryte IS,8,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802676,SE1,2025,2026-04-19,3. Matchday,Allmänna Idrottsklubben,Kalmar Fotbollförening,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802679,SE1,2025,2026-04-19,3. Matchday,BK Häcken,Göteborgs Atlet- och Idrottssällskap,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802664,SE1,2025,2026-04-22,4. Matchday,Idrottsföreningen Elfsborg,Djurgårdens Idrottsförening,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802666,SE1,2025,2026-04-22,4. Matchday,Västerås Sportklubb FK,BK Häcken,3,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802660,SE1,2025,2026-04-22,4. Matchday,Hammarby IF,Halmstads BK,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802662,SE1,2025,2026-04-22,4. Matchday,Örgryte IS,Idrottsföreningen  Brommapojkarna,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802661,SE1,2025,2026-04-23,4. Matchday,Göteborgs Atlet- och Idrottssällskap,Mjällby Almänna Idrottsförening,0,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802663,SE1,2025,2026-04-23,4. Matchday,Malmö Fotbollförening,IK Sirius,2,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802667,SE1,2025,2026-04-23,4. Matchday,Kalmar Fotbollförening,Idrottsföreningen Kamraterna Göteborg,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802665,SE1,2025,2026-04-23,4. Matchday,Degerfors IF,Allmänna Idrottsklubben,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802685,SE1,2025,2026-04-26,5. Matchday,Djurgårdens Idrottsförening,Hammarby IF,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802686,SE1,2025,2026-04-26,5. Matchday,Idrottsföreningen Kamraterna Göteborg,Göteborgs Atlet- och Idrottssällskap,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802690,SE1,2025,2026-04-26,5. Matchday,Idrottsföreningen  Brommapojkarna,Västerås Sportklubb FK,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802684,SE1,2025,2026-04-27,5. Matchday,Allmänna Idrottsklubben,Malmö Fotbollförening,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802687,SE1,2025,2026-04-27,5. Matchday,Örgryte IS,Degerfors IF,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802688,SE1,2025,2026-04-27,5. Matchday,BK Häcken,IK Sirius,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802689,SE1,2025,2026-04-27,5. Matchday,Mjällby Almänna Idrottsförening,Halmstads BK,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802691,SE1,2025,2026-04-27,5. Matchday,Kalmar Fotbollförening,Idrottsföreningen Elfsborg,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802698,SE1,2025,2026-05-02,6. Matchday,IK Sirius,Kalmar Fotbollförening,3,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802697,SE1,2025,2026-05-02,6. Matchday,Degerfors IF,BK Häcken,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802694,SE1,2025,2026-05-03,6. Matchday,Göteborgs Atlet- och Idrottssällskap,Örgryte IS,4,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802695,SE1,2025,2026-05-03,6. Matchday,Malmö Fotbollförening,Mjällby Almänna Idrottsförening,2,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802696,SE1,2025,2026-05-03,6. Matchday,Idrottsföreningen Elfsborg,Allmänna Idrottsklubben,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802693,SE1,2025,2026-05-03,6. Matchday,Hammarby IF,Västerås Sportklubb FK,3,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802692,SE1,2025,2026-05-04,6. Matchday,Djurgårdens Idrottsförening,Idrottsföreningen Kamraterna Göteborg,6,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802699,SE1,2025,2026-05-04,6. Matchday,Halmstads BK,Idrottsföreningen  Brommapojkarna,1,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802703,SE1,2025,2026-05-08,7. Matchday,Idrottsföreningen Elfsborg,Idrottsföreningen  Brommapojkarna,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802701,SE1,2025,2026-05-09,7. Matchday,Idrottsföreningen Kamraterna Göteborg,Hammarby IF,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802704,SE1,2025,2026-05-09,7. Matchday,Degerfors IF,Mjällby Almänna Idrottsförening,1,4,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802706,SE1,2025,2026-05-09,7. Matchday,Västerås Sportklubb FK,Göteborgs Atlet- och Idrottssällskap,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802707,SE1,2025,2026-05-10,7. Matchday,Kalmar Fotbollförening,Halmstads BK,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802700,SE1,2025,2026-05-10,7. Matchday,Allmänna Idrottsklubben,Djurgårdens Idrottsförening,2,4,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802702,SE1,2025,2026-05-10,7. Matchday,BK Häcken,Malmö Fotbollförening,3,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802705,SE1,2025,2026-05-11,7. Matchday,IK Sirius,Örgryte IS,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802710,SE1,2025,2026-05-16,8. Matchday,Göteborgs Atlet- och Idrottssällskap,Degerfors IF,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802715,SE1,2025,2026-05-16,8. Matchday,Halmstads BK,Idrottsföreningen Elfsborg,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802709,SE1,2025,2026-05-17,8. Matchday,Hammarby IF,Malmö Fotbollförening,4,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802712,SE1,2025,2026-05-17,8. Matchday,Mjällby Almänna Idrottsförening,BK Häcken,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802713,SE1,2025,2026-05-17,8. Matchday,Idrottsföreningen  Brommapojkarna,Kalmar Fotbollförening,1,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802714,SE1,2025,2026-05-17,8. Matchday,Västerås Sportklubb FK,Allmänna Idrottsklubben,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802708,SE1,2025,2026-05-18,8. Matchday,Djurgårdens Idrottsförening,IK Sirius,2,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802711,SE1,2025,2026-05-19,8. Matchday,Örgryte IS,Idrottsföreningen Kamraterna Göteborg,2,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802767,SE1,2025,2026-05-20,15. Matchday,Göteborgs Atlet- och Idrottssällskap,Hammarby IF,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802769,SE1,2025,2026-05-21,15. Matchday,Idrottsföreningen Elfsborg,Mjällby Almänna Idrottsförening,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802716,SE1,2025,2026-05-22,9. Matchday,Djurgårdens Idrottsförening,Idrottsföreningen  Brommapojkarna,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802722,SE1,2025,2026-05-23,9. Matchday,Kalmar Fotbollförening,Degerfors IF,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802723,SE1,2025,2026-05-23,9. Matchday,Halmstads BK,Örgryte IS,2,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802719,SE1,2025,2026-05-24,9. Matchday,Malmö Fotbollförening,Västerås Sportklubb FK,2,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802721,SE1,2025,2026-05-24,9. Matchday,IK Sirius,Göteborgs Atlet- och Idrottssällskap,2,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802717,SE1,2025,2026-05-24,9. Matchday,Hammarby IF,Allmänna Idrottsklubben,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802718,SE1,2025,2026-05-25,9. Matchday,Idrottsföreningen Kamraterna Göteborg,Mjällby Almänna Idrottsförening,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802720,SE1,2025,2026-05-25,9. Matchday,Idrottsföreningen Elfsborg,BK Häcken,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802726,SE1,2025,2026-05-29,10. Matchday,Örgryte IS,Idrottsföreningen Elfsborg,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802724,SE1,2025,2026-05-30,10. Matchday,Allmänna Idrottsklubben,IK Sirius,0,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802725,SE1,2025,2026-05-30,10. Matchday,Göteborgs Atlet- och Idrottssällskap,Kalmar Fotbollförening,3,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802729,SE1,2025,2026-05-30,10. Matchday,Malmö Fotbollförening,Halmstads BK,5,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802727,SE1,2025,2026-05-31,10. Matchday,BK Häcken,Hammarby IF,3,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802730,SE1,2025,2026-05-31,10. Matchday,Degerfors IF,Idrottsföreningen  Brommapojkarna,2,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802731,SE1,2025,2026-05-31,10. Matchday,Västerås Sportklubb FK,Idrottsföreningen Kamraterna Göteborg,4,5,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802737,SE1,2025,2026-07-03,11. Matchday,IK Sirius,Mjällby Almänna Idrottsförening,4,4,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802736,SE1,2025,2026-07-04,11. Matchday,Degerfors IF,Malmö Fotbollförening,0,1,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802739,SE1,2025,2026-07-04,11. Matchday,Halmstads BK,Västerås Sportklubb FK,1,3,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802732,SE1,2025,2026-07-05,11. Matchday,Idrottsföreningen Kamraterna Göteborg,Allmänna Idrottsklubben,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802734,SE1,2025,2026-07-05,11. Matchday,Idrottsföreningen Elfsborg,Hammarby IF,1,2,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802738,SE1,2025,2026-07-05,11. Matchday,Kalmar Fotbollförening,Örgryte IS,3,0,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802733,SE1,2025,2026-07-06,11. Matchday,BK Häcken,Djurgårdens Idrottsförening,2,4,2026,SEASON_DIFFERS_FROM_CONVENTION
+4802735,SE1,2025,2026-07-06,11. Matchday,Idrottsföreningen  Brommapojkarna,Göteborgs Atlet- och Idrottssällskap,1,1,2026,SEASON_DIFFERS_FROM_CONVENTION
