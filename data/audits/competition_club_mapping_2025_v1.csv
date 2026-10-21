@@ -1,0 +1,37 @@
+competition_id,official_edition,club_id,raw_team_name,external_team_name,mapping_method
+BRA1,2025,199,Sport Club Corinthians Paulista,Corinthians,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,210,Grêmio Foot-Ball Porto Alegrense,Gremio,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,221,Santos Futebol Clube,Santos,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,330,Clube Atlético Mineiro,Atletico-MG,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,537,S. A. F. Botafogo,Botafogo RJ,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,585,São Paulo Futebol Clube,Sao Paulo,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,609,Cruzeiro Esporte Clube,Cruzeiro,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,614,Clube de Regatas do Flamengo,Flamengo RJ,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,978,Club de Regatas Vasco da Gama,Vasco,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,1023,Sociedade Esportiva Palmeiras,Palmeiras,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,2029,Ceará Sporting Club,Ceara,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,2125,Esporte Clube Vitória,Vitoria,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,2462,Fluminense Football Club,Fluminense,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,3876,Mirasol Futebol Clube,Mirassol,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,6600,Sport Club Internacional,Internacional,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,8718,Sport Club do Recife,Sport Recife,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,8793,Red Bull Bragantino,Bragantino,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,10010,Esporte Clube Bahia,Bahia,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,10492,Esporte Clube Juventude,Juventude,EXPLICIT_MANUAL_MAPPING
+BRA1,2025,10870,Fortaleza Esporte Clube,Fortaleza,EXPLICIT_MANUAL_MAPPING
+SE1,2025,272,Allmänna Idrottsklubben,AIK,EXPLICIT_MANUAL_MAPPING
+SE1,2025,496,Malmö Fotbollförening,Malmo FF,EXPLICIT_MANUAL_MAPPING
+SE1,2025,801,Idrottsföreningen Kamraterna Göteborg,Goteborg,EXPLICIT_MANUAL_MAPPING
+SE1,2025,1011,Halmstads BK,Halmstad,EXPLICIT_MANUAL_MAPPING
+SE1,2025,1044,Djurgårdens Idrottsförening,Djurgarden,EXPLICIT_MANUAL_MAPPING
+SE1,2025,1059,Hammarby IF,Hammarby,EXPLICIT_MANUAL_MAPPING
+SE1,2025,1092,Idrottsföreningen  Brommapojkarna,Brommapojkarna,EXPLICIT_MANUAL_MAPPING
+SE1,2025,1101,Idrottsföreningen Elfsborg,Elfsborg,EXPLICIT_MANUAL_MAPPING
+SE1,2025,1109,BK Häcken,Hacken,EXPLICIT_MANUAL_MAPPING
+SE1,2025,1236,Östers IF,Oster,EXPLICIT_MANUAL_MAPPING
+SE1,2025,2719,Mjällby Almänna Idrottsförening,Mjallby,EXPLICIT_MANUAL_MAPPING
+SE1,2025,2844,IFK Norrköping,Norrkoping,EXPLICIT_MANUAL_MAPPING
+SE1,2025,3622,IFK Värnamo,Varnamo,EXPLICIT_MANUAL_MAPPING
+SE1,2025,3641,Degerfors IF,Degerfors,EXPLICIT_MANUAL_MAPPING
+SE1,2025,7009,Göteborgs Atlet- och Idrottssällskap,GAIS,EXPLICIT_MANUAL_MAPPING
+SE1,2025,7945,IK Sirius,Sirius,EXPLICIT_MANUAL_MAPPING

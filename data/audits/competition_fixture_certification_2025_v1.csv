@@ -1,0 +1,3 @@
+competition_id,raw_season,official_edition,expected_games,matched_fixture_keys,exact_matches,date_mismatches,score_mismatches,unmatched_raw,unmatched_external,documented_date_resolutions,fixture_audit_decision,pre_post_eligible,calendar_modified,scoring_modified
+BRA1,2024,2025,380,380,378,2,0,0,0,2,FIXTURE_AUDIT_PASSED,False,False,False
+SE1,2024,2025,240,240,240,0,0,0,0,0,FIXTURE_AUDIT_PASSED,False,False,False

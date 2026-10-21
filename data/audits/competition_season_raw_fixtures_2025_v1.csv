@@ -1,0 +1,621 @@
+competition_id,raw_season,official_edition,game_id,match_date,home_club_id,home_team_raw,away_club_id,away_team_raw,home_club_goals,away_club_goals
+BRA1,2024,2025,4582063,2025-03-29,585,São Paulo Futebol Clube,8718,Sport Club do Recife,0,0
+BRA1,2024,2025,4582065,2025-03-29,609,Cruzeiro Esporte Clube,3876,Mirasol Futebol Clube,2,1
+BRA1,2024,2025,4582066,2025-03-29,210,Grêmio Foot-Ball Porto Alegrense,330,Clube Atlético Mineiro,2,1
+BRA1,2024,2025,4582068,2025-03-29,10870,Fortaleza Esporte Clube,2462,Fluminense Football Club,2,0
+BRA1,2024,2025,4582069,2025-03-29,10492,Esporte Clube Juventude,2125,Esporte Clube Vitória,2,0
+BRA1,2024,2025,4582060,2025-03-30,614,Clube de Regatas do Flamengo,6600,Sport Club Internacional,1,1
+BRA1,2024,2025,4582061,2025-03-30,978,Club de Regatas Vasco da Gama,221,Santos Futebol Clube,2,1
+BRA1,2024,2025,4582062,2025-03-30,1023,Sociedade Esportiva Palmeiras,537,S. A. F. Botafogo,0,0
+BRA1,2024,2025,4582067,2025-03-31,10010,Esporte Clube Bahia,199,Sport Club Corinthians Paulista,1,1
+BRA1,2024,2025,4582064,2025-04-01,8793,Red Bull Bragantino,2029,Ceará Sporting Club,2,2
+BRA1,2024,2025,4582132,2025-04-05,199,Sport Club Corinthians Paulista,978,Club de Regatas Vasco da Gama,3,0
+BRA1,2024,2025,4582138,2025-04-05,2029,Ceará Sporting Club,210,Grêmio Foot-Ball Porto Alegrense,2,0
+BRA1,2024,2025,4582130,2025-04-06,2462,Fluminense Football Club,8793,Red Bull Bragantino,2,1
+BRA1,2024,2025,4582131,2025-04-06,537,S. A. F. Botafogo,10492,Esporte Clube Juventude,2,0
+BRA1,2024,2025,4582134,2025-04-06,3876,Mirasol Futebol Clube,10870,Fortaleza Esporte Clube,1,1
+BRA1,2024,2025,4582135,2025-04-06,330,Clube Atlético Mineiro,585,São Paulo Futebol Clube,0,0
+BRA1,2024,2025,4582136,2025-04-06,6600,Sport Club Internacional,609,Cruzeiro Esporte Clube,3,0
+BRA1,2024,2025,4582137,2025-04-06,2125,Esporte Clube Vitória,614,Clube de Regatas do Flamengo,1,2
+BRA1,2024,2025,4582139,2025-04-06,8718,Sport Club do Recife,1023,Sociedade Esportiva Palmeiras,1,2
+BRA1,2024,2025,4582133,2025-04-07,221,Santos Futebol Clube,10010,Esporte Clube Bahia,2,2
+BRA1,2024,2025,4582032,2025-04-12,1023,Sociedade Esportiva Palmeiras,199,Sport Club Corinthians Paulista,2,0
+BRA1,2024,2025,4582034,2025-04-12,8793,Red Bull Bragantino,537,S. A. F. Botafogo,1,0
+BRA1,2024,2025,4582039,2025-04-12,10492,Esporte Clube Juventude,2029,Ceará Sporting Club,2,1
+BRA1,2024,2025,4582030,2025-04-13,2462,Fluminense Football Club,221,Santos Futebol Clube,1,0
+BRA1,2024,2025,4582031,2025-04-13,978,Club de Regatas Vasco da Gama,8718,Sport Club do Recife,3,1
+BRA1,2024,2025,4582033,2025-04-13,585,São Paulo Futebol Clube,609,Cruzeiro Esporte Clube,1,1
+BRA1,2024,2025,4582036,2025-04-13,210,Grêmio Foot-Ball Porto Alegrense,614,Clube de Regatas do Flamengo,0,2
+BRA1,2024,2025,4582037,2025-04-13,10010,Esporte Clube Bahia,3876,Mirasol Futebol Clube,1,1
+BRA1,2024,2025,4582035,2025-04-14,330,Clube Atlético Mineiro,2125,Esporte Clube Vitória,2,2
+BRA1,2024,2025,4582038,2025-04-14,10870,Fortaleza Esporte Clube,6600,Sport Club Internacional,0,0
+BRA1,2024,2025,4582081,2025-04-16,537,S. A. F. Botafogo,585,São Paulo Futebol Clube,2,2
+BRA1,2024,2025,4582082,2025-04-16,199,Sport Club Corinthians Paulista,2462,Fluminense Football Club,0,2
+BRA1,2024,2025,4582084,2025-04-16,3876,Mirasol Futebol Clube,210,Grêmio Foot-Ball Porto Alegrense,4,1
+BRA1,2024,2025,4582086,2025-04-16,6600,Sport Club Internacional,1023,Sociedade Esportiva Palmeiras,0,1
+BRA1,2024,2025,4582088,2025-04-16,2029,Ceará Sporting Club,978,Club de Regatas Vasco da Gama,2,1
+BRA1,2024,2025,4582089,2025-04-16,8718,Sport Club do Recife,8793,Red Bull Bragantino,0,1
+BRA1,2024,2025,4582080,2025-04-17,614,Clube de Regatas do Flamengo,10492,Esporte Clube Juventude,6,0
+BRA1,2024,2025,4582083,2025-04-17,221,Santos Futebol Clube,330,Clube Atlético Mineiro,2,0
+BRA1,2024,2025,4582087,2025-04-17,2125,Esporte Clube Vitória,10870,Fortaleza Esporte Clube,2,1
+BRA1,2024,2025,4582085,2025-04-18,609,Cruzeiro Esporte Clube,10010,Esporte Clube Bahia,3,0
+BRA1,2024,2025,4582141,2025-04-19,978,Club de Regatas Vasco da Gama,614,Clube de Regatas do Flamengo,0,0
+BRA1,2024,2025,4582142,2025-04-19,199,Sport Club Corinthians Paulista,8718,Sport Club do Recife,2,1
+BRA1,2024,2025,4582140,2025-04-20,2462,Fluminense Football Club,2125,Esporte Clube Vitória,1,1
+BRA1,2024,2025,4582143,2025-04-20,585,São Paulo Futebol Clube,221,Santos Futebol Clube,2,1
+BRA1,2024,2025,4582145,2025-04-20,330,Clube Atlético Mineiro,537,S. A. F. Botafogo,1,0
+BRA1,2024,2025,4582146,2025-04-20,210,Grêmio Foot-Ball Porto Alegrense,6600,Sport Club Internacional,1,1
+BRA1,2024,2025,4582148,2025-04-20,10870,Fortaleza Esporte Clube,1023,Sociedade Esportiva Palmeiras,1,2
+BRA1,2024,2025,4582149,2025-04-20,10492,Esporte Clube Juventude,3876,Mirasol Futebol Clube,2,2
+BRA1,2024,2025,4582144,2025-04-21,8793,Red Bull Bragantino,609,Cruzeiro Esporte Clube,1,0
+BRA1,2024,2025,4582147,2025-04-22,10010,Esporte Clube Bahia,2029,Ceará Sporting Club,1,0
+BRA1,2024,2025,4582164,2025-04-26,3876,Mirasol Futebol Clube,330,Clube Atlético Mineiro,2,2
+BRA1,2024,2025,4582166,2025-04-26,6600,Sport Club Internacional,10492,Esporte Clube Juventude,3,1
+BRA1,2024,2025,4582168,2025-04-26,2029,Ceará Sporting Club,585,São Paulo Futebol Clube,1,1
+BRA1,2024,2025,4582160,2025-04-27,614,Clube de Regatas do Flamengo,199,Sport Club Corinthians Paulista,4,0
+BRA1,2024,2025,4582161,2025-04-27,537,S. A. F. Botafogo,2462,Fluminense Football Club,2,0
+BRA1,2024,2025,4582162,2025-04-27,1023,Sociedade Esportiva Palmeiras,10010,Esporte Clube Bahia,0,1
+BRA1,2024,2025,4582165,2025-04-27,609,Cruzeiro Esporte Clube,978,Club de Regatas Vasco da Gama,1,0
+BRA1,2024,2025,4582167,2025-04-27,2125,Esporte Clube Vitória,210,Grêmio Foot-Ball Porto Alegrense,1,1
+BRA1,2024,2025,4582169,2025-04-27,8718,Sport Club do Recife,10870,Fortaleza Esporte Clube,0,0
+BRA1,2024,2025,4582163,2025-04-28,221,Santos Futebol Clube,8793,Red Bull Bragantino,1,2
+BRA1,2024,2025,4582090,2025-05-03,2462,Fluminense Football Club,8718,Sport Club do Recife,2,1
+BRA1,2024,2025,4582092,2025-05-03,199,Sport Club Corinthians Paulista,6600,Sport Club Internacional,4,2
+BRA1,2024,2025,4582093,2025-05-03,585,São Paulo Futebol Clube,10870,Fortaleza Esporte Clube,0,0
+BRA1,2024,2025,4582098,2025-05-03,2029,Ceará Sporting Club,2125,Esporte Clube Vitória,1,0
+BRA1,2024,2025,4582091,2025-05-04,978,Club de Regatas Vasco da Gama,1023,Sociedade Esportiva Palmeiras,0,1
+BRA1,2024,2025,4582095,2025-05-04,609,Cruzeiro Esporte Clube,614,Clube de Regatas do Flamengo,2,1
+BRA1,2024,2025,4582096,2025-05-04,210,Grêmio Foot-Ball Porto Alegrense,221,Santos Futebol Clube,1,0
+BRA1,2024,2025,4582097,2025-05-04,10010,Esporte Clube Bahia,537,S. A. F. Botafogo,1,0
+BRA1,2024,2025,4582094,2025-05-05,8793,Red Bull Bragantino,3876,Mirasol Futebol Clube,1,0
+BRA1,2024,2025,4582099,2025-05-06,10492,Esporte Clube Juventude,330,Clube Atlético Mineiro,0,1
+BRA1,2024,2025,4582054,2025-05-10,3876,Mirasol Futebol Clube,199,Sport Club Corinthians Paulista,2,1
+BRA1,2024,2025,4582056,2025-05-10,210,Grêmio Foot-Ball Porto Alegrense,8793,Red Bull Bragantino,1,1
+BRA1,2024,2025,4582057,2025-05-10,2125,Esporte Clube Vitória,978,Club de Regatas Vasco da Gama,2,1
+BRA1,2024,2025,4582058,2025-05-10,10870,Fortaleza Esporte Clube,10492,Esporte Clube Juventude,5,0
+BRA1,2024,2025,4582050,2025-05-11,614,Clube de Regatas do Flamengo,10010,Esporte Clube Bahia,1,0
+BRA1,2024,2025,4582052,2025-05-11,1023,Sociedade Esportiva Palmeiras,585,São Paulo Futebol Clube,1,0
+BRA1,2024,2025,4582055,2025-05-11,330,Clube Atlético Mineiro,2462,Fluminense Football Club,3,2
+BRA1,2024,2025,4582059,2025-05-11,8718,Sport Club do Recife,609,Cruzeiro Esporte Clube,0,4
+BRA1,2024,2025,4582051,2025-05-12,537,S. A. F. Botafogo,6600,Sport Club Internacional,4,0
+BRA1,2024,2025,4582053,2025-05-13,221,Santos Futebol Clube,2029,Ceará Sporting Club,0,0
+BRA1,2024,2025,4582071,2025-05-17,978,Club de Regatas Vasco da Gama,10870,Fortaleza Esporte Clube,3,0
+BRA1,2024,2025,4582078,2025-05-17,2029,Ceará Sporting Club,8718,Sport Club do Recife,2,0
+BRA1,2024,2025,4582070,2025-05-18,614,Clube de Regatas do Flamengo,537,S. A. F. Botafogo,0,0
+BRA1,2024,2025,4582072,2025-05-18,199,Sport Club Corinthians Paulista,221,Santos Futebol Clube,1,0
+BRA1,2024,2025,4582073,2025-05-18,585,São Paulo Futebol Clube,210,Grêmio Foot-Ball Porto Alegrense,2,1
+BRA1,2024,2025,4582074,2025-05-18,8793,Red Bull Bragantino,1023,Sociedade Esportiva Palmeiras,1,2
+BRA1,2024,2025,4582077,2025-05-18,10010,Esporte Clube Bahia,2125,Esporte Clube Vitória,2,1
+BRA1,2024,2025,4582079,2025-05-18,10492,Esporte Clube Juventude,2462,Fluminense Football Club,1,1
+BRA1,2024,2025,4582075,2025-05-19,609,Cruzeiro Esporte Clube,330,Clube Atlético Mineiro,0,0
+BRA1,2024,2025,4582076,2025-05-19,6600,Sport Club Internacional,3876,Mirasol Futebol Clube,1,1
+BRA1,2024,2025,4582180,2025-05-24,2462,Fluminense Football Club,978,Club de Regatas Vasco da Gama,2,1
+BRA1,2024,2025,4582183,2025-05-24,585,São Paulo Futebol Clube,3876,Mirasol Futebol Clube,0,2
+BRA1,2024,2025,4582182,2025-05-25,1023,Sociedade Esportiva Palmeiras,614,Clube de Regatas do Flamengo,0,2
+BRA1,2024,2025,4582185,2025-05-25,330,Clube Atlético Mineiro,199,Sport Club Corinthians Paulista,0,0
+BRA1,2024,2025,4582186,2025-05-25,210,Grêmio Foot-Ball Porto Alegrense,10010,Esporte Clube Bahia,1,0
+BRA1,2024,2025,4582187,2025-05-25,2125,Esporte Clube Vitória,221,Santos Futebol Clube,0,1
+BRA1,2024,2025,4582188,2025-05-25,10870,Fortaleza Esporte Clube,609,Cruzeiro Esporte Clube,0,2
+BRA1,2024,2025,4582189,2025-05-25,8718,Sport Club do Recife,6600,Sport Club Internacional,1,1
+BRA1,2024,2025,4582184,2025-05-26,8793,Red Bull Bragantino,10492,Esporte Clube Juventude,1,0
+BRA1,2024,2025,4582157,2025-05-31,10010,Esporte Clube Bahia,585,São Paulo Futebol Clube,2,1
+BRA1,2024,2025,4582150,2025-06-01,614,Clube de Regatas do Flamengo,10870,Fortaleza Esporte Clube,5,0
+BRA1,2024,2025,4582151,2025-06-01,978,Club de Regatas Vasco da Gama,8793,Red Bull Bragantino,0,2
+BRA1,2024,2025,4582152,2025-06-01,199,Sport Club Corinthians Paulista,2125,Esporte Clube Vitória,0,0
+BRA1,2024,2025,4582153,2025-06-01,221,Santos Futebol Clube,537,S. A. F. Botafogo,0,1
+BRA1,2024,2025,4582154,2025-06-01,3876,Mirasol Futebol Clube,8718,Sport Club do Recife,1,0
+BRA1,2024,2025,4582155,2025-06-01,609,Cruzeiro Esporte Clube,1023,Sociedade Esportiva Palmeiras,2,1
+BRA1,2024,2025,4582158,2025-06-01,2029,Ceará Sporting Club,330,Clube Atlético Mineiro,0,1
+BRA1,2024,2025,4582159,2025-06-01,10492,Esporte Clube Juventude,210,Grêmio Foot-Ball Porto Alegrense,0,2
+BRA1,2024,2025,4582156,2025-06-02,6600,Sport Club Internacional,2462,Fluminense Football Club,0,2
+BRA1,2024,2025,4582181,2025-06-05,537,S. A. F. Botafogo,2029,Ceará Sporting Club,3,2
+BRA1,2024,2025,4582114,2025-06-12,8793,Red Bull Bragantino,10010,Esporte Clube Bahia,0,3
+BRA1,2024,2025,4582117,2025-06-12,2125,Esporte Clube Vitória,609,Cruzeiro Esporte Clube,0,0
+BRA1,2024,2025,4582118,2025-06-12,10870,Fortaleza Esporte Clube,221,Santos Futebol Clube,2,3
+BRA1,2024,2025,4582113,2025-06-13,585,São Paulo Futebol Clube,978,Club de Regatas Vasco da Gama,1,3
+BRA1,2024,2025,4582115,2025-06-13,330,Clube Atlético Mineiro,6600,Sport Club Internacional,2,0
+BRA1,2024,2025,4582116,2025-06-13,210,Grêmio Foot-Ball Porto Alegrense,199,Sport Club Corinthians Paulista,1,1
+BRA1,2024,2025,4582200,2025-07-12,614,Clube de Regatas do Flamengo,585,São Paulo Futebol Clube,2,0
+BRA1,2024,2025,4582201,2025-07-12,978,Club de Regatas Vasco da Gama,537,S. A. F. Botafogo,0,2
+BRA1,2024,2025,4582206,2025-07-12,6600,Sport Club Internacional,2125,Esporte Clube Vitória,1,0
+BRA1,2024,2025,4582202,2025-07-13,199,Sport Club Corinthians Paulista,8793,Red Bull Bragantino,1,2
+BRA1,2024,2025,4582207,2025-07-13,10010,Esporte Clube Bahia,330,Clube Atlético Mineiro,2,1
+BRA1,2024,2025,4582205,2025-07-14,609,Cruzeiro Esporte Clube,210,Grêmio Foot-Ball Porto Alegrense,4,1
+BRA1,2024,2025,4582208,2025-07-14,10870,Fortaleza Esporte Clube,2029,Ceará Sporting Club,0,1
+BRA1,2024,2025,4582209,2025-07-15,10492,Esporte Clube Juventude,8718,Sport Club do Recife,2,0
+BRA1,2024,2025,4582172,2025-07-16,1023,Sociedade Esportiva Palmeiras,3876,Mirasol Futebol Clube,1,1
+BRA1,2024,2025,4582178,2025-07-16,2029,Ceará Sporting Club,199,Sport Club Corinthians Paulista,0,1
+BRA1,2024,2025,4582170,2025-07-17,2462,Fluminense Football Club,609,Cruzeiro Esporte Clube,0,2
+BRA1,2024,2025,4582171,2025-07-17,537,S. A. F. Botafogo,2125,Esporte Clube Vitória,0,0
+BRA1,2024,2025,4582173,2025-07-17,221,Santos Futebol Clube,614,Clube de Regatas do Flamengo,1,0
+BRA1,2024,2025,4582174,2025-07-17,8793,Red Bull Bragantino,585,São Paulo Futebol Clube,2,2
+BRA1,2024,2025,4582101,2025-07-19,978,Club de Regatas Vasco da Gama,210,Grêmio Foot-Ball Porto Alegrense,1,1
+BRA1,2024,2025,4582104,2025-07-19,3876,Mirasol Futebol Clube,221,Santos Futebol Clube,3,0
+BRA1,2024,2025,4582108,2025-07-19,10870,Fortaleza Esporte Clube,10010,Esporte Clube Bahia,1,1
+BRA1,2024,2025,4582100,2025-07-20,614,Clube de Regatas do Flamengo,2462,Fluminense Football Club,1,0
+BRA1,2024,2025,4582102,2025-07-20,1023,Sociedade Esportiva Palmeiras,330,Clube Atlético Mineiro,3,2
+BRA1,2024,2025,4582103,2025-07-20,585,São Paulo Futebol Clube,199,Sport Club Corinthians Paulista,2,0
+BRA1,2024,2025,4582105,2025-07-20,609,Cruzeiro Esporte Clube,10492,Esporte Clube Juventude,4,0
+BRA1,2024,2025,4582106,2025-07-20,6600,Sport Club Internacional,2029,Ceará Sporting Club,1,0
+BRA1,2024,2025,4582107,2025-07-20,2125,Esporte Clube Vitória,8793,Red Bull Bragantino,1,0
+BRA1,2024,2025,4582109,2025-07-20,8718,Sport Club do Recife,537,S. A. F. Botafogo,0,1
+BRA1,2024,2025,4582220,2025-07-23,2462,Fluminense Football Club,1023,Sociedade Esportiva Palmeiras,1,2
+BRA1,2024,2025,4582222,2025-07-23,199,Sport Club Corinthians Paulista,609,Cruzeiro Esporte Clube,0,0
+BRA1,2024,2025,4582228,2025-07-23,2029,Ceará Sporting Club,3876,Mirasol Futebol Clube,0,2
+BRA1,2024,2025,4582223,2025-07-24,221,Santos Futebol Clube,6600,Sport Club Internacional,1,2
+BRA1,2024,2025,4582224,2025-07-24,8793,Red Bull Bragantino,614,Clube de Regatas do Flamengo,1,2
+BRA1,2024,2025,4582227,2025-07-24,2125,Esporte Clube Vitória,8718,Sport Club do Recife,2,2
+BRA1,2024,2025,4582229,2025-07-24,10492,Esporte Clube Juventude,585,São Paulo Futebol Clube,0,1
+BRA1,2024,2025,4582211,2025-07-26,537,S. A. F. Botafogo,199,Sport Club Corinthians Paulista,1,1
+BRA1,2024,2025,4582214,2025-07-26,3876,Mirasol Futebol Clube,2125,Esporte Clube Vitória,1,1
+BRA1,2024,2025,4582218,2025-07-26,10870,Fortaleza Esporte Clube,8793,Red Bull Bragantino,3,1
+BRA1,2024,2025,4582219,2025-07-26,8718,Sport Club do Recife,221,Santos Futebol Clube,2,2
+BRA1,2024,2025,4582212,2025-07-27,1023,Sociedade Esportiva Palmeiras,210,Grêmio Foot-Ball Porto Alegrense,1,0
+BRA1,2024,2025,4582213,2025-07-27,585,São Paulo Futebol Clube,2462,Fluminense Football Club,3,1
+BRA1,2024,2025,4582215,2025-07-27,609,Cruzeiro Esporte Clube,2029,Ceará Sporting Club,1,2
+BRA1,2024,2025,4582216,2025-07-27,6600,Sport Club Internacional,978,Club de Regatas Vasco da Gama,1,1
+BRA1,2024,2025,4582217,2025-07-27,10010,Esporte Clube Bahia,10492,Esporte Clube Juventude,3,0
+BRA1,2024,2025,4582210,2025-07-28,614,Clube de Regatas do Flamengo,330,Clube Atlético Mineiro,1,0
+BRA1,2024,2025,4582176,2025-07-30,210,Grêmio Foot-Ball Porto Alegrense,10870,Fortaleza Esporte Clube,2,1
+BRA1,2024,2025,4582275,2025-08-02,3876,Mirasol Futebol Clube,978,Club de Regatas Vasco da Gama,3,2
+BRA1,2024,2025,4582305,2025-08-02,8718,Sport Club do Recife,10010,Esporte Clube Bahia,0,0
+BRA1,2024,2025,4582261,2025-08-03,2462,Fluminense Football Club,210,Grêmio Foot-Ball Porto Alegrense,1,0
+BRA1,2024,2025,4582264,2025-08-03,537,S. A. F. Botafogo,609,Cruzeiro Esporte Clube,0,2
+BRA1,2024,2025,4582267,2025-08-03,199,Sport Club Corinthians Paulista,10870,Fortaleza Esporte Clube,1,1
+BRA1,2024,2025,4582281,2025-08-03,330,Clube Atlético Mineiro,8793,Red Bull Bragantino,2,1
+BRA1,2024,2025,4582291,2025-08-03,2125,Esporte Clube Vitória,1023,Sociedade Esportiva Palmeiras,2,2
+BRA1,2024,2025,4582299,2025-08-03,2029,Ceará Sporting Club,614,Clube de Regatas do Flamengo,1,1
+BRA1,2024,2025,4582285,2025-08-04,6600,Sport Club Internacional,585,São Paulo Futebol Clube,1,2
+BRA1,2024,2025,4582270,2025-08-05,221,Santos Futebol Clube,10492,Esporte Clube Juventude,3,1
+BRA1,2024,2025,4582120,2025-08-09,614,Clube de Regatas do Flamengo,3876,Mirasol Futebol Clube,2,1
+BRA1,2024,2025,4582123,2025-08-09,585,São Paulo Futebol Clube,2125,Esporte Clube Vitória,2,0
+BRA1,2024,2025,4582124,2025-08-09,8793,Red Bull Bragantino,6600,Sport Club Internacional,1,3
+BRA1,2024,2025,4582121,2025-08-10,978,Club de Regatas Vasco da Gama,330,Clube Atlético Mineiro,1,1
+BRA1,2024,2025,4582122,2025-08-10,1023,Sociedade Esportiva Palmeiras,2029,Ceará Sporting Club,2,1
+BRA1,2024,2025,4582125,2025-08-10,609,Cruzeiro Esporte Clube,221,Santos Futebol Clube,1,2
+BRA1,2024,2025,4582127,2025-08-10,10010,Esporte Clube Bahia,2462,Fluminense Football Club,3,3
+BRA1,2024,2025,4582128,2025-08-10,10870,Fortaleza Esporte Clube,537,S. A. F. Botafogo,0,5
+BRA1,2024,2025,4582126,2025-08-11,210,Grêmio Foot-Ball Porto Alegrense,8718,Sport Club do Recife,0,1
+BRA1,2024,2025,4582129,2025-08-12,10492,Esporte Clube Juventude,199,Sport Club Corinthians Paulista,2,1
+BRA1,2024,2025,4582271,2025-08-16,2462,Fluminense Football Club,10870,Fortaleza Esporte Clube,2,1
+BRA1,2024,2025,4582320,2025-08-16,2125,Esporte Clube Vitória,10492,Esporte Clube Juventude,2,2
+BRA1,2024,2025,4582325,2025-08-16,2029,Ceará Sporting Club,8793,Red Bull Bragantino,1,0
+BRA1,2024,2025,4582332,2025-08-16,8718,Sport Club do Recife,585,São Paulo Futebol Clube,2,2
+BRA1,2024,2025,4582282,2025-08-17,199,Sport Club Corinthians Paulista,10010,Esporte Clube Bahia,1,2
+BRA1,2024,2025,4582290,2025-08-17,221,Santos Futebol Clube,978,Club de Regatas Vasco da Gama,0,6
+BRA1,2024,2025,4582306,2025-08-17,330,Clube Atlético Mineiro,210,Grêmio Foot-Ball Porto Alegrense,1,3
+BRA1,2024,2025,4582312,2025-08-17,6600,Sport Club Internacional,614,Clube de Regatas do Flamengo,1,3
+BRA1,2024,2025,4582277,2025-08-18,537,S. A. F. Botafogo,1023,Sociedade Esportiva Palmeiras,0,1
+BRA1,2024,2025,4582297,2025-08-19,3876,Mirasol Futebol Clube,609,Cruzeiro Esporte Clube,1,1
+BRA1,2024,2025,4582179,2025-08-20,10492,Esporte Clube Juventude,978,Club de Regatas Vasco da Gama,2,0
+BRA1,2024,2025,4582044,2025-08-23,8793,Red Bull Bragantino,2462,Fluminense Football Club,4,2
+BRA1,2024,2025,4582045,2025-08-23,609,Cruzeiro Esporte Clube,6600,Sport Club Internacional,2,1
+BRA1,2024,2025,4582041,2025-08-24,978,Club de Regatas Vasco da Gama,199,Sport Club Corinthians Paulista,2,3
+BRA1,2024,2025,4582046,2025-08-24,210,Grêmio Foot-Ball Porto Alegrense,2029,Ceará Sporting Club,0,0
+BRA1,2024,2025,4582047,2025-08-24,10010,Esporte Clube Bahia,221,Santos Futebol Clube,2,0
+BRA1,2024,2025,4582048,2025-08-24,10870,Fortaleza Esporte Clube,3876,Mirasol Futebol Clube,0,1
+BRA1,2024,2025,4582049,2025-08-24,10492,Esporte Clube Juventude,537,S. A. F. Botafogo,1,3
+BRA1,2024,2025,4582042,2025-08-25,1023,Sociedade Esportiva Palmeiras,8718,Sport Club do Recife,3,0
+BRA1,2024,2025,4582043,2025-08-25,585,São Paulo Futebol Clube,330,Clube Atlético Mineiro,2,0
+BRA1,2024,2025,4582040,2025-08-26,614,Clube de Regatas do Flamengo,2125,Esporte Clube Vitória,8,0
+BRA1,2024,2025,4582269,2025-08-30,537,S. A. F. Botafogo,8793,Red Bull Bragantino,4,1
+BRA1,2024,2025,4582321,2025-08-30,2029,Ceará Sporting Club,10492,Esporte Clube Juventude,0,1
+BRA1,2024,2025,4582265,2025-08-31,614,Clube de Regatas do Flamengo,210,Grêmio Foot-Ball Porto Alegrense,1,1
+BRA1,2024,2025,4582276,2025-08-31,199,Sport Club Corinthians Paulista,1023,Sociedade Esportiva Palmeiras,1,1
+BRA1,2024,2025,4582288,2025-08-31,221,Santos Futebol Clube,2462,Fluminense Football Club,0,0
+BRA1,2024,2025,4582295,2025-08-31,3876,Mirasol Futebol Clube,10010,Esporte Clube Bahia,5,1
+BRA1,2024,2025,4582302,2025-08-31,609,Cruzeiro Esporte Clube,585,São Paulo Futebol Clube,1,0
+BRA1,2024,2025,4582316,2025-08-31,2125,Esporte Clube Vitória,330,Clube Atlético Mineiro,1,0
+BRA1,2024,2025,4582310,2025-09-01,6600,Sport Club Internacional,10870,Fortaleza Esporte Clube,2,1
+BRA1,2024,2025,4582328,2025-09-01,8718,Sport Club do Recife,978,Club de Regatas Vasco da Gama,2,3
+BRA1,2024,2025,4582192,2025-09-13,1023,Sociedade Esportiva Palmeiras,6600,Sport Club Internacional,4,1
+BRA1,2024,2025,4582196,2025-09-13,210,Grêmio Foot-Ball Porto Alegrense,3876,Mirasol Futebol Clube,0,1
+BRA1,2024,2025,4582198,2025-09-13,10870,Fortaleza Esporte Clube,2125,Esporte Clube Vitória,2,0
+BRA1,2024,2025,4582190,2025-09-14,2462,Fluminense Football Club,199,Sport Club Corinthians Paulista,0,1
+BRA1,2024,2025,4582193,2025-09-14,585,São Paulo Futebol Clube,537,S. A. F. Botafogo,1,0
+BRA1,2024,2025,4582194,2025-09-14,8793,Red Bull Bragantino,8718,Sport Club do Recife,1,1
+BRA1,2024,2025,4582195,2025-09-14,330,Clube Atlético Mineiro,221,Santos Futebol Clube,1,1
+BRA1,2024,2025,4582199,2025-09-14,10492,Esporte Clube Juventude,614,Clube de Regatas do Flamengo,0,2
+BRA1,2024,2025,4582191,2025-09-15,978,Club de Regatas Vasco da Gama,2029,Ceará Sporting Club,2,2
+BRA1,2024,2025,4582197,2025-09-16,10010,Esporte Clube Bahia,609,Cruzeiro Esporte Clube,1,2
+BRA1,2024,2025,4582111,2025-09-17,537,S. A. F. Botafogo,3876,Mirasol Futebol Clube,3,3
+BRA1,2024,2025,4582286,2025-09-20,537,S. A. F. Botafogo,330,Clube Atlético Mineiro,1,0
+BRA1,2024,2025,4582347,2025-09-20,2125,Esporte Clube Vitória,2462,Fluminense Football Club,0,1
+BRA1,2024,2025,4582348,2025-09-20,2029,Ceará Sporting Club,10010,Esporte Clube Bahia,1,1
+BRA1,2024,2025,4582274,2025-09-21,614,Clube de Regatas do Flamengo,978,Club de Regatas Vasco da Gama,1,1
+BRA1,2024,2025,4582294,2025-09-21,1023,Sociedade Esportiva Palmeiras,10870,Fortaleza Esporte Clube,4,1
+BRA1,2024,2025,4582314,2025-09-21,3876,Mirasol Futebol Clube,10492,Esporte Clube Juventude,2,0
+BRA1,2024,2025,4582329,2025-09-21,6600,Sport Club Internacional,210,Grêmio Foot-Ball Porto Alegrense,2,3
+BRA1,2024,2025,4582349,2025-09-21,8718,Sport Club do Recife,199,Sport Club Corinthians Paulista,1,0
+BRA1,2024,2025,4582307,2025-09-22,221,Santos Futebol Clube,585,São Paulo Futebol Clube,1,0
+BRA1,2024,2025,4582323,2025-09-22,609,Cruzeiro Esporte Clube,8793,Red Bull Bragantino,2,1
+BRA1,2024,2025,4582221,2025-09-24,978,Club de Regatas Vasco da Gama,10010,Esporte Clube Bahia,3,1
+BRA1,2024,2025,4582226,2025-09-24,210,Grêmio Foot-Ball Porto Alegrense,537,S. A. F. Botafogo,1,1
+BRA1,2024,2025,4582241,2025-09-27,978,Club de Regatas Vasco da Gama,609,Cruzeiro Esporte Clube,2,0
+BRA1,2024,2025,4582248,2025-09-27,10870,Fortaleza Esporte Clube,8718,Sport Club do Recife,1,0
+BRA1,2024,2025,4582249,2025-09-27,10492,Esporte Clube Juventude,6600,Sport Club Internacional,1,1
+BRA1,2024,2025,4582240,2025-09-28,2462,Fluminense Football Club,537,S. A. F. Botafogo,2,0
+BRA1,2024,2025,4582244,2025-09-28,8793,Red Bull Bragantino,221,Santos Futebol Clube,2,2
+BRA1,2024,2025,4582245,2025-09-28,330,Clube Atlético Mineiro,3876,Mirasol Futebol Clube,1,0
+BRA1,2024,2025,4582246,2025-09-28,210,Grêmio Foot-Ball Porto Alegrense,2125,Esporte Clube Vitória,3,1
+BRA1,2024,2025,4582247,2025-09-28,10010,Esporte Clube Bahia,1023,Sociedade Esportiva Palmeiras,1,0
+BRA1,2024,2025,4582242,2025-09-29,199,Sport Club Corinthians Paulista,614,Clube de Regatas do Flamengo,1,2
+BRA1,2024,2025,4582243,2025-09-30,585,São Paulo Futebol Clube,2029,Ceará Sporting Club,0,1
+BRA1,2024,2025,4582252,2025-10-01,1023,Sociedade Esportiva Palmeiras,978,Club de Regatas Vasco da Gama,3,0
+BRA1,2024,2025,4582254,2025-10-01,3876,Mirasol Futebol Clube,8793,Red Bull Bragantino,1,1
+BRA1,2024,2025,4582255,2025-10-01,330,Clube Atlético Mineiro,10492,Esporte Clube Juventude,0,0
+BRA1,2024,2025,4582256,2025-10-01,6600,Sport Club Internacional,199,Sport Club Corinthians Paulista,1,1
+BRA1,2024,2025,4582259,2025-10-01,8718,Sport Club do Recife,2462,Fluminense Football Club,2,2
+BRA1,2024,2025,4582251,2025-10-02,537,S. A. F. Botafogo,10010,Esporte Clube Bahia,2,1
+BRA1,2024,2025,4582253,2025-10-02,221,Santos Futebol Clube,210,Grêmio Foot-Ball Porto Alegrense,1,1
+BRA1,2024,2025,4582257,2025-10-02,2125,Esporte Clube Vitória,2029,Ceará Sporting Club,1,0
+BRA1,2024,2025,4582258,2025-10-02,10870,Fortaleza Esporte Clube,585,São Paulo Futebol Clube,0,2
+BRA1,2024,2025,4582250,2025-10-03,614,Clube de Regatas do Flamengo,609,Cruzeiro Esporte Clube,0,0
+BRA1,2024,2025,4582280,2025-10-04,2462,Fluminense Football Club,330,Clube Atlético Mineiro,3,0
+BRA1,2024,2025,4582313,2025-10-04,8793,Red Bull Bragantino,210,Grêmio Foot-Ball Porto Alegrense,1,0
+BRA1,2024,2025,4582331,2025-10-04,6600,Sport Club Internacional,537,S. A. F. Botafogo,2,0
+BRA1,2024,2025,4582289,2025-10-05,978,Club de Regatas Vasco da Gama,2125,Esporte Clube Vitória,4,3
+BRA1,2024,2025,4582296,2025-10-05,199,Sport Club Corinthians Paulista,3876,Mirasol Futebol Clube,3,0
+BRA1,2024,2025,4582304,2025-10-05,585,São Paulo Futebol Clube,1023,Sociedade Esportiva Palmeiras,2,3
+BRA1,2024,2025,4582335,2025-10-05,10010,Esporte Clube Bahia,614,Clube de Regatas do Flamengo,1,0
+BRA1,2024,2025,4582341,2025-10-05,10492,Esporte Clube Juventude,10870,Fortaleza Esporte Clube,1,2
+BRA1,2024,2025,4582324,2025-10-06,609,Cruzeiro Esporte Clube,8718,Sport Club do Recife,1,1
+BRA1,2024,2025,4582338,2025-10-06,2029,Ceará Sporting Club,221,Santos Futebol Clube,3,0
+BRA1,2024,2025,4582175,2025-10-08,330,Clube Atlético Mineiro,8718,Sport Club do Recife,3,1
+BRA1,2024,2025,4582204,2025-10-09,3876,Mirasol Futebol Clube,2462,Fluminense Football Club,2,1
+BRA1,2024,2025,4582112,2025-10-11,1023,Sociedade Esportiva Palmeiras,10492,Esporte Clube Juventude,4,1
+BRA1,2024,2025,4582262,2025-10-15,537,S. A. F. Botafogo,614,Clube de Regatas do Flamengo,0,3
+BRA1,2024,2025,4582266,2025-10-15,1023,Sociedade Esportiva Palmeiras,8793,Red Bull Bragantino,5,1
+BRA1,2024,2025,4582272,2025-10-16,221,Santos Futebol Clube,199,Sport Club Corinthians Paulista,3,1
+BRA1,2024,2025,4582278,2025-10-16,3876,Mirasol Futebol Clube,6600,Sport Club Internacional,3,1
+BRA1,2024,2025,4582284,2025-10-16,330,Clube Atlético Mineiro,609,Cruzeiro Esporte Clube,1,1
+BRA1,2024,2025,4582292,2025-10-16,210,Grêmio Foot-Ball Porto Alegrense,585,São Paulo Futebol Clube,2,0
+BRA1,2024,2025,4582308,2025-10-16,10870,Fortaleza Esporte Clube,978,Club de Regatas Vasco da Gama,0,2
+BRA1,2024,2025,4582315,2025-10-16,8718,Sport Club do Recife,2029,Ceará Sporting Club,1,1
+BRA1,2024,2025,4582260,2025-10-17,2462,Fluminense Football Club,10492,Esporte Clube Juventude,1,0
+BRA1,2024,2025,4582301,2025-10-17,2125,Esporte Clube Vitória,10010,Esporte Clube Bahia,2,1
+BRA1,2024,2025,4582273,2025-10-18,199,Sport Club Corinthians Paulista,330,Clube Atlético Mineiro,1,0
+BRA1,2024,2025,4582263,2025-10-19,614,Clube de Regatas do Flamengo,1023,Sociedade Esportiva Palmeiras,3,2
+BRA1,2024,2025,4582283,2025-10-19,3876,Mirasol Futebol Clube,585,São Paulo Futebol Clube,3,0
+BRA1,2024,2025,4582293,2025-10-19,609,Cruzeiro Esporte Clube,10870,Fortaleza Esporte Clube,1,0
+BRA1,2024,2025,4582303,2025-10-19,6600,Sport Club Internacional,8718,Sport Club do Recife,2,0
+BRA1,2024,2025,4582318,2025-10-19,2029,Ceará Sporting Club,537,S. A. F. Botafogo,0,2
+BRA1,2024,2025,4582268,2025-10-20,978,Club de Regatas Vasco da Gama,2462,Fluminense Football Club,2,0
+BRA1,2024,2025,4582311,2025-10-20,10010,Esporte Clube Bahia,210,Grêmio Foot-Ball Porto Alegrense,4,0
+BRA1,2024,2025,4582326,2025-10-20,10492,Esporte Clube Juventude,8793,Red Bull Bragantino,1,0
+BRA1,2024,2025,4582279,2025-10-21,221,Santos Futebol Clube,2125,Esporte Clube Vitória,0,1
+BRA1,2024,2025,4582177,2025-10-22,10010,Esporte Clube Bahia,6600,Sport Club Internacional,1,0
+BRA1,2024,2025,4582287,2025-10-25,2462,Fluminense Football Club,6600,Sport Club Internacional,1,0
+BRA1,2024,2025,4582319,2025-10-25,10870,Fortaleza Esporte Clube,614,Clube de Regatas do Flamengo,1,0
+BRA1,2024,2025,4582333,2025-10-25,330,Clube Atlético Mineiro,2029,Ceará Sporting Club,1,0
+BRA1,2024,2025,4582340,2025-10-25,2125,Esporte Clube Vitória,199,Sport Club Corinthians Paulista,0,1
+BRA1,2024,2025,4582345,2025-10-25,8718,Sport Club do Recife,3876,Mirasol Futebol Clube,1,2
+BRA1,2024,2025,4582298,2025-10-26,537,S. A. F. Botafogo,221,Santos Futebol Clube,2,2
+BRA1,2024,2025,4582309,2025-10-26,1023,Sociedade Esportiva Palmeiras,609,Cruzeiro Esporte Clube,0,0
+BRA1,2024,2025,4582327,2025-10-26,8793,Red Bull Bragantino,978,Club de Regatas Vasco da Gama,0,3
+BRA1,2024,2025,4582337,2025-10-26,210,Grêmio Foot-Ball Porto Alegrense,10492,Esporte Clube Juventude,3,1
+BRA1,2024,2025,4582343,2025-10-26,585,São Paulo Futebol Clube,10010,Esporte Clube Bahia,2,0
+BRA1,2024,2025,4582110,2025-10-29,2462,Fluminense Football Club,2029,Ceará Sporting Club,1,0
+BRA1,2024,2025,4582233,2025-11-01,221,Santos Futebol Clube,10870,Fortaleza Esporte Clube,1,1
+BRA1,2024,2025,4582234,2025-11-01,3876,Mirasol Futebol Clube,537,S. A. F. Botafogo,0,0
+BRA1,2024,2025,4582235,2025-11-01,609,Cruzeiro Esporte Clube,2125,Esporte Clube Vitória,3,1
+BRA1,2024,2025,4582230,2025-11-02,614,Clube de Regatas do Flamengo,8718,Sport Club do Recife,3,0
+BRA1,2024,2025,4582231,2025-11-02,978,Club de Regatas Vasco da Gama,585,São Paulo Futebol Clube,0,2
+BRA1,2024,2025,4582232,2025-11-02,199,Sport Club Corinthians Paulista,210,Grêmio Foot-Ball Porto Alegrense,2,0
+BRA1,2024,2025,4582236,2025-11-02,6600,Sport Club Internacional,330,Clube Atlético Mineiro,0,0
+BRA1,2024,2025,4582237,2025-11-02,10010,Esporte Clube Bahia,8793,Red Bull Bragantino,2,1
+BRA1,2024,2025,4582238,2025-11-02,2029,Ceará Sporting Club,2462,Fluminense Football Club,2,0
+BRA1,2024,2025,4582239,2025-11-02,10492,Esporte Clube Juventude,1023,Sociedade Esportiva Palmeiras,0,2
+BRA1,2024,2025,4582317,2025-11-05,537,S. A. F. Botafogo,978,Club de Regatas Vasco da Gama,3,0
+BRA1,2024,2025,4582334,2025-11-05,8793,Red Bull Bragantino,199,Sport Club Corinthians Paulista,2,1
+BRA1,2024,2025,4582336,2025-11-05,330,Clube Atlético Mineiro,10010,Esporte Clube Bahia,3,0
+BRA1,2024,2025,4582339,2025-11-05,210,Grêmio Foot-Ball Porto Alegrense,609,Cruzeiro Esporte Clube,0,1
+BRA1,2024,2025,4582342,2025-11-05,2125,Esporte Clube Vitória,6600,Sport Club Internacional,1,0
+BRA1,2024,2025,4582346,2025-11-05,8718,Sport Club do Recife,10492,Esporte Clube Juventude,0,2
+BRA1,2024,2025,4582300,2025-11-06,2462,Fluminense Football Club,3876,Mirasol Futebol Clube,1,0
+BRA1,2024,2025,4582330,2025-11-06,585,São Paulo Futebol Clube,614,Clube de Regatas do Flamengo,2,2
+BRA1,2024,2025,4582344,2025-11-06,2029,Ceará Sporting Club,10870,Fortaleza Esporte Clube,1,1
+BRA1,2024,2025,4582322,2025-11-07,1023,Sociedade Esportiva Palmeiras,221,Santos Futebol Clube,2,0
+BRA1,2024,2025,4726114,2025-11-08,978,Club de Regatas Vasco da Gama,10492,Esporte Clube Juventude,1,3
+BRA1,2024,2025,4726119,2025-11-08,6600,Sport Club Internacional,10010,Esporte Clube Bahia,2,2
+BRA1,2024,2025,4726122,2025-11-08,8718,Sport Club do Recife,330,Clube Atlético Mineiro,2,4
+BRA1,2024,2025,4726113,2025-11-09,614,Clube de Regatas do Flamengo,221,Santos Futebol Clube,3,2
+BRA1,2024,2025,4726115,2025-11-09,199,Sport Club Corinthians Paulista,2029,Ceará Sporting Club,0,1
+BRA1,2024,2025,4726116,2025-11-09,585,São Paulo Futebol Clube,8793,Red Bull Bragantino,0,1
+BRA1,2024,2025,4726117,2025-11-09,3876,Mirasol Futebol Clube,1023,Sociedade Esportiva Palmeiras,2,1
+BRA1,2024,2025,4726118,2025-11-09,609,Cruzeiro Esporte Clube,2462,Fluminense Football Club,0,0
+BRA1,2024,2025,4726120,2025-11-09,2125,Esporte Clube Vitória,537,S. A. F. Botafogo,0,0
+BRA1,2024,2025,4726121,2025-11-09,10870,Fortaleza Esporte Clube,210,Grêmio Foot-Ball Porto Alegrense,2,2
+BRA1,2024,2025,4582225,2025-11-12,330,Clube Atlético Mineiro,10870,Fortaleza Esporte Clube,3,3
+BRA1,2024,2025,4582119,2025-11-15,8718,Sport Club do Recife,614,Clube de Regatas do Flamengo,1,5
+BRA1,2024,2025,4582203,2025-11-16,221,Santos Futebol Clube,1023,Sociedade Esportiva Palmeiras,1,0
+BRA1,2024,2025,4726157,2025-11-16,8793,Red Bull Bragantino,330,Clube Atlético Mineiro,2,0
+BRA1,2024,2025,4726124,2025-11-18,537,S. A. F. Botafogo,8718,Sport Club do Recife,3,2
+BRA1,2024,2025,4726155,2025-11-19,1023,Sociedade Esportiva Palmeiras,2125,Esporte Clube Vitória,0,0
+BRA1,2024,2025,4726123,2025-11-20,2462,Fluminense Football Club,614,Clube de Regatas do Flamengo,2,1
+BRA1,2024,2025,4726125,2025-11-20,199,Sport Club Corinthians Paulista,585,São Paulo Futebol Clube,3,1
+BRA1,2024,2025,4726126,2025-11-20,221,Santos Futebol Clube,3876,Mirasol Futebol Clube,1,1
+BRA1,2024,2025,4726129,2025-11-20,210,Grêmio Foot-Ball Porto Alegrense,978,Club de Regatas Vasco da Gama,2,0
+BRA1,2024,2025,4726130,2025-11-20,10010,Esporte Clube Bahia,10870,Fortaleza Esporte Clube,2,3
+BRA1,2024,2025,4726132,2025-11-20,10492,Esporte Clube Juventude,609,Cruzeiro Esporte Clube,3,3
+BRA1,2024,2025,4726131,2025-11-21,2029,Ceará Sporting Club,6600,Sport Club Internacional,1,2
+BRA1,2024,2025,4726134,2025-11-22,537,S. A. F. Botafogo,210,Grêmio Foot-Ball Porto Alegrense,3,2
+BRA1,2024,2025,4726133,2025-11-23,614,Clube de Regatas do Flamengo,8793,Red Bull Bragantino,3,0
+BRA1,2024,2025,4726135,2025-11-23,1023,Sociedade Esportiva Palmeiras,2462,Fluminense Football Club,0,0
+BRA1,2024,2025,4726136,2025-11-23,585,São Paulo Futebol Clube,10492,Esporte Clube Juventude,2,1
+BRA1,2024,2025,4726138,2025-11-23,609,Cruzeiro Esporte Clube,199,Sport Club Corinthians Paulista,3,0
+BRA1,2024,2025,4726140,2025-11-23,10010,Esporte Clube Bahia,978,Club de Regatas Vasco da Gama,1,0
+BRA1,2024,2025,4726142,2025-11-23,8718,Sport Club do Recife,2125,Esporte Clube Vitória,1,3
+BRA1,2024,2025,4726137,2025-11-24,3876,Mirasol Futebol Clube,2029,Ceará Sporting Club,3,0
+BRA1,2024,2025,4726139,2025-11-25,6600,Sport Club Internacional,221,Santos Futebol Clube,1,1
+BRA1,2024,2025,4726147,2025-11-26,8793,Red Bull Bragantino,10870,Fortaleza Esporte Clube,0,1
+BRA1,2024,2025,4726148,2025-11-26,330,Clube Atlético Mineiro,614,Clube de Regatas do Flamengo,1,1
+BRA1,2024,2025,4726149,2025-11-26,210,Grêmio Foot-Ball Porto Alegrense,1023,Sociedade Esportiva Palmeiras,3,2
+BRA1,2024,2025,4726143,2025-11-27,2462,Fluminense Football Club,585,São Paulo Futebol Clube,6,0
+BRA1,2024,2025,4726144,2025-11-28,978,Club de Regatas Vasco da Gama,6600,Sport Club Internacional,5,1
+BRA1,2024,2025,4726152,2025-11-28,10492,Esporte Clube Juventude,10010,Esporte Clube Bahia,1,1
+BRA1,2024,2025,4726146,2025-11-29,221,Santos Futebol Clube,8718,Sport Club do Recife,3,0
+BRA1,2024,2025,4726150,2025-11-29,2125,Esporte Clube Vitória,3876,Mirasol Futebol Clube,2,0
+BRA1,2024,2025,4726141,2025-11-30,10870,Fortaleza Esporte Clube,330,Clube Atlético Mineiro,1,0
+BRA1,2024,2025,4726145,2025-11-30,199,Sport Club Corinthians Paulista,537,S. A. F. Botafogo,2,2
+BRA1,2024,2025,4726151,2025-11-30,2029,Ceará Sporting Club,609,Cruzeiro Esporte Clube,1,1
+BRA1,2024,2025,4726154,2025-12-02,978,Club de Regatas Vasco da Gama,3876,Mirasol Futebol Clube,0,2
+BRA1,2024,2025,4726127,2025-12-03,8793,Red Bull Bragantino,2125,Esporte Clube Vitória,4,0
+BRA1,2024,2025,4726156,2025-12-03,585,São Paulo Futebol Clube,6600,Sport Club Internacional,3,0
+BRA1,2024,2025,4726159,2025-12-03,210,Grêmio Foot-Ball Porto Alegrense,2462,Fluminense Football Club,1,2
+BRA1,2024,2025,4726160,2025-12-03,10010,Esporte Clube Bahia,8718,Sport Club do Recife,2,0
+BRA1,2024,2025,4726161,2025-12-03,10870,Fortaleza Esporte Clube,199,Sport Club Corinthians Paulista,2,1
+BRA1,2024,2025,4726162,2025-12-03,10492,Esporte Clube Juventude,221,Santos Futebol Clube,0,3
+BRA1,2024,2025,4726128,2025-12-04,330,Clube Atlético Mineiro,1023,Sociedade Esportiva Palmeiras,0,3
+BRA1,2024,2025,4726153,2025-12-04,614,Clube de Regatas do Flamengo,2029,Ceará Sporting Club,1,0
+BRA1,2024,2025,4726158,2025-12-04,609,Cruzeiro Esporte Clube,537,S. A. F. Botafogo,2,2
+BRA1,2024,2025,4726167,2025-12-06,3876,Mirasol Futebol Clube,614,Clube de Regatas do Flamengo,3,3
+BRA1,2024,2025,4726163,2025-12-07,2462,Fluminense Football Club,10010,Esporte Clube Bahia,2,0
+BRA1,2024,2025,4726164,2025-12-07,537,S. A. F. Botafogo,10870,Fortaleza Esporte Clube,4,2
+BRA1,2024,2025,4726165,2025-12-07,199,Sport Club Corinthians Paulista,10492,Esporte Clube Juventude,1,1
+BRA1,2024,2025,4726166,2025-12-07,221,Santos Futebol Clube,609,Cruzeiro Esporte Clube,3,0
+BRA1,2024,2025,4726168,2025-12-07,330,Clube Atlético Mineiro,978,Club de Regatas Vasco da Gama,5,0
+BRA1,2024,2025,4726169,2025-12-07,6600,Sport Club Internacional,8793,Red Bull Bragantino,3,1
+BRA1,2024,2025,4726170,2025-12-07,2125,Esporte Clube Vitória,585,São Paulo Futebol Clube,1,0
+BRA1,2024,2025,4726171,2025-12-07,2029,Ceará Sporting Club,1023,Sociedade Esportiva Palmeiras,1,3
+BRA1,2024,2025,4726172,2025-12-07,8718,Sport Club do Recife,210,Grêmio Foot-Ball Porto Alegrense,0,4
+SE1,2024,2025,4523456,2025-03-29,1044,Djurgårdens Idrottsförening,496,Malmö Fotbollförening,0,1
+SE1,2024,2025,4523460,2025-03-29,1109,BK Häcken,1092,Idrottsföreningen  Brommapojkarna,2,0
+SE1,2024,2025,4523457,2025-03-30,1059,Hammarby IF,801,Idrottsföreningen Kamraterna Göteborg,4,0
+SE1,2024,2025,4523458,2025-03-30,1101,Idrottsföreningen Elfsborg,2719,Mjällby Almänna Idrottsförening,2,2
+SE1,2024,2025,4523461,2025-03-30,2844,IFK Norrköping,1236,Östers IF,4,3
+SE1,2024,2025,4523462,2025-03-30,1011,Halmstads BK,3641,Degerfors IF,0,5
+SE1,2024,2025,4523459,2025-03-31,7009,Göteborgs Atlet- och Idrottssällskap,272,Allmänna Idrottsklubben,0,1
+SE1,2024,2025,4523463,2025-03-31,3622,IFK Värnamo,7945,IK Sirius,1,2
+SE1,2024,2025,4525684,2025-04-05,801,Idrottsföreningen Kamraterna Göteborg,1011,Halmstads BK,1,0
+SE1,2024,2025,4525685,2025-04-05,1236,Östers IF,1109,BK Häcken,2,0
+SE1,2024,2025,4525688,2025-04-05,7945,IK Sirius,1044,Djurgårdens Idrottsförening,0,1
+SE1,2024,2025,4525682,2025-04-06,272,Allmänna Idrottsklubben,2844,IFK Norrköping,4,3
+SE1,2024,2025,4525683,2025-04-06,1092,Idrottsföreningen  Brommapojkarna,1059,Hammarby IF,0,2
+SE1,2024,2025,4525687,2025-04-06,2719,Mjällby Almänna Idrottsförening,7009,Göteborgs Atlet- och Idrottssällskap,1,1
+SE1,2024,2025,4525689,2025-04-06,3641,Degerfors IF,3622,IFK Värnamo,1,0
+SE1,2024,2025,4525686,2025-04-07,496,Malmö Fotbollförening,1101,Idrottsföreningen Elfsborg,2,1
+SE1,2024,2025,4525716,2025-04-12,1101,Idrottsföreningen Elfsborg,2844,IFK Norrköping,2,0
+SE1,2024,2025,4525718,2025-04-12,1109,BK Häcken,2719,Mjällby Almänna Idrottsförening,0,3
+SE1,2024,2025,4525715,2025-04-13,1059,Hammarby IF,1044,Djurgårdens Idrottsförening,2,0
+SE1,2024,2025,4525717,2025-04-13,7009,Göteborgs Atlet- och Idrottssällskap,3641,Degerfors IF,2,0
+SE1,2024,2025,4525719,2025-04-13,7945,IK Sirius,1092,Idrottsföreningen  Brommapojkarna,0,3
+SE1,2024,2025,4525721,2025-04-13,3622,IFK Värnamo,801,Idrottsföreningen Kamraterna Göteborg,0,1
+SE1,2024,2025,4525714,2025-04-14,272,Allmänna Idrottsklubben,496,Malmö Fotbollförening,0,0
+SE1,2024,2025,4525720,2025-04-14,1011,Halmstads BK,1236,Östers IF,1,0
+SE1,2024,2025,4525702,2025-04-18,496,Malmö Fotbollförening,7945,IK Sirius,1,1
+SE1,2024,2025,4525703,2025-04-18,2719,Mjällby Almänna Idrottsförening,1059,Hammarby IF,3,1
+SE1,2024,2025,4525704,2025-04-19,2844,IFK Norrköping,1011,Halmstads BK,3,0
+SE1,2024,2025,4525705,2025-04-19,3641,Degerfors IF,1101,Idrottsföreningen Elfsborg,0,1
+SE1,2024,2025,4525699,2025-04-20,1092,Idrottsföreningen  Brommapojkarna,3622,IFK Värnamo,3,2
+SE1,2024,2025,4525700,2025-04-20,801,Idrottsföreningen Kamraterna Göteborg,1109,BK Häcken,2,3
+SE1,2024,2025,4525701,2025-04-20,1236,Östers IF,272,Allmänna Idrottsklubben,0,1
+SE1,2024,2025,4525698,2025-04-21,1044,Djurgårdens Idrottsförening,7009,Göteborgs Atlet- och Idrottssällskap,0,0
+SE1,2024,2025,4525675,2025-04-23,1059,Hammarby IF,496,Malmö Fotbollförening,2,0
+SE1,2024,2025,4525676,2025-04-23,1101,Idrottsföreningen Elfsborg,7945,IK Sirius,4,3
+SE1,2024,2025,4525678,2025-04-23,1109,BK Häcken,3641,Degerfors IF,3,4
+SE1,2024,2025,4525680,2025-04-23,1011,Halmstads BK,2719,Mjällby Almänna Idrottsförening,1,3
+SE1,2024,2025,4525674,2025-04-24,1044,Djurgårdens Idrottsförening,1236,Östers IF,1,0
+SE1,2024,2025,4525677,2025-04-24,7009,Göteborgs Atlet- och Idrottssällskap,1092,Idrottsföreningen  Brommapojkarna,1,1
+SE1,2024,2025,4525679,2025-04-24,2844,IFK Norrköping,801,Idrottsföreningen Kamraterna Göteborg,2,3
+SE1,2024,2025,4525681,2025-04-24,3622,IFK Värnamo,272,Allmänna Idrottsklubben,1,2
+SE1,2024,2025,4525690,2025-04-27,272,Allmänna Idrottsklubben,1101,Idrottsföreningen Elfsborg,2,0
+SE1,2024,2025,4525693,2025-04-27,1109,BK Häcken,1059,Hammarby IF,1,1
+SE1,2024,2025,4525695,2025-04-27,2719,Mjällby Almänna Idrottsförening,3641,Degerfors IF,4,1
+SE1,2024,2025,4525696,2025-04-27,7945,IK Sirius,1011,Halmstads BK,1,1
+SE1,2024,2025,4525697,2025-04-27,3622,IFK Värnamo,2844,IFK Norrköping,1,3
+SE1,2024,2025,4525692,2025-04-28,801,Idrottsföreningen Kamraterna Göteborg,7009,Göteborgs Atlet- och Idrottssällskap,1,1
+SE1,2024,2025,4525694,2025-04-29,496,Malmö Fotbollförening,1236,Östers IF,2,0
+SE1,2024,2025,4525712,2025-05-03,1011,Halmstads BK,3622,IFK Värnamo,4,2
+SE1,2024,2025,4525713,2025-05-03,3641,Degerfors IF,7945,IK Sirius,1,1
+SE1,2024,2025,4525706,2025-05-04,1044,Djurgårdens Idrottsförening,272,Allmänna Idrottsklubben,1,1
+SE1,2024,2025,4525708,2025-05-04,1236,Östers IF,1059,Hammarby IF,0,3
+SE1,2024,2025,4525710,2025-05-04,2719,Mjällby Almänna Idrottsförening,801,Idrottsföreningen Kamraterna Göteborg,1,0
+SE1,2024,2025,4525711,2025-05-04,2844,IFK Norrköping,1109,BK Häcken,0,2
+SE1,2024,2025,4525707,2025-05-05,1101,Idrottsföreningen Elfsborg,7009,Göteborgs Atlet- och Idrottssällskap,2,0
+SE1,2024,2025,4525709,2025-05-05,496,Malmö Fotbollförening,1092,Idrottsföreningen  Brommapojkarna,1,2
+SE1,2024,2025,4525724,2025-05-10,1092,Idrottsföreningen  Brommapojkarna,1011,Halmstads BK,0,1
+SE1,2024,2025,4525725,2025-05-10,7009,Göteborgs Atlet- och Idrottssällskap,3622,IFK Värnamo,1,1
+SE1,2024,2025,4525728,2025-05-10,7945,IK Sirius,1109,BK Häcken,2,0
+SE1,2024,2025,4525722,2025-05-11,272,Allmänna Idrottsklubben,2719,Mjällby Almänna Idrottsförening,2,1
+SE1,2024,2025,4525723,2025-05-11,1059,Hammarby IF,2844,IFK Norrköping,1,1
+SE1,2024,2025,4525727,2025-05-11,1236,Östers IF,1101,Idrottsföreningen Elfsborg,0,1
+SE1,2024,2025,4525729,2025-05-11,3641,Degerfors IF,496,Malmö Fotbollförening,1,4
+SE1,2024,2025,4525726,2025-05-12,801,Idrottsföreningen Kamraterna Göteborg,1044,Djurgårdens Idrottsförening,1,2
+SE1,2024,2025,4525755,2025-05-14,1059,Hammarby IF,7945,IK Sirius,3,2
+SE1,2024,2025,4525758,2025-05-14,1109,BK Häcken,272,Allmänna Idrottsklubben,3,3
+SE1,2024,2025,4525760,2025-05-14,1011,Halmstads BK,7009,Göteborgs Atlet- och Idrottssällskap,1,3
+SE1,2024,2025,4525754,2025-05-15,1044,Djurgårdens Idrottsförening,2719,Mjällby Almänna Idrottsförening,1,3
+SE1,2024,2025,4525756,2025-05-15,1101,Idrottsföreningen Elfsborg,1092,Idrottsföreningen  Brommapojkarna,4,3
+SE1,2024,2025,4525757,2025-05-15,801,Idrottsföreningen Kamraterna Göteborg,1236,Östers IF,0,1
+SE1,2024,2025,4525759,2025-05-15,2844,IFK Norrköping,3641,Degerfors IF,1,2
+SE1,2024,2025,4525761,2025-05-15,3622,IFK Värnamo,496,Malmö Fotbollförening,2,2
+SE1,2024,2025,4525650,2025-05-18,272,Allmänna Idrottsklubben,1059,Hammarby IF,0,0
+SE1,2024,2025,4525652,2025-05-18,1109,BK Häcken,3622,IFK Värnamo,2,0
+SE1,2024,2025,4525653,2025-05-18,1236,Östers IF,7009,Göteborgs Atlet- och Idrottssällskap,1,1
+SE1,2024,2025,4525654,2025-05-18,496,Malmö Fotbollförening,1011,Halmstads BK,3,0
+SE1,2024,2025,4525651,2025-05-19,1101,Idrottsföreningen Elfsborg,1044,Djurgårdens Idrottsförening,4,0
+SE1,2024,2025,4525655,2025-05-19,2719,Mjällby Almänna Idrottsförening,1092,Idrottsföreningen  Brommapojkarna,1,0
+SE1,2024,2025,4525656,2025-05-19,7945,IK Sirius,2844,IFK Norrköping,1,2
+SE1,2024,2025,4525657,2025-05-19,3641,Degerfors IF,801,Idrottsföreningen Kamraterna Göteborg,1,3
+SE1,2024,2025,4525731,2025-05-22,1059,Hammarby IF,2719,Mjällby Almänna Idrottsförening,1,2
+SE1,2024,2025,4525735,2025-05-22,496,Malmö Fotbollförening,272,Allmänna Idrottsklubben,0,0
+SE1,2024,2025,4525789,2025-05-24,7009,Göteborgs Atlet- och Idrottssällskap,7945,IK Sirius,2,1
+SE1,2024,2025,4525793,2025-05-24,3622,IFK Värnamo,1236,Östers IF,1,1
+SE1,2024,2025,4525786,2025-05-25,1044,Djurgårdens Idrottsförening,1109,BK Häcken,1,1
+SE1,2024,2025,4525788,2025-05-25,1092,Idrottsföreningen  Brommapojkarna,272,Allmänna Idrottsklubben,0,1
+SE1,2024,2025,4525790,2025-05-25,801,Idrottsföreningen Kamraterna Göteborg,496,Malmö Fotbollförening,1,0
+SE1,2024,2025,4525792,2025-05-25,1011,Halmstads BK,1101,Idrottsföreningen Elfsborg,1,4
+SE1,2024,2025,4525787,2025-05-26,1059,Hammarby IF,3641,Degerfors IF,1,0
+SE1,2024,2025,4525791,2025-05-26,2844,IFK Norrköping,2719,Mjällby Almänna Idrottsförening,1,1
+SE1,2024,2025,4525691,2025-05-29,1092,Idrottsföreningen  Brommapojkarna,1044,Djurgårdens Idrottsförening,0,1
+SE1,2024,2025,4525739,2025-05-31,1101,Idrottsföreningen Elfsborg,1059,Hammarby IF,0,2
+SE1,2024,2025,4525742,2025-05-31,2844,IFK Norrköping,7009,Göteborgs Atlet- och Idrottssällskap,0,3
+SE1,2024,2025,4525745,2025-05-31,3641,Degerfors IF,1236,Östers IF,1,2
+SE1,2024,2025,4525738,2025-06-01,1092,Idrottsföreningen  Brommapojkarna,801,Idrottsföreningen Kamraterna Göteborg,1,3
+SE1,2024,2025,4525740,2025-06-01,496,Malmö Fotbollförening,1109,BK Häcken,3,0
+SE1,2024,2025,4525741,2025-06-01,2719,Mjällby Almänna Idrottsförening,3622,IFK Värnamo,2,0
+SE1,2024,2025,4525743,2025-06-01,7945,IK Sirius,272,Allmänna Idrottsklubben,3,1
+SE1,2024,2025,4525744,2025-06-01,1011,Halmstads BK,1044,Djurgårdens Idrottsförening,1,0
+SE1,2024,2025,4525612,2025-06-28,1059,Hammarby IF,1011,Halmstads BK,2,0
+SE1,2024,2025,4525614,2025-06-28,1236,Östers IF,7945,IK Sirius,2,2
+SE1,2024,2025,4525610,2025-06-29,272,Allmänna Idrottsklubben,801,Idrottsföreningen Kamraterna Göteborg,3,0
+SE1,2024,2025,4525613,2025-06-29,1109,BK Häcken,7009,Göteborgs Atlet- och Idrottssällskap,1,3
+SE1,2024,2025,4525616,2025-06-29,3641,Degerfors IF,1092,Idrottsföreningen  Brommapojkarna,0,3
+SE1,2024,2025,4525617,2025-06-29,3622,IFK Värnamo,1101,Idrottsföreningen Elfsborg,0,0
+SE1,2024,2025,4525611,2025-06-30,1044,Djurgårdens Idrottsförening,2844,IFK Norrköping,1,1
+SE1,2024,2025,4525615,2025-06-30,2719,Mjällby Almänna Idrottsförening,496,Malmö Fotbollförening,1,1
+SE1,2024,2025,4525603,2025-07-05,1059,Hammarby IF,3622,IFK Värnamo,1,0
+SE1,2024,2025,4525605,2025-07-05,7009,Göteborgs Atlet- och Idrottssällskap,496,Malmö Fotbollförening,0,0
+SE1,2024,2025,4525607,2025-07-05,1236,Östers IF,2719,Mjällby Almänna Idrottsförening,0,1
+SE1,2024,2025,4525602,2025-07-06,1044,Djurgårdens Idrottsförening,3641,Degerfors IF,5,1
+SE1,2024,2025,4525604,2025-07-06,1101,Idrottsföreningen Elfsborg,1109,BK Häcken,0,2
+SE1,2024,2025,4525606,2025-07-06,801,Idrottsföreningen Kamraterna Göteborg,7945,IK Sirius,3,1
+SE1,2024,2025,4525609,2025-07-06,1011,Halmstads BK,272,Allmänna Idrottsklubben,2,0
+SE1,2024,2025,4525608,2025-07-07,2844,IFK Norrköping,1092,Idrottsföreningen  Brommapojkarna,0,1
+SE1,2024,2025,4525773,2025-07-12,801,Idrottsföreningen Kamraterna Göteborg,1101,Idrottsföreningen Elfsborg,1,2
+SE1,2024,2025,4525775,2025-07-12,496,Malmö Fotbollförening,2844,IFK Norrköping,3,1
+SE1,2024,2025,4525770,2025-07-13,272,Allmänna Idrottsklubben,3641,Degerfors IF,3,0
+SE1,2024,2025,4525771,2025-07-13,1092,Idrottsföreningen  Brommapojkarna,1236,Östers IF,2,0
+SE1,2024,2025,4525772,2025-07-13,7009,Göteborgs Atlet- och Idrottssällskap,1059,Hammarby IF,3,2
+SE1,2024,2025,4525774,2025-07-13,1109,BK Häcken,1011,Halmstads BK,4,1
+SE1,2024,2025,4525777,2025-07-13,3622,IFK Värnamo,1044,Djurgårdens Idrottsförening,1,0
+SE1,2024,2025,4525776,2025-07-14,7945,IK Sirius,2719,Mjällby Almänna Idrottsförening,1,2
+SE1,2024,2025,4525746,2025-07-19,1044,Djurgårdens Idrottsförening,1101,Idrottsföreningen Elfsborg,1,0
+SE1,2024,2025,4525748,2025-07-19,1236,Östers IF,496,Malmö Fotbollförening,0,2
+SE1,2024,2025,4525753,2025-07-19,3641,Degerfors IF,7009,Göteborgs Atlet- och Idrottssällskap,0,3
+SE1,2024,2025,4525747,2025-07-20,1059,Hammarby IF,1092,Idrottsföreningen  Brommapojkarna,3,2
+SE1,2024,2025,4525749,2025-07-20,2719,Mjällby Almänna Idrottsförening,272,Allmänna Idrottsklubben,2,0
+SE1,2024,2025,4525751,2025-07-20,7945,IK Sirius,801,Idrottsföreningen Kamraterna Göteborg,0,1
+SE1,2024,2025,4525752,2025-07-20,1011,Halmstads BK,1109,BK Häcken,0,0
+SE1,2024,2025,4525750,2025-07-21,2844,IFK Norrköping,3622,IFK Värnamo,3,1
+SE1,2024,2025,4525779,2025-07-26,1092,Idrottsföreningen  Brommapojkarna,496,Malmö Fotbollförening,2,3
+SE1,2024,2025,4525781,2025-07-26,7009,Göteborgs Atlet- och Idrottssällskap,1011,Halmstads BK,3,0
+SE1,2024,2025,4525784,2025-07-26,3641,Degerfors IF,2844,IFK Norrköping,0,0
+SE1,2024,2025,4525778,2025-07-27,272,Allmänna Idrottsklubben,1236,Östers IF,0,0
+SE1,2024,2025,4525782,2025-07-27,1109,BK Häcken,1044,Djurgårdens Idrottsförening,1,6
+SE1,2024,2025,4525783,2025-07-27,2719,Mjällby Almänna Idrottsförening,7945,IK Sirius,2,1
+SE1,2024,2025,4525785,2025-07-27,3622,IFK Värnamo,1059,Hammarby IF,2,3
+SE1,2024,2025,4525780,2025-07-28,1101,Idrottsföreningen Elfsborg,801,Idrottsföreningen Kamraterna Göteborg,4,3
+SE1,2024,2025,4525732,2025-08-02,1092,Idrottsföreningen  Brommapojkarna,2844,IFK Norrköping,6,4
+SE1,2024,2025,4525737,2025-08-02,3622,IFK Värnamo,7009,Göteborgs Atlet- och Idrottssällskap,2,2
+SE1,2024,2025,4525730,2025-08-03,1044,Djurgårdens Idrottsförening,1011,Halmstads BK,1,1
+SE1,2024,2025,4525734,2025-08-03,1109,BK Häcken,1101,Idrottsföreningen Elfsborg,1,2
+SE1,2024,2025,4525736,2025-08-03,7945,IK Sirius,1236,Östers IF,1,1
+SE1,2024,2025,4525733,2025-08-04,801,Idrottsföreningen Kamraterna Göteborg,3641,Degerfors IF,3,0
+SE1,2024,2025,4525766,2025-08-09,496,Malmö Fotbollförening,2719,Mjällby Almänna Idrottsförening,1,3
+SE1,2024,2025,4525768,2025-08-09,1011,Halmstads BK,7945,IK Sirius,0,1
+SE1,2024,2025,4525762,2025-08-10,272,Allmänna Idrottsklubben,1044,Djurgårdens Idrottsförening,0,0
+SE1,2024,2025,4525765,2025-08-10,1236,Östers IF,1092,Idrottsföreningen  Brommapojkarna,1,1
+SE1,2024,2025,4525767,2025-08-10,2844,IFK Norrköping,1059,Hammarby IF,0,2
+SE1,2024,2025,4525769,2025-08-10,3641,Degerfors IF,1109,BK Häcken,0,0
+SE1,2024,2025,4525763,2025-08-11,1101,Idrottsföreningen Elfsborg,3622,IFK Värnamo,2,2
+SE1,2024,2025,4525764,2025-08-11,7009,Göteborgs Atlet- och Idrottssällskap,801,Idrottsföreningen Kamraterna Göteborg,0,1
+SE1,2024,2025,4525647,2025-08-16,2844,IFK Norrköping,1101,Idrottsföreningen Elfsborg,2,1
+SE1,2024,2025,4525648,2025-08-16,1011,Halmstads BK,496,Malmö Fotbollförening,0,4
+SE1,2024,2025,4525642,2025-08-17,1059,Hammarby IF,7009,Göteborgs Atlet- och Idrottssällskap,1,2
+SE1,2024,2025,4525643,2025-08-17,1092,Idrottsföreningen  Brommapojkarna,7945,IK Sirius,2,4
+SE1,2024,2025,4525644,2025-08-17,801,Idrottsföreningen Kamraterna Göteborg,272,Allmänna Idrottsklubben,2,1
+SE1,2024,2025,4525645,2025-08-17,1109,BK Häcken,1236,Östers IF,0,2
+SE1,2024,2025,4525646,2025-08-17,2719,Mjällby Almänna Idrottsförening,1044,Djurgårdens Idrottsförening,1,1
+SE1,2024,2025,4525649,2025-08-18,3622,IFK Värnamo,3641,Degerfors IF,3,2
+SE1,2024,2025,4525666,2025-08-24,1044,Djurgårdens Idrottsförening,1092,Idrottsföreningen  Brommapojkarna,1,0
+SE1,2024,2025,4525667,2025-08-24,1101,Idrottsföreningen Elfsborg,1011,Halmstads BK,1,2
+SE1,2024,2025,4525670,2025-08-24,496,Malmö Fotbollförening,801,Idrottsföreningen Kamraterna Göteborg,0,0
+SE1,2024,2025,4525671,2025-08-24,7945,IK Sirius,1059,Hammarby IF,3,1
+SE1,2024,2025,4525672,2025-08-24,3641,Degerfors IF,272,Allmänna Idrottsklubben,0,1
+SE1,2024,2025,4525673,2025-08-24,3622,IFK Värnamo,1109,BK Häcken,1,5
+SE1,2024,2025,4525668,2025-08-25,7009,Göteborgs Atlet- och Idrottssällskap,2719,Mjällby Almänna Idrottsförening,0,2
+SE1,2024,2025,4525669,2025-08-25,1236,Östers IF,2844,IFK Norrköping,1,2
+SE1,2024,2025,4525636,2025-08-30,1092,Idrottsföreningen  Brommapojkarna,1101,Idrottsföreningen Elfsborg,3,0
+SE1,2024,2025,4525638,2025-08-30,801,Idrottsföreningen Kamraterna Göteborg,3622,IFK Värnamo,1,0
+SE1,2024,2025,4525640,2025-08-30,2719,Mjällby Almänna Idrottsförening,1011,Halmstads BK,1,0
+SE1,2024,2025,4525634,2025-08-31,272,Allmänna Idrottsklubben,7945,IK Sirius,2,1
+SE1,2024,2025,4525635,2025-08-31,1059,Hammarby IF,1236,Östers IF,4,0
+SE1,2024,2025,4525637,2025-08-31,7009,Göteborgs Atlet- och Idrottssällskap,1109,BK Häcken,2,1
+SE1,2024,2025,4525639,2025-08-31,496,Malmö Fotbollförening,3641,Degerfors IF,1,1
+SE1,2024,2025,4525641,2025-08-31,2844,IFK Norrköping,1044,Djurgårdens Idrottsförening,0,4
+SE1,2024,2025,4525624,2025-09-13,1011,Halmstads BK,2844,IFK Norrköping,1,1
+SE1,2024,2025,4525625,2025-09-13,3641,Degerfors IF,2719,Mjällby Almänna Idrottsförening,0,1
+SE1,2024,2025,4525619,2025-09-14,1044,Djurgårdens Idrottsförening,1059,Hammarby IF,3,3
+SE1,2024,2025,4525620,2025-09-14,1101,Idrottsföreningen Elfsborg,496,Malmö Fotbollförening,2,2
+SE1,2024,2025,4525622,2025-09-14,1236,Östers IF,3622,IFK Värnamo,4,3
+SE1,2024,2025,4525623,2025-09-14,7945,IK Sirius,7009,Göteborgs Atlet- och Idrottssällskap,3,0
+SE1,2024,2025,4525618,2025-09-15,272,Allmänna Idrottsklubben,1092,Idrottsföreningen  Brommapojkarna,2,1
+SE1,2024,2025,4525621,2025-09-15,1109,BK Häcken,801,Idrottsföreningen Kamraterna Göteborg,1,2
+SE1,2024,2025,4525659,2025-09-20,7009,Göteborgs Atlet- och Idrottssällskap,1101,Idrottsföreningen Elfsborg,2,0
+SE1,2024,2025,4525661,2025-09-20,496,Malmö Fotbollförening,1044,Djurgårdens Idrottsförening,0,1
+SE1,2024,2025,4525662,2025-09-20,2719,Mjällby Almänna Idrottsförening,1236,Östers IF,1,1
+SE1,2024,2025,4525658,2025-09-21,1059,Hammarby IF,1109,BK Häcken,4,0
+SE1,2024,2025,4525660,2025-09-21,801,Idrottsföreningen Kamraterna Göteborg,1092,Idrottsföreningen  Brommapojkarna,0,1
+SE1,2024,2025,4525664,2025-09-21,7945,IK Sirius,3641,Degerfors IF,1,3
+SE1,2024,2025,4525663,2025-09-22,2844,IFK Norrköping,272,Allmänna Idrottsklubben,3,1
+SE1,2024,2025,4525665,2025-09-22,3622,IFK Värnamo,1011,Halmstads BK,1,2
+SE1,2024,2025,4525629,2025-09-27,1101,Idrottsföreningen Elfsborg,3641,Degerfors IF,1,2
+SE1,2024,2025,4525630,2025-09-27,1109,BK Häcken,2844,IFK Norrköping,2,0
+SE1,2024,2025,4525626,2025-09-28,272,Allmänna Idrottsklubben,7009,Göteborgs Atlet- och Idrottssällskap,1,1
+SE1,2024,2025,4525628,2025-09-28,1092,Idrottsföreningen  Brommapojkarna,2719,Mjällby Almänna Idrottsförening,0,1
+SE1,2024,2025,4525632,2025-09-28,496,Malmö Fotbollförening,3622,IFK Värnamo,3,2
+SE1,2024,2025,4525633,2025-09-28,1011,Halmstads BK,1059,Hammarby IF,1,0
+SE1,2024,2025,4525627,2025-09-29,1044,Djurgårdens Idrottsförening,7945,IK Sirius,8,2
+SE1,2024,2025,4525631,2025-09-29,1236,Östers IF,801,Idrottsföreningen Kamraterna Göteborg,0,2
+SE1,2024,2025,4550389,2025-10-04,7009,Göteborgs Atlet- och Idrottssällskap,2844,IFK Norrköping,2,1
+SE1,2024,2025,4550391,2025-10-04,1236,Östers IF,1011,Halmstads BK,3,0
+SE1,2024,2025,4550392,2025-10-04,2719,Mjällby Almänna Idrottsförening,1101,Idrottsföreningen Elfsborg,2,0
+SE1,2024,2025,4550394,2025-10-04,3641,Degerfors IF,1044,Djurgårdens Idrottsförening,1,1
+SE1,2024,2025,4550387,2025-10-05,272,Allmänna Idrottsklubben,3622,IFK Värnamo,2,3
+SE1,2024,2025,4550388,2025-10-05,1092,Idrottsföreningen  Brommapojkarna,1109,BK Häcken,1,3
+SE1,2024,2025,4550390,2025-10-05,801,Idrottsföreningen Kamraterna Göteborg,1059,Hammarby IF,1,2
+SE1,2024,2025,4550393,2025-10-05,7945,IK Sirius,496,Malmö Fotbollförening,5,1
+SE1,2024,2025,4550399,2025-10-18,1109,BK Häcken,7945,IK Sirius,1,1
+SE1,2024,2025,4550400,2025-10-18,2844,IFK Norrköping,496,Malmö Fotbollförening,0,2
+SE1,2024,2025,4550395,2025-10-19,1059,Hammarby IF,272,Allmänna Idrottsklubben,2,1
+SE1,2024,2025,4550396,2025-10-19,1101,Idrottsföreningen Elfsborg,1236,Östers IF,5,1
+SE1,2024,2025,4550397,2025-10-19,7009,Göteborgs Atlet- och Idrottssällskap,1044,Djurgårdens Idrottsförening,3,2
+SE1,2024,2025,4550402,2025-10-19,3622,IFK Värnamo,1092,Idrottsföreningen  Brommapojkarna,1,1
+SE1,2024,2025,4550398,2025-10-20,801,Idrottsföreningen Kamraterna Göteborg,2719,Mjällby Almänna Idrottsförening,0,2
+SE1,2024,2025,4550401,2025-10-20,3641,Degerfors IF,1011,Halmstads BK,0,1
+SE1,2024,2025,4550404,2025-10-25,1044,Djurgårdens Idrottsförening,3622,IFK Värnamo,6,2
+SE1,2024,2025,4550406,2025-10-25,1236,Östers IF,3641,Degerfors IF,1,2
+SE1,2024,2025,4550403,2025-10-26,272,Allmänna Idrottsklubben,1109,BK Häcken,2,2
+SE1,2024,2025,4550408,2025-10-26,2719,Mjällby Almänna Idrottsförening,2844,IFK Norrköping,2,1
+SE1,2024,2025,4550409,2025-10-26,7945,IK Sirius,1101,Idrottsföreningen Elfsborg,4,0
+SE1,2024,2025,4550410,2025-10-26,1011,Halmstads BK,801,Idrottsföreningen Kamraterna Göteborg,0,3
+SE1,2024,2025,4550405,2025-10-27,1092,Idrottsföreningen  Brommapojkarna,7009,Göteborgs Atlet- och Idrottssällskap,0,2
+SE1,2024,2025,4550407,2025-10-27,496,Malmö Fotbollförening,1059,Hammarby IF,1,3
+SE1,2024,2025,4550414,2025-11-01,1109,BK Häcken,496,Malmö Fotbollförening,1,1
+SE1,2024,2025,4550415,2025-11-01,2844,IFK Norrköping,7945,IK Sirius,1,2
+SE1,2024,2025,4550411,2025-11-02,1044,Djurgårdens Idrottsförening,801,Idrottsföreningen Kamraterna Göteborg,0,0
+SE1,2024,2025,4550412,2025-11-02,1101,Idrottsföreningen Elfsborg,272,Allmänna Idrottsklubben,0,3
+SE1,2024,2025,4550413,2025-11-02,7009,Göteborgs Atlet- och Idrottssällskap,1236,Östers IF,1,1
+SE1,2024,2025,4550416,2025-11-02,1011,Halmstads BK,1092,Idrottsföreningen  Brommapojkarna,0,0
+SE1,2024,2025,4550417,2025-11-03,3641,Degerfors IF,1059,Hammarby IF,1,1
+SE1,2024,2025,4550418,2025-11-03,3622,IFK Värnamo,2719,Mjällby Almänna Idrottsförening,0,5
+SE1,2024,2025,4550419,2025-11-09,272,Allmänna Idrottsklubben,1011,Halmstads BK,0,2
+SE1,2024,2025,4550420,2025-11-09,1059,Hammarby IF,1101,Idrottsföreningen Elfsborg,3,0
+SE1,2024,2025,4550421,2025-11-09,1092,Idrottsföreningen  Brommapojkarna,3641,Degerfors IF,1,3
+SE1,2024,2025,4550422,2025-11-09,801,Idrottsföreningen Kamraterna Göteborg,2844,IFK Norrköping,2,0
+SE1,2024,2025,4550423,2025-11-09,1236,Östers IF,1044,Djurgårdens Idrottsförening,1,3
+SE1,2024,2025,4550424,2025-11-09,496,Malmö Fotbollförening,7009,Göteborgs Atlet- och Idrottssällskap,2,1
+SE1,2024,2025,4550425,2025-11-09,2719,Mjällby Almänna Idrottsförening,1109,BK Häcken,1,0
+SE1,2024,2025,4550426,2025-11-09,7945,IK Sirius,3622,IFK Värnamo,3,1

@@ -1,0 +1,22 @@
+{
+  "artifact": "competition_season_calendar_bounds_final.csv",
+  "version": "1.0.0",
+  "created_at_utc": "2026-10-21T12:06:33.595962+00:00",
+  "sha256": "74b0476baacd36fb82e23f0f8ac5c71c5c39fbfd13873223730b433b1c5166a4",
+  "rows": 615,
+  "competitions": 65,
+  "seasons": 14,
+  "primary_key": [
+    "competition_id",
+    "season"
+  ],
+  "source": "competition_season_calendar_bounds_candidate.csv",
+  "validation_source": "competition_season_calendar_candidate_validation.csv",
+  "validation_status": "PASS",
+  "known_limitations": [
+    "CGB: source season labels and incomplete 2023 edition",
+    "BRA1 and SE1: one-year source label offset",
+    "CDR and SFA: exceptional 2019 edition overlaps",
+    "Missing source editions are not interpolated"
+  ]
+}
