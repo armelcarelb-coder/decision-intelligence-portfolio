@@ -804,7 +804,7 @@ The LLM should not:
 - Produce a recruitment decision without the structured engines.
 - Present missing data as known information.
 
-### Implementation Architecture
+### 5. Implementation Architecture
 
 ```text
 User request
@@ -824,7 +824,7 @@ DecisionAggregator
 Visual Brief Generator
 ```
 
-### Recommended modules
+### 6. Recommended modules
 
 ```text
 interfaces/
@@ -851,7 +851,7 @@ visualisation/
 └── financial_decision_panel.py
 ```
 
-### Data contract
+### 7. Data contract
 
 The visual layer should consume a single, stable object:
 
@@ -876,7 +876,7 @@ interface, a PDF, or a future web application.
 
 ## Visual Language
 
-### Typography
+### 1. Typography
 
 Use a single modern sans-serif family.
 
@@ -886,7 +886,7 @@ Use a single modern sans-serif family.
 - Key figures: large and high-contrast.
 - Explanatory text: small, secondary grey.
 
-### Shape language
+### 2. Shape language
 
 - Use rounded rectangles for cards and panels.
 - Use horizontal bars for ability and financial comparisons.
@@ -895,7 +895,7 @@ Use a single modern sans-serif family.
 - Use a simplified pitch only to provide football context.
 - Avoid pie charts, 3D charts, decorative gauges, and dense multi-radar layouts.
 
-### Recommendation badges
+### 3. Recommendation badges
 
 | Recommendation | Colour | Meaning |
 |---|---|---|
