@@ -5,18 +5,917 @@
 ## 1. PROJECT OVERVIEW
 
 ### Problem
-Football recruitment involves costly decisions under uncertainty. Recruitment teams must identify players who match a coach's tactical requirements, squad needs, and financial constraints. Decisions based on isolated statistics or reputation can lead to poor role fit, inefficient spending, and an unbalanced squad.
+
+Football recruitment involves costly decisions under uncertainty. Clubs do not simply need talented players; they need players who solve a specific squad problem within a coach’s tactical system and the club’s financial constraints.
+
+A player may be talented in isolation but poorly suited to the required role, playing style, squad balance, or wage structure. Conversely, a less famous player may be the better recruitment solution because his abilities, tactical profile, projected contribution, and financial profile match the club’s need.
+
+Decisions based on isolated statistics, reputation, or generic ratings can therefore lead to poor role fit, inefficient spending, and an unbalanced squad.
 
 ### Approach
-This project develops a **Football Recruitment Decision Support framework** combining player-performance analysis, profiling, probabilistic estimation, tactical compatibility, and recruitment constraints.
 
-- **Current implementation:** The repository contains football-data ingestion and player-analysis components, player profiling and comparison logic, tactical-fit components, and a Bayesian use case focused on estimating scoring ability from observed performance. The Bayesian approach represents an estimate as a probability distribution rather than only a point value.
-- **Development direction:** Extend the framework towards a broader, role-aware view of player ability. Rather than treating goalscoring as a universal measure of talent, the intended design will represent abilities relevant to a player's role and tactical responsibilities, then connect those profiles to squad needs and recruitment constraints.
-- **Validation objective:** Document a capability as implemented only when it is demonstrable in the code. New ability dimensions and decision outputs must be tested on suitable data and compared with appropriate baselines before being treated as reliable recruitment evidence.
+This project develops an **Ideal-Profile Recruitment Matching System**.
 
-The aim is to support better-informed decisions, not to replace scouting expertise or claim that a model can directly observe a player's “true talent”.
+The system first translates a club’s tactical identity, squad needs, and financial constraints into an **ideal player profile**. This profile describes the characteristics required to solve a specific recruitment problem.
 
-## 2. FOOTBALL RECRUITMENT PROBLEM
+The system then compares real players with that ideal profile across role-relevant ability dimensions, tactical requirements, and financial criteria. The output is a ranked shortlist of real players with the highest compatibility with the target profile.
+
+```text
+Coach needs + tactical system + squad need + financial constraints
+                              ↓
+                   Ideal Player Profile
+                              ↓
+                Comparison with real-player database
+                              ↓
+          Compatibility scores by ability dimension
+                              ↓
+             Financial compatibility and overall fit
+                              ↓
+              Ranked real-player recommendations
+```
+
+### Current implementation
+
+The repository contains football-data ingestion and player-analysis components, player profiling and comparison logic, tactical-fit components, and an initial Bayesian use case focused on estimating scoring ability from observed performance.
+
+The Bayesian approach represents an estimate as a probability distribution rather than only a point value.
+
+### Development direction
+
+Extend the framework from a single goalscoring-ability model to a role-aware Bayesian Talent Engine.
+
+Rather than treating goalscoring as a universal measure of talent, the intended design will estimate separate ability dimensions relevant to different roles —
+for example finishing, chance creation, progression, dribbling, passing security, pressing, defensive impact, duels, and goalkeeper-specific abilities.
+
+These ability profiles will then be connected to an ideal player profile, a tactical-compatibility layer, and a financial-compatibility layer.
+
+### Validation objective
+
+Document a capability as implemented only when it is demonstrable in the code.
+
+New ability dimensions, compatibility scores, financial estimates, and decision outputs must be tested on suitable data and compared with appropriate baselines before being treated as reliable recruitment evidence.
+
+The aim is to support better-informed recruitment decisions, not to replace scouting expertise or claim that a model can directly observe a player’s “true talent”.
+
+### Ideal-Profile Recruitment Matching
+
+This project is built around a two-stage recruitment logic.
+
+First, it translates a club’s coaching requirements, tactical identity, squad needs, and financial constraints into an **ideal player profile**. This profile describes the player characteristics required to solve a specific recruitment problem.
+
+Second, it compares real players with that ideal profile across role-relevant ability dimensions and financial criteria. The output is a ranked shortlist of real players with the highest compatibility with the target profile.
+
+### Central Question
+
+**Given a club’s tactical identity, squad need, and financial constraints, what is the ideal player profile for the identified recruitment problem — and which real players are most compatible with that profile?**
+
+The system does not start from a player and ask whether he fits the club.It starts from the club’s recruitment problem and asks which real players best match the profile required to solve it.
+
+### How the System Works
+
+```text
+Coach needs + tactical system + squad need + financial constraints
+                              ↓
+                   Ideal Player Profile
+                              ↓
+                Comparison with real-player database
+                              ↓
+          Compatibility scores by ability dimension
+                              ↓
+             Financial compatibility and overall fit
+                              ↓
+              Ranked real-player recommendations
+```
+
+The ideal profile is a recruitment specification, not a claim that a perfect player exists. It defines the ability, tactical, squad-building, and financial characteristics required for a specific role.
+
+### Expected Output
+
+The central output is a **Recruitment Decision Brief** for each recommended
+player.
+
+### 1. Ideal Player Profile
+
+The system first presents the profile it is searching for.
+
+Example:
+
+```text
+🎯 Ideal Player Profile — Left Winger
+
+Recruitment problem:
+The squad needs a left-sided winger able to progress the ball, create chances, and support a high-pressing system.
+
+Tactical target:
+- High pressing intensity
+- Progressive ball carrying
+- Chance creation from wide areas
+- Defensive contribution in transition
+
+Squad target:
+- Immediate rotation option with starter potential
+- Age profile: 21–26
+- Contract horizon: at least three years
+
+Financial target:
+- Transfer budget: €25m
+- Maximum salary: €4m per year
+- Preferred contract length: 4–5 years
+```
+
+### 2. Real-Player Compatibility Ranking
+
+The system then ranks real players by overall compatibility with the ideal profile.
+
+```text
+🔍 Best matches with ideal profile
+
+1. Player A — Overall compatibility: 86%
+2. Player B — Overall compatibility: 81%
+3. Player C — Overall compatibility: 77%
+```
+
+The overall score is always accompanied by a dimension-level breakdown, so the user can see where a player matches the target and where he deviates.
+
+### 3. Dimension-Level Compatibility
+
+For each recommended player, the system compares the real player with the ideal
+profile across relevant dimensions.
+
+```text
+Dimension              Ideal target     Player A      Compatibility
+Finishing              High             High          78%
+Chance creation        High             Very high     91%
+Ball progression       High             High          94%
+Dribbling              High             High          88%
+Pressing impact        High             High          90%
+Defensive impact       Moderate         Low           71%
+Transfer cost          ≤ €25m           €23m          82%
+Salary                 ≤ €4m            €3.2m         88%
+```
+
+This makes the recommendation interpretable: a player may be an excellent match for creation and progression while remaining below target on defensive impact.
+
+### 4. Financial Compatibility
+
+Financial fit is treated as a distinct recruitment dimension.
+
+```text
+💰 Financial compatibility — Player A
+
+Estimated transfer cost: €23m
+Budget limit: €25m
+Transfer-cost compatibility: 82%
+
+Estimated salary: €3.2m per year
+Salary limit: €4m per year
+Salary compatibility: 88%
+
+Contract situation:
+Current contract expires: 2028
+Recommended contract length: four years
+Contract compatibility: 90%
+
+Financial risk: Low to moderate
+```
+
+The system should also expose trade-offs, for example when a player fits the
+wage structure but consumes most of the available transfer budget.
+
+### 5. Recruitment Recommendation
+
+The final output is a transparent decision-support recommendation.
+
+```text
+✅ Recruitment recommendation — Player A
+
+Recommendation: TARGET
+Overall compatibility: 86%
+Confidence: Moderate
+
+Why:
+- Strong match with the ideal winger profile.
+- High compatibility on creation, progression, dribbling, and pressing.
+- Financially feasible within the defined budget and salary structure.
+
+Conditions:
+- Defensive impact is below the ideal target.
+- Transfer cost leaves limited budget flexibility.
+- Compare with at least two lower-cost alternatives.
+
+This recommendation supports recruitment decision-making; it does not replace
+scouting expertise or final club decision-making.
+```
+
+### What the System Does Not Claim
+
+The ideal profile is not a perfect player.  
+A high compatibility score does not guarantee transfer success, future performance, or financial return.
+
+The system produces a transparent comparison between a player’s evidence and the specific system, role, and financial context in which the club intends to use them.
+
+## 2. Visual Decision Interface
+
+The central interface is not a generic analytics dashboard. It is a
+**Recruitment Decision Brief**: a guided visual workflow that translates a
+club’s recruitment problem into an ideal player profile, identifies real
+players compatible with that profile, and explains the recommendation.
+
+The interface is organised into four connected screens:
+
+1. Recruitment Brief
+2. Target-vs-Player Compatibility
+3. Player Pitch Card
+4. Financial Decision Panel
+
+Each screen answers one decision question. Together, they allow a sporting
+director or scout to understand the recruitment problem, the ideal solution,
+the best real-player matches, and the conditions of the recommendation.
+
+### Design Principle
+
+The interface follows a decision-first structure:
+
+```text
+Club need → Ideal profile → Real-player matches → Dimension-level fit → Financial fit → Recommendation
+```
+
+The user should be able to understand the main answer in less than ten
+seconds:
+
+- What player profile does the club need?
+- Which real players are closest to that profile?
+- Where do they match or deviate?
+- Are they financially feasible?
+- What is the recommended action?
+
+Visual complexity is deliberately limited. Colour, shape, and layout are used
+to support decision-making, not decoration.
+
+### Screen 1 — Recruitment Brief
+
+### 1. Purpose
+
+The Recruitment Brief defines the recruitment problem and presents the ideal
+player profile generated from coach, tactical, squad-building, and financial
+requirements.
+
+### 2. User question
+
+> “What player profile does the club need, and which real players best match it?”
+
+### 3. Layout
+
+```text
+┌────────────────────────────────────────────────────────────────────┐
+│ RECRUITMENT BRIEF — LEFT WINGER                                    │
+│                                                                    │
+│ Recruitment problem                                                │
+│ Progressive, high-pressing left winger able to create chances      │
+│ and support transitions.                                           │
+│                                                                    │
+│ Financial constraints                                              │
+│ Transfer budget: €25m                                              │
+│ Salary cap: €4m per year                                           │
+│ Preferred contract: 4–5 years                                      │
+│                                                                    │
+│ IDEAL PLAYER PROFILE                                               │
+│                                                                    │
+│ Chance creation       ████████████████  High                       │
+│ Ball progression      ████████████████  High                       │
+│ Dribbling             ████████████████  High                       │
+│ Pressing impact       ████████████████  High                       │
+│ Finishing             ██████████          Moderate–High            │
+│ Defensive impact      ██████              Moderate                 │
+│                                                                    │
+│ TOP REAL-PLAYER MATCHES                                            │
+│                                                                    │
+│ 1. Player A   Overall compatibility: 86%   [TARGET]               │
+│ 2. Player B   Overall compatibility: 81%   [MONITOR]              │
+│ 3. Player C   Overall compatibility: 77%   [MONITOR]              │
+│                                                                    │
+│ [Open detailed comparison]                                         │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+### 4. Required data
+
+```python
+{
+    "recruitment_brief": {
+        "target_position": "LEFT_WINGER",
+        "recruitment_problem": "Progressive, high-pressing left winger",
+        "tactical_context": {
+            "playing_style": "high_press",
+            "build_up_preference": "progressive",
+            "defensive_structure": "high_block"
+        },
+        "squad_need": {
+            "role": "rotation_with_starter_potential",
+            "age_range":,[21][26]
+            "contract_horizon_years":[3][5]
+        },
+        "financial_constraints": {
+            "transfer_budget": 25_000_000,
+            "salary_cap": 4_000_000,
+            "preferred_contract_years":[4][5]
+        }
+    },
+    "ideal_profile": {
+        "finishing": {
+            "target_level": "moderate_high",
+            "weight": 0.15
+        },
+        "chance_creation": {
+            "target_level": "high",
+            "weight": 0.25
+        },
+        "ball_progression": {
+            "target_level": "high",
+            "weight": 0.25
+        },
+        "dribbling": {
+            "target_level": "high",
+            "weight": 0.15
+        },
+        "pressing_impact": {
+            "target_level": "high",
+            "weight": 0.15
+        },
+        "defensive_impact": {
+            "target_level": "moderate",
+            "weight": 0.05
+        }
+    },
+    "recommended_players": [
+        {
+            "player": "Player A",
+            "overall_compatibility": 0.86,
+            "recommendation": "TARGET"
+        },
+        {
+            "player": "Player B",
+            "overall_compatibility": 0.81,
+            "recommendation": "MONITOR"
+        },
+        {
+            "player": "Player C",
+            "overall_compatibility": 0.77,
+            "recommendation": "MONITOR"
+        }
+    ]
+}
+```
+
+### 5. Visual components
+
+- A prominent title identifying the target role.
+- A short recruitment-problem statement.
+- Financial constraints displayed as compact badges.
+- Horizontal bars for ideal-profile target levels.
+- A ranked list of the top three real-player matches.
+- A clear call-to-action to open the detailed comparison.
+
+### 6. Colour rules
+
+| Element | Colour | Meaning |
+|---|---|---|
+| Page background | `#F7F8FA` | Neutral, high-readability background |
+| Primary text | `#1F2937` | Titles, player names, key figures |
+| Secondary text | `#6B7280` | Context, labels, explanations |
+| Ideal-profile bars | `#111827` | Neutral reference target |
+| Player bars | `#1D4ED8` | Real-player evidence |
+| Strong compatibility | `#15803D` | Clear match with target |
+| Moderate compatibility | `#D97706` | Acceptable but requires attention |
+| Weak compatibility or risk | `#B91C1C` | Significant deviation or financial risk |
+| Pitch background | `#E8F3EC` | Subtle football context |
+
+### Screen 2 — Target-vs-Player Compatibility
+
+### 1. Purpose
+
+This is the analytical core of the interface. It compares one real player with
+the ideal profile across every relevant evaluation dimension.
+
+### 2. User question
+
+> “Where does this real player match the ideal profile, and where does he deviate?”
+
+### 3. Layout
+
+```text
+┌────────────────────────────────────────────────────────────────────┐
+│ TARGET vs PLAYER — Player A                                        │
+│                                                                    │
+│ Overall compatibility: 86%                                         │
+│ Recommendation: TARGET                                             │
+│ Confidence: Moderate                                               │
+│                                                                    │
+│ ABILITY COMPATIBILITY                                              │
+│                                                                    │
+│ Chance creation                                                    │
+│ Player A   ████████████████████░░  91%                             │
+│ Target     ────────────────  High                                  │
+│                                                                    │
+│ Ball progression                                                   │
+│ Player A   █████████████████████  94%                              │
+│ Target     ────────────────  High                                  │
+│                                                                    │
+│ Dribbling                                                          │
+│ Player A   ████████████████████░░  88%                             │
+│ Target     ────────────────  High                                  │
+│                                                                    │
+│ Pressing impact                                                    │
+│ Player A   ████████████████████░░  90%                             │
+│ Target     ────────────────  High                                  │
+│                                                                    │
+│ Finishing                                                          │
+│ Player A   ████████████████░░░░░░  78%                             │
+│ Target     ────────────────  Moderate–High                         │
+│                                                                    │
+│ Defensive impact                                                   │
+│ Player A   ██████████████░░░░░░░░  71%                             │
+│ Target     ──────────────────  Moderate                            │
+│                                                                    │
+│ MATCHES TARGET                                                     │
+│ - Chance creation                                                  │
+│ - Ball progression                                                 │
+│ - Pressing impact                                                  │
+│                                                                    │
+│ DEVIATES FROM TARGET                                               │
+│ - Defensive impact                                                 │
+│ - Finishing is close to, but below, target                         │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+### 4. Required data
+
+```python
+{
+    "player": "Player A",
+    "overall_compatibility": 0.86,
+    "recommendation": "TARGET",
+    "confidence": "moderate",
+    "dimension_compatibility": {
+        "finishing": 0.78,
+        "chance_creation": 0.91,
+        "ball_progression": 0.94,
+        "dribbling": 0.88,
+        "pressing_impact": 0.90,
+        "defensive_impact": 0.71
+    },
+    "ideal_profile": {
+        "finishing": "moderate_high",
+        "chance_creation": "high",
+        "ball_progression": "high",
+        "dribbling": "high",
+        "pressing_impact": "high",
+        "defensive_impact": "moderate"
+    },
+    "matches_target": [
+        "chance_creation",
+        "ball_progression",
+        "pressing_impact"
+    ],
+    "deviates_from_target": [
+        "defensive_impact"
+    ],
+    "uncertainty": {
+        "finishing": {
+            "hdi_low": 0.68,
+            "hdi_high": 0.86
+        },
+        "chance_creation": {
+            "hdi_low": 0.85,
+            "hdi_high": 0.95
+        }
+    }
+}
+```
+
+### 5. Visual components
+
+- One horizontal bar per ability dimension.
+- A vertical target marker showing the ideal-profile requirement.
+- A compatibility percentage at the end of each bar.
+- Two summary lists: `Matches target` and `Deviates from target`.
+- Optional uncertainty bands or HDI annotations for Bayesian estimates.
+
+### 6. Visual rule
+
+Do not use a radar chart as the primary comparison. Radar charts can distort
+magnitude perception and make cross-axis comparison slower. Use them only as a
+secondary identity view, never as the main evidence.
+
+### Screen 3 — Player Pitch Card
+
+### 1. Purpose
+
+The Player Pitch Card translates statistical compatibility into football
+context. It shows the player’s intended role, main strengths, and fit with the
+coach’s system.
+
+### 2. User question
+
+> “What role would this player occupy in our system, and what would he bring?”
+
+### 3. Layout
+
+```text
+┌────────────────────────────────────────────────────────────────────┐
+│ PLAYER A — LEFT WINGER                                             │
+│                                                                    │
+│ ┌──────────────────────────────────────────────────────────────┐   │
+│ │                    PITCH CONTEXT                             │   │
+│ │                                                              │   │
+│ │                 Left flank / attacking third                 │   │
+│ │                                                              │   │
+│ │   Primary role: Progressive wide creator                     │   │
+│ │   Secondary role: High-pressing forward                      │   │
+│ └──────────────────────────────────────────────────────────────┘   │
+│                                                                    │
+│ SYSTEM FIT                                                         │
+│                                                                    │
+│ High pressing          ████████████████████  Strong                │
+│ Progressive build-up   ████████████████████  Strong                │
+│ Wide chance creation   ███████████████████░  Strong                │
+│ Transition defence     ██████████████░░░░░░  Moderate              │
+│                                                                    │
+│ KEY STRENGTHS                                                      │
+│ - Progressive carrying                                             │
+│ - Chance creation from the left flank                              │
+│ - Pressing intensity                                               │
+│                                                                    │
+│ WATCH-OUTS                                                         │
+│ - Limited defensive-duel evidence                                  │
+│ - Requires complementary defensive cover from left-back            │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+### 4. Required data
+
+```python
+{
+    "player": "Player A",
+    "primary_role": "Progressive wide creator",
+    "secondary_role": "High-pressing forward",
+    "pitch_context": {
+        "primary_zone": "left_flank",
+        "secondary_zone": "attacking_third"
+    },
+    "system_fit": {
+        "high_pressing": {
+            "score": 0.90,
+            "level": "strong"
+        },
+        "progressive_build_up": {
+            "score": 0.94,
+            "level": "strong"
+        },
+        "wide_chance_creation": {
+            "score": 0.91,
+            "level": "strong"
+        },
+        "transition_defence": {
+            "score": 0.71,
+            "level": "moderate"
+        }
+    },
+    "key_strengths": [
+        "Progressive carrying",
+        "Chance creation from the left flank",
+        "Pressing intensity"
+    ],
+    "watch_outs": [
+        "Limited defensive-duel evidence",
+        "Requires complementary defensive cover from left-back"
+    ]
+}
+```
+
+### 5. Visual components
+
+- A simplified vertical or horizontal pitch.
+- A highlighted zone showing the player’s primary area of influence.
+- Role labels: primary and secondary.
+- System-fit bars linked to the coach’s tactical principles.
+- Strengths and watch-outs in two separate lists.
+
+### 6. Visual rule
+
+The pitch is a contextual frame, not a detailed match map. It should show
+**where the player fits**, not pretend to display tracking data that the system
+does not currently have.
+
+### Screen 4 — Financial Decision Panel
+
+### 1. Purpose
+
+The Financial Decision Panel separates sporting compatibility from financial
+feasibility. It shows whether the player can realistically be signed within
+the club’s constraints.
+
+### 2. User question
+
+> “Can the club afford this player, and what is the financial risk?”
+
+### 3. Layout
+
+```text
+┌────────────────────────────────────────────────────────────────────┐
+│ 💰 FINANCIAL DECISION PANEL — Player A                             │
+│                                                                    │
+│ TRANSFER COST                                                      │
+│                                                                    │
+│ €23m      [████████████████████░░░░]  €25m limit                   │
+│ Compatibility: 82%                                                 │
+│                                                                    │
+│ SALARY                                                             │
+│                                                                    │
+│ €3.2m     [██████████████████████░░]  €4m limit                    │
+│ Compatibility: 88%                                                 │
+│                                                                    │
+│ CONTRACT                                                           │
+│                                                                    │
+│ Current contract expires: 2028                                     │
+│ Recommended contract length: 4 years                               │
+│ Contract compatibility: 90%                                        │
+│                                                                    │
+│ FINANCIAL RISK                                                     │
+│                                                                    │
+│ Low–Moderate                                                       │
+│                                                                    │
+│ TRADE-OFF                                                          │
+│ The player fits the wage structure, but the estimated transfer fee │
+│ would consume 92% of the remaining transfer budget.                │
+│                                                                    │
+│ FINANCIAL RECOMMENDATION                                           │
+│ Feasible, but budget flexibility is limited.                       │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+### 4. Required data
+
+```python
+{
+    "player": "Player A",
+    "financial_profile": {
+        "estimated_transfer_cost": 23_000_000,
+        "transfer_budget": 25_000_000,
+        "transfer_cost_compatibility": 0.82,
+        "estimated_salary": 3_200_000,
+        "salary_cap": 4_000_000,
+        "salary_compatibility": 0.88,
+        "current_contract_expiry": "2028",
+        "recommended_contract_years": 4,
+        "contract_compatibility": 0.90,
+        "financial_risk": "low_moderate",
+        "budget_utilisation": 0.92
+    },
+    "financial_recommendation": {
+        "status": "feasible_limited_flexibility",
+        "message": "The player fits the wage structure, but the estimated transfer fee would consume 92% of the remaining transfer budget."
+    }
+}
+```
+
+### 5. Visual components
+
+- Horizontal financial gauges for transfer cost and salary.
+- Clear budget and salary-cap reference lines.
+- A contract compatibility indicator.
+- A financial-risk badge.
+- A trade-off message explaining budget flexibility.
+
+### 6. Colour rules
+
+| Financial status | Colour | Meaning |
+|---|---|---|
+| Within comfortable limits | `#15803D` | Feasible |
+| Close to limit | `#D97706` | Feasible but constrained |
+| Above limit | `#B91C1C` | Not feasible under current constraints |
+
+### LLM Recruitment Interpreter
+
+The LLM acts as the **natural-language entry point** of the system. It does not
+replace the Bayesian engine, similarity model, tactical-fit engine, or financial
+engine. It translates a user request into a structured recruitment brief.
+
+### 1. User input example
+
+```text
+Je veux un ailier créatif avec un fort pourcentage de dribbles réussis
+et une finition au-dessus de la moyenne.
+```
+
+### 2. Expected system behaviour
+
+```text
+User request
+     ↓
+LLM Recruitment Interpreter
+     ↓
+Structured recruitment brief
+     ↓
+Ideal-profile generator
+     ↓
+Real-player compatibility engine
+     ↓
+Financial compatibility engine
+     ↓
+Visual Recruitment Decision Brief
+```
+
+### 3. LLM output schema
+
+The LLM must return a validated JSON object, not free text.
+
+```python
+{
+    "target_position": "LEFT_WINGER",
+    "recruitment_problem": "Creative left winger with strong dribbling and above-average finishing",
+    "tactical_context": {
+        "playing_style": "possession_with_width",
+        "build_up_preference": "progressive",
+        "defensive_structure": "unspecified"
+    },
+    "squad_need": {
+        "role": "wide_creator",
+        "age_range":,[18][30]
+        "contract_horizon_years":[3][5]
+    },
+    "financial_constraints": {
+        "transfer_budget": None,
+        "salary_cap": None,
+        "preferred_contract_years":[3][5]
+    },
+    "ideal_profile": {
+        "finishing": {
+            "target_level": "above_average",
+            "weight": 0.25
+        },
+        "chance_creation": {
+            "target_level": "high",
+            "weight": 0.30
+        },
+        "dribbling": {
+            "target_level": "high",
+            "weight": 0.30
+        },
+        "ball_progression": {
+            "target_level": "moderate_high",
+            "weight": 0.10
+        },
+        "pressing_impact": {
+            "target_level": "moderate",
+            "weight": 0.05
+        }
+    },
+    "missing_information": [
+        "transfer_budget",
+        "salary_cap",
+        "preferred_foot",
+        "league_coverage"
+    ],
+    "assumptions": [
+        "No financial constraint was specified, so financial compatibility will be reported as informational rather than decisive.",
+        "Dribbling compatibility requires successful and attempted dribble data."
+    ]
+}
+```
+
+### 4. LLM responsibilities
+
+The LLM should:
+
+- Identify the target position or role.
+- Extract tactical requirements.
+- Convert qualitative requests into target levels.
+- Assign initial dimension weights.
+- Identify missing financial or squad-building information.
+- Generate a structured recruitment brief.
+- Explain the final recommendation in clear football language.
+
+The LLM should not:
+
+- Invent player statistics.
+- Directly calculate final compatibility scores.
+- Override Bayesian estimates.
+- Produce a recruitment decision without the structured engines.
+- Present missing data as known information.
+
+### Implementation Architecture
+
+```text
+User request
+     ↓
+LLM Recruitment Interpreter
+     ↓
+Structured Recruitment Brief
+     ↓
+IdealProfileBuilder
+     ↓
+PlayerCompatibilityEngine
+     ↓
+FinancialCompatibilityEngine
+     ↓
+DecisionAggregator
+     ↓
+Visual Brief Generator
+```
+
+### Recommended modules
+
+```text
+interfaces/
+└── recruitment_request.py
+
+llm/
+└── recruitment_interpreter.py
+
+profile/
+└── ideal_profile_builder.py
+
+engines/
+├── role_aware_talent_engine.py
+├── player_compatibility_engine.py
+└── financial_compatibility_engine.py
+
+decision/
+└── decision_aggregator.py
+
+visualisation/
+├── recruitment_brief.py
+├── target_player_comparison.py
+├── player_pitch_card.py
+└── financial_decision_panel.py
+```
+
+### Data contract
+
+The visual layer should consume a single, stable object:
+
+```python
+RecruitmentDecisionBrief
+```
+
+This object should contain:
+
+- The original user request.
+- The structured recruitment brief.
+- The ideal player profile.
+- The ranked real-player matches.
+- Dimension-level compatibility scores.
+- Bayesian uncertainty where available.
+- Financial compatibility.
+- The final recommendation and confidence level.
+- Missing information and assumptions.
+
+This separation allows the same backend to generate an HTML report, a Streamlit
+interface, a PDF, or a future web application.
+
+## Visual Language
+
+### Typography
+
+Use a single modern sans-serif family.
+
+- Titles: bold, large, dark grey.
+- Player names: semibold.
+- Metric labels: regular, medium grey.
+- Key figures: large and high-contrast.
+- Explanatory text: small, secondary grey.
+
+### Shape language
+
+- Use rounded rectangles for cards and panels.
+- Use horizontal bars for ability and financial comparisons.
+- Use a vertical line or marker for the ideal-profile target.
+- Use badges for recommendation status.
+- Use a simplified pitch only to provide football context.
+- Avoid pie charts, 3D charts, decorative gauges, and dense multi-radar layouts.
+
+### Recommendation badges
+
+| Recommendation | Colour | Meaning |
+|---|---|---|
+| `TARGET` | `#15803D` | Strong overall compatibility and feasible profile |
+| `MONITOR` | `#D97706` | Interesting profile, but uncertainty or financial constraint exists |
+| `AVOID` | `#B91C1C` | Major incompatibility or unacceptable financial/risk profile |
+| `INSUFFICIENT DATA` | `#6B7280` | Evidence is too limited for a reliable recommendation |
+
+## Implementation Priority
+
+1. Build the structured `RecruitmentDecisionBrief` object.
+2. Implement the four visual screens with static example data.
+3. Connect the ideal-profile generator.
+4. Connect the player-compatibility engine.
+5. Connect the financial-compatibility engine.
+6. Add the LLM interpreter as the natural-language entry point.
+7. Add uncertainty, missing-data handling, and recommendation explanations.
+
+
+## 3. FOOTBALL RECRUITMENT PROBLEM
 
 ### Problem
 Recruitment decisions can be distorted when clubs focus on headline statistics or well-known names rather than the specific role a candidate is expected to perform. A player may produce strong numbers in one team or tactical system and struggle in another. Decisions must also account for squad balance, budget, age profile, contractual situation, and alternative candidates.
@@ -28,7 +927,7 @@ The framework organizes candidate evaluation around performance indicators, role
 - **Development direction:** Make the links between squad needs, role-specific profiles, tactical compatibility, and recruitment constraints more explicit in an end-to-end workflow.
 - **Validation objective:** Test whether the framework produces useful and consistent shortlists under defined recruitment scenarios, comparing recommendations with transparent baselines or expert-defined criteria.
 
-## 3. WHY TRADITIONAL PLAYER EVALUATION CAN BE MISLEADING
+## 4. WHY TRADITIONAL PLAYER EVALUATION CAN BE MISLEADING
 
 ### Problem
 Raw totals such as goals and assists can hide context. Playing time, team strength, tactical role, and opportunity volume affect observed output. A single statistic may reflect several factors rather than individual contribution. Defensive actions, progression, creation, and other role-relevant behaviours can also be overlooked when evaluation relies on headline metrics.
@@ -42,7 +941,7 @@ The project aims to interpret observed performance in context rather than treat 
 
 GPS running distances, comprehensive injury histories, and other specialized data are not treated as current capabilities unless a working source and pipeline have been implemented and verified.
 
-## 4. METHODOLOGY
+## 5. METHODOLOGY
 
 ### Problem
 Football performance varies over time and is affected by limited samples, opportunity, team context, and random variation. A single observed statistic or deterministic score can give a misleading impression of certainty, especially when a player has limited playing time.
@@ -56,7 +955,7 @@ The project uses Bayesian modelling to estimate an underlying performance abilit
 
 “Underlying ability” refers to a latent quantity inferred from observed data; it is not a direct measurement of innate or permanent talent.
 
-## 5. BAYESIAN PLAYER EVALUATION
+## 6. BAYESIAN PLAYER EVALUATION
 
 ### Problem
 Football data can be noisy, and observed output may be based on limited minutes or few relevant events. A strong short-term result does not necessarily imply stable underlying ability. Point estimates also make it difficult to distinguish a precise estimate from one based on weak evidence.
@@ -68,7 +967,7 @@ Bayesian inference combines prior assumptions with observed data to obtain a pos
 - **Development direction:** Preserve the scoring model as an initial ability-specific model while designing a reusable structure for additional role-relevant dimensions. Model dimensions separately where their data-generating processes differ, then bring them together in a multidimensional player profile.
 - **Validation objective:** Check sampling convergence and effective sample size, inspect trace plots and posterior distributions, and report credible intervals where appropriate. Test sensitivity to modelling assumptions and limited samples before using estimates to rank or compare recruitment targets.
 
-## 6. UNCERTAINTY QUANTIFICATION
+## 7. UNCERTAINTY QUANTIFICATION
 
 ### Problem
 A single rating can conceal how much evidence supports it. Two players with similar point estimates may have different uncertainty because of differences in minutes, event counts, or data quality. Without that distinction, decision-makers may place too much confidence in a fragile estimate.
@@ -147,7 +1046,7 @@ sampling. It reports an approximate uncertainty interval, not an MCMC-based
 HDI.
 
 
-## 7. RECRUITMENT DECISION SUPPORT
+## 8. RECRUITMENT DECISION SUPPORT
 
 ### Problem
 Statistical outputs are not automatically useful to scouts or sporting decision-makers. Recruitment decisions also depend on the role to fill, tactical requirements, budget, contract situation, age profile, and alternative candidates. A performance estimate alone cannot determine whether a player should be signed.
@@ -159,7 +1058,7 @@ The decision-support layer is intended to connect player evidence to a defined r
 - **Development direction:** Connect role-aware ability profiles and their uncertainty to explicit squad needs and recruitment constraints. The intended output is a transparent comparison of candidates and trade-offs, not an unexplained universal rating.
 - **Validation objective:** Test recommendations against defined scenarios, inspect each criterion's contribution, and assess stability when budgets, role requirements, or assumptions change. Financial feasibility and tactical compatibility remain distinct decision dimensions.
 
-## 8. PLAYER PROFILING & COMPARISON
+## 9. PLAYER PROFILING & COMPARISON
 
 ### Problem
 Players listed in the same position can perform different tactical roles. Comparing them using positional labels or raw totals alone may hide differences in style, responsibility, opportunity, and strengths. Useful comparison must reflect the role the club is trying to recruit for.
@@ -171,7 +1070,7 @@ The framework is moving towards role-aware profiles that preserve multiple perfo
 - **Development direction:** Define role-relevant dimensions and build separate estimates where justified by the data. Comparisons can combine observed metrics with probabilistic estimates where available, retaining each dimension's uncertainty and context.
 - **Validation objective:** Confirm that dimensions are defined consistently, compare like with like where appropriate, and test whether profiles distinguish meaningful role differences. Do not claim comparisons of posterior distributions for dimensions that have not yet been modelled or validated.
 
-## 9. TECHNICAL ARCHITECTURE
+## 10. TECHNICAL ARCHITECTURE
 
 ### Problem
 A recruitment decision-support workflow requires data ingestion, consistent feature definitions, analysis, modelling, and decision-oriented outputs. Disconnected components or inconsistent assumptions can make comparisons difficult to reproduce or interpret.
@@ -198,7 +1097,7 @@ The intended workflow is:
 4. Player profiles, comparisons, tactical-fit analysis, and recruitment
    decision-support components consume these outputs.
 
-## 10. DATA SOURCES
+## 11. DATA SOURCES
 
 ### Problem
 Player evaluation can be limited by incomplete coverage, inconsistent definitions, and differences between providers or competitions. Contract and market information can help frame recruitment decisions, but should not be assumed to be available or equally reliable for every player.
@@ -300,7 +1199,7 @@ Real-data integration and recruitment validation are separate milestones:
 retrieving and combining observations does not by itself validate downstream
 scores, Bayesian estimates, or recruitment recommendations.
 
-## 11. CURRENT LIMITATIONS
+## 12. CURRENT LIMITATIONS
 
 ### Problem
 A useful recruitment framework must do more than run a model. It needs suitable data, reliable estimates, reproducible processing, interpretable outputs, and evidence that recommendations are meaningful. Gaps in any of these areas limit how confidently results can be used.
@@ -312,7 +1211,7 @@ The project is being developed incrementally, with implementation status and val
 - **Development direction:** Extend the model to role-specific ability dimensions, strengthen data pipelines and integration, and improve decision-facing visualizations and reporting.
 - **Validation objective:** Establish repeatable tests and documented evidence for each new capability. A feature is not operational merely because it appears in the architecture or roadmap; a model is not recruitment-ready until its assumptions, diagnostics, and performance have been evaluated.
 
-## 12. ROADMAP
+## 13. ROADMAP
 
 ### Problem
 A probabilistic model becomes useful to non-technical stakeholders only when its outputs can be interpreted in context and connected to a clear decision. A complete recruitment workflow therefore requires progress in modelling, data quality, integration, and presentation—not just additional features.
